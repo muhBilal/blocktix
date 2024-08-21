@@ -8,6 +8,7 @@ import {
   Command,
   CreditCard,
   File,
+  FileClock,
   FileText,
   HelpCircle,
   Image,
@@ -19,8 +20,10 @@ import {
   LucideProps,
   Moon,
   MoreVertical,
+  NotebookText,
   Pizza,
   Plus,
+  Rss,
   Settings,
   SunMedium,
   Trash,
@@ -28,8 +31,8 @@ import {
   User,
   User2Icon,
   UserX2Icon,
-  X
-} from 'lucide-react';
+  X,
+} from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -60,6 +63,9 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  channel: Rss,
+  event: NotebookText,
+  historyEvent: FileClock,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
@@ -78,5 +84,5 @@ export const Icons = {
     </svg>
   ),
   twitter: Twitter,
-  check: Check
+  check: Check,
 };

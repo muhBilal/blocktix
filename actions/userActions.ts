@@ -69,7 +69,5 @@ export const checkUser = async () => {
     await insertUser(data);
   }
 
-  if (user.privateMetadata.role === "ADMIN") {
-    return redirect("/admin");
-  }
+  return user;
 };

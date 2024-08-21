@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { DashboardNav } from "@/components/DashboardNav";
-import { navItems } from "@/constants/data";
+import { userNavItems } from "@/constants/data";
+import { adminNavItems } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useSidebar } from "@/hooks/useSidebar";
+import { useUser } from "@clerk/nextjs";
 
 type SidebarProps = {
   className?: string;
@@ -13,6 +15,10 @@ type SidebarProps = {
 export default function Sidebar({ className }: SidebarProps) {
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
+  const { user } = useUser();
+  const isAdmin =
+    user?.emailAddresses[0].emailAddress ===
+    "22081010099@student.upnjatim.ac.id";
 
   const handleToggle = () => {
     setStatus(true);
@@ -38,7 +44,11 @@ export default function Sidebar({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="mt-3 space-y-1">
-            <DashboardNav items={navItems} />
+            {isAdmin ? (
+              <DashboardNav items={adminNavItems} />
+            ) : (
+              <DashboardNav items={userNavItems} />
+            )}
           </div>
         </div>
       </div>

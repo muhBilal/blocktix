@@ -110,36 +110,51 @@ export type Employee = {
   profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
 };
 
-export const navItems: NavItem[] = [
+export const userNavItems: NavItem[] = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/users",
+    icon: "dashboard",
+    label: "Dashboard",
+  },
+  {
+    title: "Channel",
+    href: "/users/channels",
+    icon: "channel",
+    label: "channel",
+  },
+  {
+    title: "History Event",
+    href: "/users/events",
+    icon: "historyEvent",
+    label: "historyEvent",
+  },
+];
+
+export const adminNavItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    href: "/admin",
     icon: "dashboard",
     label: "Dashboard",
   },
   {
     title: "User",
-    href: "/dashboard/user",
+    href: "/admin/users",
     icon: "user",
     label: "user",
   },
   {
-    title: "Employee",
-    href: "/dashboard/employee",
-    icon: "employee",
-    label: "employee",
+    title: "Channel",
+    href: "/admin/channels",
+    icon: "channel",
+    label: "channel",
   },
   {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: "profile",
-    label: "profile",
-  },
-  {
-    title: "Kanban",
-    href: "/dashboard/kanban",
-    icon: "kanban",
-    label: "kanban",
+    title: "Event",
+    href: "/admin/events",
+    icon: "event",
+    label: "event",
   },
 ];
 
