@@ -29,12 +29,12 @@ const items = [
     url: "/",
   },
   {
-    name: "Komunitas",
-    url: "/communities",
+    name: "Jelajahi",
+    url: "/browse",
   },
   {
-    name: "Event",
-    url: "/events",
+    name: "Channel",
+    url: "/channels",
   },
 ];
 
@@ -46,14 +46,14 @@ const Navbar = (props: Props) => {
         <div className="flex justify-between items-center gap-4 rounded-xl p-4 border bg-background border-input">
           <aside className="flex gap-2 items-center">
             <Image
-              src={"/logo.png"}
+              src={"/logo.svg"}
               draggable={false}
               alt="logo"
               width={30}
               height={30}
             />
             <Link href={"/"} className="font-bold text-xl">
-              Helvi
+              Annect
             </Link>
           </aside>
           <nav className="gap-4 hidden lg:flex flex-grow justify-center items-center">
@@ -72,7 +72,7 @@ const Navbar = (props: Props) => {
           <aside>
             <div className="hidden lg:flex lg:gap-2 lg:items-center">
               <Link
-                href={"/user"}
+                href={"/users"}
                 className="border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2 flex justify-center items-center"
               >
                 Get Started
@@ -128,7 +128,7 @@ const Navbar = (props: Props) => {
                       </Link>
                     ))}
                     <Link
-                      href={"/user"}
+                      href={"/users"}
                       className={
                         "hover:text-blue-600 hover:bg-blue-600/10 transition-all border border-input p-4 rounded-md"
                       }
