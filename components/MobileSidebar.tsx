@@ -1,7 +1,8 @@
 "use client";
 import { DashboardNav } from "@/components/DashboardNav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { navItems } from "@/constants/data";
+import { adminNavItems, userNavItems } from "@/constants/data";
+import { useUser } from "@clerk/nextjs";
 import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -13,6 +14,10 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function MobileSidebar({ className }: SidebarProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useUser();
+  const isAdmin =
+    user?.emailAddresses[0].emailAddress ===
+    "22081010099@student.upnjatim.ac.id";
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -26,11 +31,19 @@ export function MobileSidebar({ className }: SidebarProps) {
                 Overview
               </h2>
               <div className="space-y-1">
-                <DashboardNav
-                  items={navItems}
-                  isMobileNav={true}
-                  setOpen={setOpen}
-                />
+                {isAdmin ? (
+                  <DashboardNav
+                    items={adminNavItems}
+                    isMobileNav={true}
+                    setOpen={setOpen}
+                  />
+                ) : (
+                  <DashboardNav
+                    items={userNavItems}
+                    isMobileNav={true}
+                    setOpen={setOpen}
+                  />
+                )}
               </div>
             </div>
           </div>
