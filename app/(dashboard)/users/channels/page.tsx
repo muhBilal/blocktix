@@ -10,8 +10,8 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 const breadcrumbItems = [
-  { title: "Dashboard", link: "/dashboard" },
-  { title: "Employee", link: "/dashboard/employee" },
+  { title: "Dashboard", link: "/users" },
+  { title: "Channels", link: "/users/channels" },
 ];
 
 type paramsProps = {

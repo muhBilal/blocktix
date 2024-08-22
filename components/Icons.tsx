@@ -26,6 +26,7 @@ import {
   Rss,
   Settings,
   SunMedium,
+  Tag,
   Trash,
   Twitter,
   User,
@@ -66,6 +67,8 @@ export const Icons = {
   channel: Rss,
   event: NotebookText,
   historyEvent: FileClock,
+  tag: Tag,
+  // category: Chart,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

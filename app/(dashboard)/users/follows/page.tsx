@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
-  { title: "History Events", link: "/users/history-events" },
+  { title: "Follows", link: "/users/follows" },
 ];
 
 type paramsProps = {

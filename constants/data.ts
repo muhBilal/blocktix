@@ -70,6 +70,18 @@ export const userNavItems: NavItem[] = [
     icon: "historyEvent",
     label: "historyEvent",
   },
+  {
+    title: "Favorite",
+    href: "/users/favorites",
+    icon: "historyEvent",
+    label: "favorite",
+  },
+  {
+    title: "Follow",
+    href: "/users/follows",
+    icon: "historyEvent",
+    label: "follows",
+  },
 ];
 
 export const adminNavItems: NavItem[] = [
@@ -84,6 +96,18 @@ export const adminNavItems: NavItem[] = [
     href: "/admin/users",
     icon: "user",
     label: "user",
+  },
+  {
+    title: "Tag",
+    href: "/admin/tags",
+    icon: "tag",
+    label: "tag",
+  },
+  {
+    title: "Category",
+    href: "/admin/categories",
+    icon: "page",
+    label: "category",
   },
   {
     title: "Channel",
