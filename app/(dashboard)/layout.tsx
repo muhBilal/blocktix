@@ -14,7 +14,11 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await checkUser();
+  const user = await checkUser();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
   return (
     <>
       <Header />

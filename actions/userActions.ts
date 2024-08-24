@@ -32,7 +32,7 @@ const insertUser = async ({ id, name, email, image, role }: UserData) => {
 export const checkUser = async () => {
   const user = await currentUser();
 
-  if (!user) return redirect("/sign-in");
+  if (!user) return null;
 
   const getUserFromDB = await db.users.findUnique({
     where: {

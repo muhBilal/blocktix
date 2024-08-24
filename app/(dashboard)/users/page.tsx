@@ -1,3 +1,4 @@
+"use client";
 import { AreaGraph } from "@/components/charts/area-graph";
 import { BarGraph } from "@/components/charts/bar-graph";
 import { PieGraph } from "@/components/charts/pie-graph";
@@ -8,156 +9,170 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Clock, FileClock, LayoutGrid, Tag } from "lucide-react";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default function page() {
+export default function Page() {
+  const { user } = useUser();
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
-            Hi, Welcome back 👋
+            Hi, Welcome back{" "}
+            <span className="text-primary">{user?.firstName}</span> 👋
           </h2>
+          <Link
+            href={"/dashboard/employee/new"}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Buat Channel
+          </Link>
         </div>
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics" disabled>
-              Analytics
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Subscriptions
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
-                  <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <path d="M2 10h20" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Active Now
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
-                  <p className="text-xs text-muted-foreground">
-                    +201 since last hour
-                  </p>
-                </CardContent>
+        <Separator />
+        <div className="mt-5">
+          <div className="flex justify-between items-center">
+            <div className="text-primary">Event yang pernah diikuti</div>
+            <Link href={"#"}>
+              <Button variant={"secondary"} className="hover:text-primary">
+                Lihat semua
+              </Button>
+            </Link>
+          </div>
+          <div className="mt-5">
+            <div className="grid grid-cols-1 gap-5">
+              <Card className="hover:-translate-y-3 hover:border-primary transition-all duration-300">
+                <div className="flex flex-col lg:flex-row gap-4 p-2">
+                  <Image
+                    src={"/preview.png"}
+                    alt="events"
+                    width={500}
+                    height={500}
+                    className="object-contain border border-muted rounded-md"
+                  />
+                  <div className="flex flex-col gap-2">
+                    <CardTitle>Event Kemanusiaan</CardTitle>
+                    <CardDescription>
+                      Diadakan oleh{" "}
+                      <Link href={"#"} className="text-primary">
+                        Budiono Siregar
+                      </Link>
+                    </CardDescription>
+                    <div className="flex gap-4">
+                      <div className="flex gap-2 items-center text-muted-foreground">
+                        <Clock />
+                        <p className="text-xs">17 Agustus 2024</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="flex gap-2 items-center text-muted-foreground">
+                        <LayoutGrid />
+                        <p className="text-xs">Lomba</p>
+                      </div>
+                      <div className="flex gap-2 items-center text-muted-foreground">
+                        <Tag />
+                        <p className="text-xs">Rp. 17.000</p>
+                      </div>
+                    </div>
+                    <div className="mt-5">
+                      <div className="text-sm text-muted-foreground">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing
+                        elit. Quod nam ea labore natus rerum eum sit culpa!
+                        Nobis quas consequuntur velit quaerat impedit culpa
+                        expedita sit incidunt, ullam tempore ex modi doloribus
+                        saepe magnam quod qui a facilis voluptatibus aliquam
+                        placeat minima optio quis! Facilis, eligendi ad.
+                        Voluptate vitae ab obcaecati minus ea facere
+                        voluptatibus tempore maxime! Quis doloremque
+                        necessitatibus accusantium. Maxime aperiam vel dolor
+                        fugiat ullam velit eligendi deserunt obcaecati officia
+                        quo, molestias et similique deleniti optio officiis
+                        accusamus...
+                      </div>
+                    </div>
+                    <div className="mt-3 ms-auto">
+                      <Link href={"#"}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </Card>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <div className="col-span-4">
-                <BarGraph />
-              </div>
-              <Card className="col-span-4 md:col-span-3">
+          </div>
+        </div>
+        <Separator />
+        <div className="mt-5">
+          <div className="flex justify-between items-center">
+            <div className="text-primary">Channel yang diikuti</div>
+            <Link href={"#"}>
+              <Button variant={"secondary"} className="hover:text-primary">
+                Lihat semua
+              </Button>
+            </Link>
+          </div>
+          <div className="mt-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <Card className="group hover:-translate-y-3 hover:border-primary transition-all duration-300">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <Image
+                      src={"/preview.png"}
+                      alt="image"
+                      width={500}
+                      height={500}
+                      loading="lazy"
+                      className="object-contain rounded"
+                    />
+                    <div className="flex flex-col gap-2">
+                      <h3 className="font-bold text-xl">Jonathan Evan</h3>
+                      <p className="text-muted-foreground text-xs">
+                        since 20 Agustus 2024
+                      </p>
+                    </div>
+                  </div>
+                  <CardTitle>Bersih itu sehat!!</CardTitle>
+                  <CardDescription className="max-w-lg">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    Doloremque, expedita quo! Consectetur sunt placeat vero
+                    laudantium sapiente. Id, excepturi magnam....
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
+                <CardFooter>
+                  <div className="ms-auto">
+                    <Link href={"#"}>
+                      <Button
+                        variant={"secondary"}
+                        className="hover:text-primary transition-all duration-300"
+                      >
+                        Lihat detail
+                      </Button>
+                    </Link>
+                  </div>
+                </CardFooter>
               </Card>
-              <div className="col-span-4">
-                <AreaGraph />
-              </div>
-              <div className="col-span-4 md:col-span-3">
-                <PieGraph />
-              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
     </ScrollArea>
   );
