@@ -22,8 +22,8 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="flex justify-center mt-16 gap-5">
-          <article className="rounded-xl border-2 border-gray-100 bg-white w-80 h-40">
+        <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
+          <article className="rounded-xl border-2 border-gray-100 bg-white">
             <div className="flex items-start gap-4 p-4">
               <a href="#" className="block shrink-0">
                 <img
@@ -41,15 +41,14 @@ export default function Home() {
                   </a>
                 </h3>
 
-                <p className="line-clamp-2 text-sm text-gray-700">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Accusamus, accusantium temporibus iure delectus ut totam natus
-                  nesciunt ex? Ducimus, enim.
+                <p className=" text-sm text-gray-700">
+                  Pertemuan edukatif berbagi pengetahuan mengenai topik
+                  tertentu.
                 </p>
               </div>
             </div>
           </article>
-          <article className="rounded-xl border-2 border-gray-100 bg-white w-80 h-40">
+          <article className="rounded-xl border-2 border-gray-100 bg-white">
             <div className="flex items-start gap-4 p-4">
               <a href="#" className="block shrink-0">
                 <img
@@ -67,36 +66,9 @@ export default function Home() {
                   </a>
                 </h3>
 
-                <p className="line-clamp-2 text-sm text-gray-700">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Accusamus, accusantium temporibus iure delectus ut totam natus
-                  nesciunt ex? Ducimus, enim.
-                </p>
-              </div>
-            </div>
-          </article>
-          <article className="rounded-xl border-2 border-gray-100 bg-white w-80 h-40">
-            <div className="flex items-start gap-4 p-4">
-              <a href="#" className="block shrink-0">
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
-                  className="size-32 rounded-lg object-cover"
-                />
-              </a>
-
-              <div>
-                <h3 className="font-medium sm:text-lg">
-                  <a href="#" className="hover:underline">
-                    {" "}
-                    Seminar{" "}
-                  </a>
-                </h3>
-
-                <p className="line-clamp-2 text-sm text-gray-700">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Accusamus, accusantium temporibus iure delectus ut totam natus
-                  nesciunt ex? Ducimus, enim.
+                <p className=" text-sm text-gray-700">
+                  Pertemuan edukatif berbagi pengetahuan mengenai topik
+                  tertentu.
                 </p>
               </div>
             </div>
