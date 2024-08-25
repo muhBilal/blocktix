@@ -63,7 +63,7 @@
     "react-day-picker": "^9.0.0",
     "react-dom": "^18",
     "react-email": "2.1.6",
-    "react-hook-form": "^7.52.1",
+    "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
     "react-loading-icons": "^1.1.0",
     "react-resizable-panels": "^2.0.21",

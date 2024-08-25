@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Annect - Dashboard Page",
@@ -21,6 +22,7 @@ export default async function DashboardLayout({
   }
   return (
     <>
+      <Toaster />
       <Header />
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
