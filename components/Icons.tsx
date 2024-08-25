@@ -10,6 +10,7 @@ import {
   File,
   FileClock,
   FileText,
+  Heart,
   HelpCircle,
   Image,
   Laptop,
@@ -25,6 +26,7 @@ import {
   Plus,
   Rss,
   Settings,
+  SquareUser,
   SunMedium,
   Tag,
   Trash,
@@ -68,6 +70,8 @@ export const Icons = {
   event: NotebookText,
   historyEvent: FileClock,
   tag: Tag,
+  favorite: Heart,
+  following: SquareUser,
   // category: Chart,
   gitHub: ({ ...props }: LucideProps) => (
     <svg

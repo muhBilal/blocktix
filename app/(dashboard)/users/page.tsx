@@ -24,7 +24,6 @@ import { Clock, FileClock, LayoutGrid, Tag } from "lucide-react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Page() {
   const { user } = useUser();
@@ -37,7 +36,7 @@ export default function Page() {
             <span className="text-primary">{user?.firstName}</span> 👋
           </h2>
           <Link
-            href={"/dashboard/employee/new"}
+            href={"/users/channels/create"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Buat Channel
