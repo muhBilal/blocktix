@@ -78,12 +78,25 @@ export default async function page({ searchParams }: paramsProps) {
                 <p className="text-muted-foreground text-sm">40 Event</p>
               </div>
             </div>
-            <Link
-              href={"/users/channels/update/2"}
-              className={cn(buttonVariants({ variant: "default" }))}
-            >
-              <Settings className="mr-2 h-4 w-4" /> Edit Channel
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href={"/users/channels/events/create"}
+                className={cn(
+                  buttonVariants({
+                    variant: "secondary",
+                    className: "text-primary",
+                  })
+                )}
+              >
+                <Plus className="mr-2 h-4 w-4" /> Tambah Event
+              </Link>
+              <Link
+                href={"/users/channels/update/2"}
+                className={cn(buttonVariants({ variant: "default" }))}
+              >
+                <Settings className="mr-2 h-4 w-4" /> Edit Channel
+              </Link>
+            </div>
           </div>
         </div>
         <Separator />
@@ -153,6 +166,14 @@ export default async function page({ searchParams }: paramsProps) {
             Molestias perferendis temporibus earum architecto!
           </TabsContent>
         </Tabs>
+        {/* <div className="border-2 border-dotted rounded-lg mt-10 h-[200px] flex justify-center items-center">
+          <Link
+            href={"/users/channels/create"}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Buat Channel
+          </Link>
+        </div> */}
       </div>
     </ScrollArea>
   );
