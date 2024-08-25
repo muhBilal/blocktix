@@ -7,7 +7,7 @@ import { UploadDropzone } from "@/lib/uploadthing";
 import toast from "react-hot-toast";
 
 type Props = {
-  apiEndpoint: "avatar";
+  apiEndpoint: "image";
   onChange: (url?: string) => void;
   value?: string;
 };

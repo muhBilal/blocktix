@@ -73,13 +73,13 @@ export const userNavItems: NavItem[] = [
   {
     title: "Favorite",
     href: "/users/favorites",
-    icon: "historyEvent",
+    icon: "favorite",
     label: "favorite",
   },
   {
-    title: "Follow",
+    title: "Following",
     href: "/users/follows",
-    icon: "historyEvent",
+    icon: "following",
     label: "follows",
   },
 ];
