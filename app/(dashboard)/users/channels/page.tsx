@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
-  { title: "Channels", link: "/users/channels" },
+  { title: "Channel", link: "/users/channels" },
 ];
 
 type paramsProps = {
@@ -26,6 +26,7 @@ export default async function page({ searchParams }: paramsProps) {
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
 
+  // const res = await fetch(process.env.API_BASE_URL + "/channels");
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
       (country ? `&search=${country}` : "")

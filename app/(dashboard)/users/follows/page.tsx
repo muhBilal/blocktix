@@ -6,6 +6,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Employee } from "@/constants/data";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -20,12 +21,14 @@ type paramsProps = {
   };
 };
 
-export default async function page({ searchParams }: paramsProps) {
+export default async function Page({ searchParams }: paramsProps) {
   const page = Number(searchParams.page) || 1;
   const pageLimit = Number(searchParams.limit) || 10;
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
+  const { user } = useUser();
 
+  // const res = await fetch(process.env.API_BASE_URL + "/users/{user?.id}/favorites");
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
       (country ? `&search=${country}` : "")

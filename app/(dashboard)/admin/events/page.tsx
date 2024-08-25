@@ -10,8 +10,8 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 const breadcrumbItems = [
-  { title: "Dashboard", link: "/dashboard" },
-  { title: "Employee", link: "/dashboard/employee" },
+  { title: "Dashboard", link: "/admin" },
+  { title: "Event", link: "/admin/events" },
 ];
 
 type paramsProps = {
@@ -26,6 +26,7 @@ export default async function page({ searchParams }: paramsProps) {
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
 
+  // const res = await fetch(process.env.API_BASE_URL + "/events");
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
       (country ? `&search=${country}` : "")

@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/admin" },
-  { title: "Users", link: "/dashboard/users" },
+  { title: "Users", link: "/admin/users" },
 ];
 
 type paramsProps = {
@@ -27,6 +27,7 @@ export default async function page({ searchParams }: paramsProps) {
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
 
+  // const res = await fetch(process.env.API_BASE_URL + "/users");
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
       (country ? `&search=${country}` : "")
