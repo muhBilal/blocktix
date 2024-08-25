@@ -6,7 +6,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
-import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Annect",
@@ -27,7 +26,6 @@ export default function RootLayout({
           <Toaster position="top-center" />
           <ThemeProvider attribute="class" disableTransitionOnChange>
             {children}
-            <Footer />
           </ThemeProvider>
         </body>
       </html>
