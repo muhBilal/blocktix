@@ -1,14 +1,15 @@
+import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
 import { BookmarkCheck, Clock, Files, TagIcon } from "lucide-react";
 import Image from "next/image";
 
 import React from "react";
 
-export default function page() {
+export default function Page() {
   return (
     <Wrapper>
       <main className="flex min-h-screen flex-col items-center justify-between p-24 pt-40">
-        <div className="flex flex-col items-center gap-5 px-44 py-16 bg-blue-50 mb-8 rounded-lg relative">
+        <div className="flex flex-col items-center gap-5 px-36 py-16 lg:px-44 lg:py-16 bg-blue-50 mb-8 rounded-lg relative">
           <Image
             src={"/undraw_globe.svg"}
             alt="icon-chart"
@@ -35,14 +36,14 @@ export default function page() {
               placeholder="Search..."
               className="px-4 py-4 w-96 focus:outline-none  "
             />
-            <button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
+            <Button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
               Search
-            </button>
+            </Button>
           </div>
         </div>
         <div className="w-full">
-          <div className="flex">
-            <div className="w-1/4">
+          <div className="flex flex-col-reverse lg:flex-row">
+            <div className="w-full lg:w-1/4">
               <div className="mb-3">
                 <div className="flex justify-between">
                   <h5 className="font-semibold text-xl">Filter</h5>
@@ -179,14 +180,19 @@ export default function page() {
                 </div>
               </div>
             </div>
-            <div className="w-3/4">
-              <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-20 ml-6">
-                <div className=" bg-blue-50 h-72 w-56 rounded-lg">
+            <div className="w-full lg:w-3/4">
+              <div className="grid grid-cols-2 gap-10 mb-5 lg:grid-cols-3  lg:gap-20 mt-10 ml-6">
+                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
                   <div className="flex flex-col justify-center items-center h-[30%]">
                     <div className="flex">
                       {/* <!-- Logo (1/4) --> */}
                       <div className="w-1/4 flex items-center justify-center">
-                        <img src="logo.png" alt="Logo" className="w-12 h-12" />
+                        <Image
+                          src={"/logo.png"}
+                          alt="logo"
+                          width={48}
+                          height={48}
+                        />
                       </div>
                       {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
                       <div className="w-3/4 pl-2">
@@ -222,12 +228,122 @@ export default function page() {
                     </div>
                     {/* <!-- Tombol Claim dan Icon Simpan --> */}
                     <div className="flex justify-between items-center mt-auto">
-                      <button className="bg-blue-500 text-white px-12 py-2 rounded-lg mb-3">
+                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
                         Claim
-                      </button>
-                      <button className="text-gray-500 hover:text-gray-700 ml-3 mb-3">
+                      </Button>
+                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
                         <BookmarkCheck />
-                      </button>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
+                  <div className="flex flex-col justify-center items-center h-[30%]">
+                    <div className="flex">
+                      {/* <!-- Logo (1/4) --> */}
+                      <div className="w-1/4 flex items-center justify-center">
+                        <Image
+                          src={"/logo.png"}
+                          alt="logo"
+                          width={48}
+                          height={48}
+                        />
+                      </div>
+                      {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
+                      <div className="w-3/4 pl-2">
+                        <h3 className="text-lg font-semibold">
+                          PT. Helvi Studio
+                        </h3>
+                        <p className="text-sm text-gray-600">Kota Surabaya</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* <!-- Bagian Bawah 70% --> */}
+                  <div className="h-[70%] flex flex-col justify-center items-center">
+                    {/* <!-- Judul Posisi dan Lokasi --> */}
+                    <div className="flex flex-col items-start mt-10">
+                      <h5 className="text-base font-bold mb-2">
+                        Web Developer - Surabaya
+                      </h5>
+                      <div className="flex flex-wrap mb-1 ">
+                        <div className="flex mr-4 gap-1">
+                          <TagIcon />
+                          <p className="text-sm">Seminar</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Files />
+                          <p className="text-sm">Page</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <Clock />
+                        <p className="text-sm">2h ago</p>
+                      </div>
+                    </div>
+                    {/* <!-- Tombol Claim dan Icon Simpan --> */}
+                    <div className="flex justify-between items-center mt-auto">
+                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
+                        Claim
+                      </Button>
+                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
+                        <BookmarkCheck />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
+                  <div className="flex flex-col justify-center items-center h-[30%]">
+                    <div className="flex">
+                      {/* <!-- Logo (1/4) --> */}
+                      <div className="w-1/4 flex items-center justify-center">
+                        <Image
+                          src={"/logo.png"}
+                          alt="logo"
+                          width={48}
+                          height={48}
+                        />
+                      </div>
+                      {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
+                      <div className="w-3/4 pl-2">
+                        <h3 className="text-lg font-semibold">
+                          PT. Helvi Studio
+                        </h3>
+                        <p className="text-sm text-gray-600">Kota Surabaya</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* <!-- Bagian Bawah 70% --> */}
+                  <div className="h-[70%] flex flex-col justify-center items-center">
+                    {/* <!-- Judul Posisi dan Lokasi --> */}
+                    <div className="flex flex-col items-start mt-10">
+                      <h5 className="text-base font-bold mb-2">
+                        Web Developer - Surabaya
+                      </h5>
+                      <div className="flex flex-wrap mb-1 ">
+                        <div className="flex mr-4 gap-1">
+                          <TagIcon />
+                          <p className="text-sm">Seminar</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Files />
+                          <p className="text-sm">Page</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <Clock />
+                        <p className="text-sm">2h ago</p>
+                      </div>
+                    </div>
+                    {/* <!-- Tombol Claim dan Icon Simpan --> */}
+                    <div className="flex justify-between items-center mt-auto">
+                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
+                        Claim
+                      </Button>
+                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
+                        <BookmarkCheck />
+                      </Button>
                     </div>
                   </div>
                 </div>
