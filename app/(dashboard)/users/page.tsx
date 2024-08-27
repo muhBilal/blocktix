@@ -46,7 +46,7 @@ export default function Page() {
         <div className="mt-5">
           <div className="flex justify-between items-center">
             <div className="text-primary">Event yang pernah diikuti</div>
-            <Link href={"#"}>
+            <Link href={"/users/history-events"}>
               <Button variant={"secondary"} className="hover:text-primary">
                 Lihat semua
               </Button>
@@ -123,7 +123,7 @@ export default function Page() {
         <div className="mt-5">
           <div className="flex justify-between items-center">
             <div className="text-primary">Channel yang diikuti</div>
-            <Link href={"#"}>
+            <Link href={"/users/following"}>
               <Button variant={"secondary"} className="hover:text-primary">
                 Lihat semua
               </Button>
@@ -176,7 +176,7 @@ export default function Page() {
         <div className="mt-5">
           <div className="flex justify-between items-center">
             <div className="text-primary">Event Favorite</div>
-            <Link href={"#"}>
+            <Link href={"/users/favorites"}>
               <Button variant={"secondary"} className="hover:text-primary">
                 Lihat semua
               </Button>
