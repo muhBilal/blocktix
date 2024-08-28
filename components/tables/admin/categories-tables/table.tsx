@@ -12,7 +12,7 @@ interface ProductsClientProps {
   data: categories[];
 }
 
-export const TagTable: React.FC<ProductsClientProps> = ({ data }) => {
+export const CategoryTable: React.FC<ProductsClientProps> = ({ data }) => {
   const router = useRouter();
 
   return (
@@ -20,7 +20,7 @@ export const TagTable: React.FC<ProductsClientProps> = ({ data }) => {
       <div className="flex items-start justify-between">
         <Heading
           title={`Categories (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
+          description="Kelola data kategori."
         />
       </div>
       <Separator />

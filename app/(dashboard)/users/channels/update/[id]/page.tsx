@@ -53,7 +53,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const updateHandler = async (values: z.infer<typeof formSchema>) => {
     try {
       const req = await fetch(
-        process.env.API_BASE_URL + "/channels/" + params.id,
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/channels/" + params.id,
         {
           method: "POST",
           body: JSON.stringify(values),

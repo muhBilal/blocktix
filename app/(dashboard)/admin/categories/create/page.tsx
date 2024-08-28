@@ -44,7 +44,9 @@ export default function Page() {
 
   const createHandler = async (tag: string) => {
     try {
-      const req = await fetch(process.env.API_BASE_URL + "/categories");
+      const req = await fetch(
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/categories"
+      );
       if (req.ok) {
         toast.success("Success!");
 

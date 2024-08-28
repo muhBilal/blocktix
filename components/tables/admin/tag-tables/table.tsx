@@ -20,7 +20,7 @@ export const TagTable: React.FC<ProductsClientProps> = ({ data }) => {
       <div className="flex items-start justify-between">
         <Heading
           title={`Tags (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
+          description="Kelola data tag."
         />
       </div>
       <Separator />
