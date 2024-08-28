@@ -9,7 +9,8 @@ import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Annect",
-  description: "Annect Websites",
+  description:
+    "Event Akademic Untuk Pelajar Mahasiswa Maupun Siswa di Seluruh Indonesia",
 };
 
 export default function RootLayout({

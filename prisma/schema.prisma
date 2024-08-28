@@ -54,6 +54,7 @@ model events {
   image       String?        @db.VarChar(255)
   tf_image    String?        @db.VarChar(255)
   location    String?        @db.VarChar(255)
+  link_group  String         @db.VarChar(255)
   is_paid     Boolean?
   price       Float?
   status      events_status?
