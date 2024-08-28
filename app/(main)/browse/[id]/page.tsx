@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
-export default function Detailpage() {
+export default function Page() {
   return (
     <Wrapper>
       <div className="relative mt-32 h-[500px] mb-10">
@@ -46,7 +46,7 @@ export default function Detailpage() {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-8 ">
+        <div className="col-span-12 lg:col-span-8 ">
           <Tabs defaultValue="events" className="space-y-4">
             <TabsList>
               <TabsTrigger value="events">Deskripsi</TabsTrigger>
@@ -167,15 +167,17 @@ export default function Detailpage() {
             </div>
           </div>
         </div>
-        <div className="col-span-4">
+        <div className="col-span-12 lg:col-span-4">
           <h2 className="font-semibold text-3xl mt-14 mb-5">Acara Serupa</h2>
-          <div className="flex flex-col gap-10">
+          <div className="grid grid-cols-2 lg:flex lg:flex-col gap-10">
             <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
               <Link href="/browse">
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-                  className="h-56 w-full object-cover"
+                <Image
+                  src={"/event_lain.png"}
+                  alt="gambar event lain"
+                  width={224}
+                  height={224}
+                  className="w-full object-cover"
                 />
               </Link>
 
@@ -197,10 +199,12 @@ export default function Detailpage() {
             </article>
             <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
               <Link href="/browse">
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-                  className="h-56 w-full object-cover"
+                <Image
+                  src={"/event_lain.png"}
+                  alt="gambar event lain"
+                  width={224}
+                  height={224}
+                  className="w-full object-cover"
                 />
               </Link>
 

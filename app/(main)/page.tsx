@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -17,19 +19,21 @@ export default function Home() {
               placeholder="Search..."
               className="px-4 py-4 w-96 focus:outline-none rounded-full"
             />
-            <button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
+            <Button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
               Search
-            </button>
+            </Button>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
           <article className="rounded-xl border-2 border-gray-100 bg-white">
             <div className="flex items-start gap-4 p-4">
               <a href="#" className="block shrink-0">
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
-                  className="size-32 rounded-lg object-cover"
+                <Image
+                  alt="jenis-event"
+                  src={"/jenis_event.png"}
+                  width={128}
+                  height={128}
+                  className="rounded-lg object-cover"
                 />
               </a>
 
@@ -51,10 +55,12 @@ export default function Home() {
           <article className="rounded-xl border-2 border-gray-100 bg-white">
             <div className="flex items-start gap-4 p-4">
               <a href="#" className="block shrink-0">
-                <img
-                  alt=""
-                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
-                  className="size-32 rounded-lg object-cover"
+                <Image
+                  alt="jenis-event"
+                  src={"/jenis_event.png"}
+                  width={128}
+                  height={128}
+                  className="rounded-lg object-cover"
                 />
               </a>
 
