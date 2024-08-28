@@ -21,6 +21,8 @@ model channels {
   name        String?   @db.VarChar(255)
   description String?   @db.VarChar(255)
   image       String?   @db.VarChar(255)
+  nik         String?   @db.VarChar(255)
+  no_rek      String?   @db.VarChar(255)
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   users       users?    @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "channels_ibfk_1")
