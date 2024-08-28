@@ -12,6 +12,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Employee } from "@/constants/data";
 import { cn } from "@/lib/utils";
+import { follows } from "@prisma/client";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +23,7 @@ const breadcrumbItems = [
 ];
 
 export default async function Page() {
-  const followings = await getAllData();
+  const followings: follows[] = await getAllData();
   return (
     <>
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">

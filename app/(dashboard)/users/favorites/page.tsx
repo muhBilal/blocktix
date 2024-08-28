@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
+import { favorites } from "@prisma/client";
 import { Clock, LayoutGrid, Plus, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +24,7 @@ const breadcrumbItems = [
 ];
 
 export default async function Page() {
-  const favorites = await getAllData();
+  const favorites: favorites[] = await getAllData();
   console.log(favorites);
   return (
     <ScrollArea className="h-full">
