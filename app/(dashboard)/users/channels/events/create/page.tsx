@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import EditableEditor from "@/components/EditableEditor";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useState } from "react";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -49,22 +50,25 @@ const breadcrumbItems = [
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: "Name must be exists.",
   }),
   description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
+    message: "description must be exists.",
   }),
   image: z.string().min(2, {
-    message: "Image must be exists.",
+    message: "image must be exists.",
   }),
   tag_id: z.string().min(2, {
-    message: "Image must be exists.",
+    message: "tag must be exists.",
   }),
   category_id: z.string().min(2, {
-    message: "Image must be exists.",
+    message: "category must be exists.",
   }),
   location: z.string().min(2, {
-    message: "Image must be exists.",
+    message: "location must be exists.",
+  }),
+  link_group: z.string().min(2, {
+    message: "link must be exists.",
   }),
   price: z.coerce.number().min(0),
   event_date: z.date(),
@@ -74,6 +78,9 @@ export default function Page() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const [tags, setTags] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const router = useRouter();
 
@@ -98,6 +105,35 @@ export default function Page() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await createHandler(values);
   };
+
+  useEffect(() => {
+    const getTags = async () => {
+      try {
+        const req = await fetch(`${process.env.API_BASE_URL}/tags`);
+        const res = await req.json();
+        if (res.data.length > 0) {
+          setTags(res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+
+    const getCategories = async () => {
+      try {
+        const req = await fetch(`${process.env.API_BASE_URL}/categories`);
+        const res = await req.json();
+        if (res.data.length > 0) {
+          setCategories(res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    getTags();
+    getCategories();
+  }, []);
 
   return (
     <ScrollArea className="h-full">
@@ -199,19 +235,34 @@ export default function Page() {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Lokasi Event</FormLabel>
-                  <FormControl>
-                    <Input disabled={isLoading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lokasi Event</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="link_group"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Link Grub Event</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}

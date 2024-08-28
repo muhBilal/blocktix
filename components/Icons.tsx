@@ -33,6 +33,7 @@ import {
   Twitter,
   User,
   User2Icon,
+  UserRoundPen,
   UserX2Icon,
   X,
 } from "lucide-react";
@@ -72,6 +73,7 @@ export const Icons = {
   tag: Tag,
   favorite: Heart,
   following: SquareUser,
+  editProfile: UserRoundPen,
   // category: Chart,
   gitHub: ({ ...props }: LucideProps) => (
     <svg

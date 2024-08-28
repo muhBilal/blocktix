@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Employee } from "@/constants/data";
 import { cn } from "@/lib/utils";
-import { Plus, Settings } from "lucide-react";
+import { Plus, Settings, UserRoundPen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -94,7 +94,7 @@ export default async function page({ searchParams }: paramsProps) {
                 href={"/users/channels/update/2"}
                 className={cn(buttonVariants({ variant: "default" }))}
               >
-                <Settings className="mr-2 h-4 w-4" /> Edit Channel
+                <UserRoundPen className="mr-2 h-4 w-4" /> Edit Channel
               </Link>
             </div>
           </div>
