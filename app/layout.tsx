@@ -21,7 +21,24 @@ export default function RootLayout({
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.embeddedChatbotConfig = {
+                  chatbotId: "wCNrHkqozTzmJ4SOQ8yCx",
+                  domain: "www.chatbase.co"
+                };
+              `,
+            }}
+          />
+          <script
+            src="https://www.chatbase.co/embed.min.js"
+            data-chatbot-id="wCNrHkqozTzmJ4SOQ8yCx"
+            data-domain="www.chatbase.co"
+            defer
+          />
+        </head>
         <body>
           <NextTopLoader color="#1e40af" />
           <Toaster position="top-center" />

@@ -21,19 +21,15 @@ export const getChannelByUserId = async () => {
   const user = await currentUser();
 
   try {
-    const channels = await db.channels.findFirst({
-      where: {
-        user_id: user?.id,
-      },
-      include: {
-        events: true,
-        users: true,
-        follows: true,
-        _count: true,
-      },
-    });
+    const req = await fetch(
+      process.env.API_BASE_URL + "/channels/user/" + user?.id
+    );
 
-    return channels;
+    if (req.ok) {
+      const res = await req.json();
+
+      return res;
+    }
   } catch (err) {
     console.log(err);
     return null;

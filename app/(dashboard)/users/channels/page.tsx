@@ -1,3 +1,4 @@
+"use client";
 import { getChannelByUserId } from "@/actions/channelAction";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,60 +14,37 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { channels, follows, users, users_role } from "@prisma/client";
+import { events, follows, users } from "@prisma/client";
 import { Plus, UserRoundPen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
   { title: "Channel", link: "/users/channels" },
 ];
 
-type Channel = {
+type ChannelUser = {
   id: string;
-  user_id: string | null;
+  image: string;
   name: string | null;
   description: string | null;
-  image: string | null;
-  nik: string | null;
-  no_rek: string | null;
-  created_at: Date;
-  updated_at: Date;
-  users: {
-    id: string;
-    name: string | null;
-    email: string | null;
-    image: string | null;
-    role: users_role | null;
-    created_at: Date;
-    updated_at: Date;
-  } | null;
-  follows:
-    | {
-        id: string;
-        user_id: string | null;
-        channel_id: string | null;
-        created_at: Date;
-        updated_at: Date;
-      }[]
-    | null;
-  events: {
-    id: string;
-    name: string | null;
-    description: string | null;
-    created_at: Date;
-    updated_at: Date;
-  }[];
-  _count: {
-    follows: number;
-    events: number;
-  } | null;
+  users: users | null;
+  events: events[] | null;
+  follows: follows[] | null;
 };
 
-export default async function page() {
-  const channels: Channel | null = await getChannelByUserId();
-  console.log(channels);
+export default function Page() {
+  const [channels, setChannels] = useState<ChannelUser | null>();
+  const getData = async () => {
+    const req = await getChannelByUserId();
+    setChannels(req);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
@@ -97,11 +75,11 @@ export default async function page() {
                       </p>
                       <p className="text-muted-foreground text-sm">|</p>
                       <p className="text-muted-foreground text-sm">
-                        {channels._count?.follows} Followers
+                        {channels.follows?.length ?? 0} Followers
                       </p>
                     </div>
                     <p className="text-muted-foreground text-sm">
-                      {channels._count?.events} Event
+                      {channels.events?.length ?? 0} Event
                     </p>
                   </div>
                 </div>
@@ -134,7 +112,7 @@ export default async function page() {
               </TabsList>
               <TabsContent value="events" className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  {channels.events.map((event, index: number) => (
+                  {channels.events?.map((event, index: number) => (
                     <Card
                       key={index}
                       className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
