@@ -38,11 +38,15 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import EditableEditor from "@/components/EditableEditor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
 import { categories, tags } from "@prisma/client";
 import { createEvents } from "@/actions/eventAction";
+import { Checkbox } from "@/components/ui/checkbox";
+import dynamic from "next/dynamic";
+const EditableEditor = dynamic(() => import("@/components/EditableEditor"), {
+  ssr: false,
+});
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -74,11 +78,24 @@ const formSchema = z.object({
   }),
   price: z.coerce.number().min(0),
   event_date: z.date(),
+  is_paid: z.coerce.boolean(),
 });
 
 export default function Page() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      category_id: "",
+      description: "",
+      event_date: new Date(),
+      image: "",
+      link_group: "",
+      location: "",
+      name: "",
+      price: 0,
+      tag_id: "",
+      is_paid: false,
+    },
   });
 
   const [tags, setTags] = useState<tags[]>([]);
@@ -89,15 +106,18 @@ export default function Page() {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (values.is_paid == false) {
+      values.price = 0;
+    }
     const create = await createEvents(values);
 
     if (create) {
       toast.success("Success!");
 
       router.push("/users/channels");
+    } else {
+      toast.error("Failed!");
     }
-
-    toast.error("Failed!");
   };
 
   useEffect(() => {
@@ -176,6 +196,43 @@ export default function Page() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deskripsi Event</FormLabel>
+                  <FormControl>
+                    <EditableEditor
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="is_paid"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative flex items-center gap-2 mt-5">
+                      <Checkbox
+                        disabled={isLoading}
+                        onCheckedChange={field.onChange}
+                        checked={field.value}
+                      />
+                      <span className="text-muted-foreground text-xs">
+                        Apakah event berbayar?
+                      </span>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -184,7 +241,13 @@ export default function Page() {
                   <FormItem>
                     <FormLabel>Harga Event</FormLabel>
                     <FormControl>
-                      <Input disabled={isLoading} type="number" {...field} />
+                      <Input
+                        disabled={
+                          isLoading || form.getValues("is_paid") == false
+                        }
+                        type="number"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -315,22 +378,6 @@ export default function Page() {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deskripsi Event</FormLabel>
-                  <FormControl>
-                    <EditableEditor
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Separator className="mt-5" />
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Submit"}

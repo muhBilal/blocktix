@@ -1,5 +1,6 @@
 "use server";
 
+import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
@@ -58,6 +59,22 @@ export const searchEventByTitle = async (title: string) => {
     return [];
   }
 };
+
+const getSpesificChannelByUserId = async (user_id: string) => {
+  try {
+    const channel = await db.channels.findFirst({
+      where: {
+        user_id,
+      },
+    });
+
+    return channel;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
 type createValues = {
   name: string;
   description: string;
@@ -68,29 +85,40 @@ type createValues = {
   link_group: string;
   price: number;
   event_date: Date;
-  user_id?: string;
+  channel_id?: string;
+  is_paid: boolean | null;
 };
 
 export const createEvents = async (values: createValues) => {
   const user = await currentUser();
-  const data = values;
-  data.user_id = user?.id;
-  try {
-    const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
 
-    if (req.ok) {
-      return true;
+  if (user && user.privateMetadata.role === "USER") {
+    const getChannelId = await getSpesificChannelByUserId(user.id);
+    if (getChannelId) {
+      values.channel_id = getChannelId.id;
+      try {
+        const req = await fetch(
+          process.env.NEXT_PUBLIC_API_BASE_URL + "/events",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (req.ok) {
+          return true;
+        }
+
+        return false;
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
     }
-
-    return false;
-  } catch (err) {
-    console.log(err);
-    return null;
   }
+
+  return null;
 };

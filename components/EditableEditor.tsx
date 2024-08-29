@@ -1,12 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useTheme } from "next-themes";
 
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-
-import { useRouter } from "next/navigation";
 
 type Props = {
   onChange: (value?: string) => void;
@@ -31,7 +29,7 @@ const EditableEditor = ({ onChange, value }: Props) => {
   };
 
   return (
-    <div className="-mx-[54px]">
+    <div className="-mx-[40px]">
       <BlockNoteView
         editor={editor}
         theme={blockNoteTheme}

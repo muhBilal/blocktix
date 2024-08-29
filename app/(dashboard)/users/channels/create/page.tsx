@@ -22,6 +22,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import FileUpload from "@/components/FileUpload";
 import { createChannels } from "@/actions/channelAction";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import dynamic from "next/dynamic";
+const EditableEditor = dynamic(() => import("@/components/EditableEditor"), {
+  ssr: false,
+});
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -38,6 +43,12 @@ const formSchema = z.object({
   }),
   image: z.string().min(2, {
     message: "Image must be exists.",
+  }),
+  nik: z.string().min(2, {
+    message: "NIK must be exists.",
+  }),
+  no_rek: z.string().min(2, {
+    message: "No. Rek must be exists.",
   }),
 });
 
@@ -56,13 +67,13 @@ export default function Page() {
     if (create) {
       toast.success("Success!");
       router.push("/users/channels");
+    } else {
+      toast.error("Failed!");
     }
-
-    toast.error("Failed!");
   };
 
   return (
-    <>
+    <ScrollArea className="h-full">
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
         <Breadcrumbs items={breadcrumbItems} />
 
@@ -113,18 +124,50 @@ export default function Page() {
                 <FormItem>
                   <FormLabel>Deskripsi Channel</FormLabel>
                   <FormControl>
-                    <Input disabled={isLoading} {...field} />
+                    <EditableEditor
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="nik"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIK (Nomor Induk Kewarganegaran)</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="no_rek"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>No. Rekening</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Submit"}
             </Button>
           </form>
         </Form>
       </div>
-    </>
+    </ScrollArea>
   );
 }
