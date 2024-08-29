@@ -17,9 +17,18 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { getEventById } from "@/actions/eventAction";
+import { channels, events } from "@prisma/client";
+
+type Event = {
+  channels: channels;
+  name: string;
+  description: string;
+  similar_event: events[];
+  event_date: string;
+};
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event>();
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
     setEvents(data);
@@ -79,12 +88,12 @@ export default function Page({ params }: { params: { id: string } }) {
             </TabsList>
             <TabsContent value="events" className="space-y-4">
               <h2 className="font-semibold text-3xl">Nama Acara</h2>
-              <p>{events.name}</p>
+              <p>{events?.name}</p>
               <Button>Ikuti Event</Button>
             </TabsContent>
             <TabsContent value="description" className="space-y-4">
               <h2 className="font-semibold text-3xl">Detail Acara</h2>
-              <p>{events.description}</p>
+              <p>{events?.description}</p>
             </TabsContent>
             <TabsContent value="contact" className="space-y-4">
               <div className="flex flex-col">
@@ -159,7 +168,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
                 <div className="bg-white p-4 sm:p-6">
                   <p className="block test-xs text-gray-500">
-                    {formatDateIndonesian(event.event_date)}
+                    {formatDateIndonesian(event?.event_date)}
                   </p>
 
                   <Link href={`/browse/${event.id}`}>
