@@ -31,6 +31,12 @@ export const getChannelByUserId = async () => {
       where: {
         user_id: user?.id,
       },
+      include: {
+        events: true,
+        users: true,
+        follows: true,
+        _count: true,
+      },
     });
 
     return channels;
