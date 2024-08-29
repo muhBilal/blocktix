@@ -1,8 +1,9 @@
+"use client";
 import Wrapper from "@/components/Wrapper";
 import Image from "next/image";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardDescription,
@@ -15,8 +16,28 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { getEventById } from "@/actions/eventAction";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
+  const [events, setEvents] = useState([]);
+  const getEventDetail = async () => {
+    const data = await getEventById(params.id);
+    setEvents(data);
+  };
+
+  useEffect(() => {
+    getEventDetail();
+  }, []);
+
+  const formatDateIndonesian = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
   return (
     <Wrapper>
       <div className="relative mt-32 h-[500px] mb-10">
@@ -39,10 +60,13 @@ export default function Page() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-2">
-              <h3 className="font-bold text-xl">AsWINN Channel</h3>
+              <h3 className="font-bold text-xl">{events?.channels?.name}</h3>
             </div>
           </div>
-          <Button>Ikuti Event</Button>
+          <div>
+            <Button className="mr-2">Diskusi</Button>
+            <Button>Ikuti Event</Button>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-8">
@@ -54,65 +78,13 @@ export default function Page() {
               <TabsTrigger value="contact">Kontak</TabsTrigger>
             </TabsList>
             <TabsContent value="events" className="space-y-4">
-              <h2 className="font-semibold text-3xl">Deskripsi Acara</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
-                facilis aliquam exercitationem qui inventore consectetur
-                quibusdam, vel, voluptatum esse hic suscipit rem quisquam,
-                veniam voluptatibus magnam. Eos minus officiis animi nulla
-                assumenda veritatis quo unde deserunt. Provident dicta vero
-                ullam similique magni rem eaque, culpa quibusdam dolorem maiores
-                nobis necessitatibus quam consequatur velit possimus odit nemo
-                quae veritatis fugit ad laborum recusandae tenetur a. Aspernatur
-                vitae quod quae, excepturi est porro praesentium explicabo
-                voluptates aperiam eaque dolorum, corrupti aliquam, vero fuga
-                cum! Minima aspernatur alias obcaecati ducimus reprehenderit
-                porro repellendus accusantium sunt amet provident fugit fugiat
-                cumque officiis eveniet quae in tempora distinctio harum officia
-                ratione eum, iste maxime, nam qui. Sit magnam voluptas molestias
-                in natus fugit reprehenderit ratione voluptatem reiciendis
-                placeat quas nesciunt itaque assumenda fugiat eum perspiciatis,
-                fuga non recusandae? Fugiat eos laborum unde labore debitis aut
-                laudantium velit aliquam. Consequuntur perspiciatis inventore
-                aspernatur iste libero quod earum veniam temporibus suscipit
-                possimus adipisci sapiente tempora quaerat exercitationem ipsa,
-                ut voluptatem ducimus neque cumque dolorem. Rem corrupti soluta
-                odio iusto ad accusantium fugiat optio at veritatis nulla
-                laudantium, accusamus eos! Veritatis fugiat eius, adipisci,
-                error quibusdam eaque impedit architecto ad tempora omnis
-                aliquam! Molestias perferendis temporibus earum architecto!
-              </p>
+              <h2 className="font-semibold text-3xl">Nama Acara</h2>
+              <p>{events.name}</p>
               <Button>Ikuti Event</Button>
             </TabsContent>
             <TabsContent value="description" className="space-y-4">
               <h2 className="font-semibold text-3xl">Detail Acara</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
-                facilis aliquam exercitationem qui inventore consectetur
-                quibusdam, vel, voluptatum esse hic suscipit rem quisquam,
-                veniam voluptatibus magnam. Eos minus officiis animi nulla
-                assumenda veritatis quo unde deserunt. Provident dicta vero
-                ullam similique magni rem eaque, culpa quibusdam dolorem maiores
-                nobis necessitatibus quam consequatur velit possimus odit nemo
-                quae veritatis fugit ad laborum recusandae tenetur a. Aspernatur
-                vitae quod quae, excepturi est porro praesentium explicabo
-                voluptates aperiam eaque dolorum, corrupti aliquam, vero fuga
-                cum! Minima aspernatur alias obcaecati ducimus reprehenderit
-                porro repellendus accusantium sunt amet provident fugit fugiat
-                cumque officiis eveniet quae in tempora distinctio harum officia
-                ratione eum, iste maxime, nam qui. Sit magnam voluptas molestias
-                in natus fugit reprehenderit ratione voluptatem reiciendis
-                placeat quas nesciunt itaque assumenda fugiat eum perspiciatis,
-                fuga non recusandae? Fugiat eos laborum unde labore debitis aut
-                laudantium velit aliquam. Consequuntur perspiciatis inventore
-                aspernatur iste libero quod earum veniam temporibus suscipit
-                possimus adipisci sapiente tempora quaerat exercitationem ipsa,
-                ut voluptatem ducimus neque cumque dolorem. Rem corrupti soluta
-                odio iusto ad accusantium fugiat optio at veritatis nulla
-                laudantium, accusamus eos! Veritatis fugiat eius, adipisci,
-                error quibusdam eaque impedit architecto ad tempora omnis
-                aliquam! Molestias perferendis temporibus earum architecto!
-              </p>
+              <p>{events.description}</p>
             </TabsContent>
             <TabsContent value="contact" className="space-y-4">
               <div className="flex flex-col">
@@ -170,60 +142,34 @@ export default function Page() {
         <div className="col-span-12 lg:col-span-4">
           <h2 className="font-semibold text-3xl mt-14 mb-5">Acara Serupa</h2>
           <div className="grid grid-cols-2 lg:flex lg:flex-col gap-10">
-            <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
-              <Link href="/browse">
-                <Image
-                  src={"/event_lain.png"}
-                  alt="gambar event lain"
-                  width={224}
-                  height={224}
-                  className="w-full object-cover"
-                />
-              </Link>
-
-              <div className="bg-white p-4 sm:p-6">
-                <time
-                  dateTime="2022-10-10"
-                  className="block text-xs text-gray-500"
-                >
-                  {" "}
-                  10th Oct 2022{" "}
-                </time>
-
-                <Link href="/browse">
-                  <h3 className="mt-0.5 text-lg text-gray-900">
-                    How to position your furniture for positivity
-                  </h3>
+            {events?.similar_event?.map((event) => (
+              <article
+                key={event.id}
+                className="overflow-hidden rounded-lg shadow transition hover:shadow-lg"
+              >
+                <Link href={`/browse/${event.id}`}>
+                  <Image
+                    src={"/event_lain.png"}
+                    alt="gambar event lain"
+                    width={224}
+                    height={224}
+                    className="w-full object-cover"
+                  />
                 </Link>
-              </div>
-            </article>
-            <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
-              <Link href="/browse">
-                <Image
-                  src={"/event_lain.png"}
-                  alt="gambar event lain"
-                  width={224}
-                  height={224}
-                  className="w-full object-cover"
-                />
-              </Link>
 
-              <div className="bg-white p-4 sm:p-6">
-                <time
-                  dateTime="2022-10-10"
-                  className="block text-xs text-gray-500"
-                >
-                  {" "}
-                  10th Oct 2022{" "}
-                </time>
+                <div className="bg-white p-4 sm:p-6">
+                  <p className="block test-xs text-gray-500">
+                    {formatDateIndonesian(event.event_date)}
+                  </p>
 
-                <Link href="/browse">
-                  <h3 className="mt-0.5 text-lg text-gray-900">
-                    How to position your furniture for positivity
-                  </h3>
-                </Link>
-              </div>
-            </article>
+                  <Link href={`/browse/${event.id}`}>
+                    <h3 className="mt-0.5 text-lg text-gray-900">
+                      {event.name}
+                    </h3>
+                  </Link>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </div>

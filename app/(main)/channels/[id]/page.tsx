@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Wrapper from "@/components/Wrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Link from "next/link";
@@ -14,8 +16,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getChannelById } from "@/actions/channelAction";
+import { isArray } from "util";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
+  const [channels, setChannels] = useState([]);
+  const getChannelDetail = async () => {
+    const data = await getChannelById(params.id);
+    setChannels(data);
+  };
+
+  useEffect(() => {
+    getChannelDetail();
+  }, []);
   return (
     <Wrapper>
       <div className="relative h-[300px] mt-28">
@@ -38,13 +51,19 @@ export default function Page() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-2">
-              <h3 className="font-bold text-2xl">Nama Channel</h3>
+              <h3 className="font-bold text-2xl">{channels.name}</h3>
               <div className="flex gap-3">
-                <p className="text-muted-foreground text-sm">Saya Akun</p>
+                <p className="text-muted-foreground text-sm">
+                  {channels.users?.name}
+                </p>
                 <p className="text-muted-foreground text-sm">|</p>
-                <p className="text-muted-foreground text-sm">2000 Followers</p>
+                <p className="text-muted-foreground text-sm">
+                  {channels._count?.follows} Followers
+                </p>
               </div>
-              <p className="text-muted-foreground text-sm">40 Event</p>
+              <p className="text-muted-foreground text-sm">
+                {channels._count?.events} Event
+              </p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -60,36 +79,39 @@ export default function Page() {
         </TabsList>
         <TabsContent value="events" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <Card className="group hover:-translate-y-3 hover:border-primary transition-all duration-300">
-              <Image
-                src={"/preview.png"}
-                alt="image"
-                width={600}
-                height={600}
-                loading="lazy"
-                className="object-contain rounded-t-lg"
-              />
-              <CardHeader>
-                <CardTitle>Bersih itu sehat!!</CardTitle>
-                <CardDescription className="max-w-lg">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Doloremque, expedita quo! Consectetur sunt placeat vero
-                  laudantium sapiente. Id, excepturi magnam....
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="ms-auto">
-                  <Link href={"#"}>
-                    <Button
-                      variant={"secondary"}
-                      className="hover:text-primary transition-all duration-300"
-                    >
-                      Lihat detail
-                    </Button>
-                  </Link>
-                </div>
-              </CardFooter>
-            </Card>
+            {channels.events?.map((event) => (
+              <Card
+                className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                key={event.id}
+              >
+                <Image
+                  src={"/preview.png"}
+                  alt="image"
+                  width={600}
+                  height={600}
+                  loading="lazy"
+                  className="object-contain rounded-t-lg"
+                />
+                <CardHeader>
+                  <CardTitle>{event.name}</CardTitle>
+                  <CardDescription className="max-w-lg">
+                    {event.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                  <div className="ms-auto">
+                    <Link href={`/browse/${event.id}`}>
+                      <Button
+                        variant={"secondary"}
+                        className="hover:text-primary transition-all duration-300"
+                      >
+                        Lihat detail
+                      </Button>
+                    </Link>
+                  </div>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </TabsContent>
         <TabsContent value="description" className="space-y-4">
@@ -118,14 +140,6 @@ export default function Page() {
           Molestias perferendis temporibus earum architecto!
         </TabsContent>
       </Tabs>
-      {/* <div className="border-2 border-dotted rounded-lg mt-10 h-[200px] flex justify-center items-center">
-          <Link
-            href={"/users/channels/create"}
-            className={cn(buttonVariants({ variant: "default" }))}
-          >
-            <Plus className="mr-2 h-4 w-4" /> Buat Channel
-          </Link>
-        </div> */}
     </Wrapper>
   );
 }

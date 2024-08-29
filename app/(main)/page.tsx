@@ -3,6 +3,35 @@ import Wrapper from "@/components/Wrapper";
 import Image from "next/image";
 
 export default function Home() {
+  const cards = [
+    {
+      id: 1,
+      jenisAcara: "Seminar",
+      deskripsi:
+        "Pertemuan edukatif berbagi pengetahuan mengenai topik tertentu",
+    },
+    {
+      id: 2,
+      jenisAcara: "Lomba",
+      deskripsi:
+        "Pertandingan yang diadakan untuk menemukan pemenang dalam suatu bidang",
+    },
+    {
+      id: 3,
+      jenisAcara: "Workshop",
+      deskripsi: "Kegiatan pelatihan",
+    },
+    {
+      id: 4,
+      jenisAcara: "Bootcamp",
+      deskripsi: "Pelatihan intensif yang dilakukan dalam waktu singkat",
+    },
+    {
+      id: 5,
+      jenisAcara: "Beasiswa",
+      deskripsi: "Bantuan keuangan yang diberikan kepada seseorang",
+    },
+  ];
   return (
     <Wrapper>
       <main className="flex min-h-screen flex-col items-center justify-between p-24 pt-40">
@@ -25,60 +54,34 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
-          <article className="rounded-xl border-2 border-gray-100 bg-white">
-            <div className="flex items-start gap-4 p-4">
-              <a href="#" className="block shrink-0">
-                <Image
-                  alt="jenis-event"
-                  src={"/jenis_event.png"}
-                  width={128}
-                  height={128}
-                  className="rounded-lg object-cover"
-                />
-              </a>
+          {cards.map((card) => (
+            <article
+              className="rounded-xl border-2 border-gray-100 bg-white"
+              key={card.id}
+            >
+              <div className="flex items-start gap-4 p-4">
+                <a href="#" className="block shrink-0">
+                  <Image
+                    alt="jenis-event"
+                    src={"/jenis_event.png"}
+                    width={128}
+                    height={128}
+                    className="rounded-lg object-cover"
+                  />
+                </a>
 
-              <div>
-                <h3 className="font-medium sm:text-lg">
-                  <a href="#" className="hover:underline">
-                    {" "}
-                    Seminar{" "}
-                  </a>
-                </h3>
+                <div>
+                  <h3 className="font-medium sm:text-lg">
+                    <a href="#" className="hover:underline">
+                      {card.jenisAcara}
+                    </a>
+                  </h3>
 
-                <p className=" text-sm text-gray-700">
-                  Pertemuan edukatif berbagi pengetahuan mengenai topik
-                  tertentu.
-                </p>
+                  <p className=" text-sm text-gray-700">{card.deskripsi}</p>
+                </div>
               </div>
-            </div>
-          </article>
-          <article className="rounded-xl border-2 border-gray-100 bg-white">
-            <div className="flex items-start gap-4 p-4">
-              <a href="#" className="block shrink-0">
-                <Image
-                  alt="jenis-event"
-                  src={"/jenis_event.png"}
-                  width={128}
-                  height={128}
-                  className="rounded-lg object-cover"
-                />
-              </a>
-
-              <div>
-                <h3 className="font-medium sm:text-lg">
-                  <a href="#" className="hover:underline">
-                    {" "}
-                    Seminar{" "}
-                  </a>
-                </h3>
-
-                <p className=" text-sm text-gray-700">
-                  Pertemuan edukatif berbagi pengetahuan mengenai topik
-                  tertentu.
-                </p>
-              </div>
-            </div>
-          </article>
+            </article>
+          ))}
         </div>
       </main>
     </Wrapper>

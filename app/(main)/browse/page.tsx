@@ -1,11 +1,50 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
-import { BookmarkCheck, Clock, Files, TagIcon } from "lucide-react";
+import { BookmarkCheck, Clock, TagIcon, GanttChartSquare } from "lucide-react";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { getAllData, searchEventByTitle } from "@/actions/eventAction";
 
 import React from "react";
+import Link from "next/link";
 
 export default function Page() {
+  const [events, setEvents] = useState([]);
+  const [results, setResults] = useState([]);
+  const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  const getAllEvents = async () => {
+    const eventAction = await getAllData();
+    setEvents(eventAction);
+  };
+
+  useEffect(() => {
+    getAllEvents();
+  }, []);
+
+  const handleSearch = async () => {
+    setIsSearching(true);
+    if (query.trim()) {
+      const data = await searchEventByTitle(query);
+      setResults(data);
+    } else {
+      setResults(events);
+      setIsSearching(false);
+    }
+  };
+
+  const formatDateIndonesian = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
     <Wrapper>
       <main className="flex min-h-screen flex-col items-center justify-between p-24 pt-40">
@@ -34,9 +73,13 @@ export default function Page() {
             <input
               type="text"
               placeholder="Search..."
-              className="px-4 py-4 w-96 focus:outline-none  "
+              className="px-4 py-4 w-96 focus:outline-none "
+              onChange={(e) => setQuery(e.target.value)}
             />
-            <Button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
+            <Button
+              onClick={() => handleSearch(query)}
+              className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2"
+            >
               Search
             </Button>
           </div>
@@ -56,9 +99,7 @@ export default function Page() {
                 <hr className="mt-2" />
               </div>
               <div className="mb-5">
-                <h5 className="font-semibold text-xl mb-2 ">
-                  Tingkat Pendidikan
-                </h5>
+                <h5 className="font-semibold text-xl mb-2 ">Kategori</h5>
                 <div>
                   <ul>
                     <li>
@@ -68,7 +109,7 @@ export default function Page() {
                         name="group1"
                         value={1}
                       />
-                      <span>SD</span>
+                      <span>Technology</span>
                     </li>
                     <li>
                       <input
@@ -77,7 +118,7 @@ export default function Page() {
                         name="group1"
                         value={2}
                       />
-                      <span>SMP</span>
+                      <span>Gaming</span>
                     </li>
                     <li>
                       <input
@@ -86,49 +127,13 @@ export default function Page() {
                         name="group1"
                         value={3}
                       />
-                      <span>SMA</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={4}
-                      />
-                      <span>D3</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={5}
-                      />
-                      <span>S1</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={6}
-                      />
-                      <span>S2</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={7}
-                      />
-                      <span>S3</span>
+                      <span>Health & Wellness</span>
                     </li>
                   </ul>
                 </div>
               </div>
               <div className="mb-5">
-                <h5 className="font-semibold text-xl mb-2 ">Tipe Event</h5>
+                <h5 className="font-semibold text-xl mb-2 ">Tag</h5>
                 <div>
                   <ul>
                     <li>
@@ -138,7 +143,7 @@ export default function Page() {
                         name="group2"
                         value={1}
                       />
-                      <span>Seminar</span>
+                      <span>Innovation</span>
                     </li>
                     <li>
                       <input
@@ -147,7 +152,7 @@ export default function Page() {
                         name="group2"
                         value={2}
                       />
-                      <span>Lomba</span>
+                      <span>Esport</span>
                     </li>
                     <li>
                       <input
@@ -156,197 +161,157 @@ export default function Page() {
                         name="group2"
                         value={3}
                       />
-                      <span>Workshop</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={4}
-                      />
-                      <span>Beasiswa</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={5}
-                      />
-                      <span>Bootcamp</span>
+                      <span>Nutrition</span>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
             <div className="w-full lg:w-3/4">
-              <div className="grid grid-cols-2 gap-10 mb-5 lg:grid-cols-3  lg:gap-20 mt-10 ml-6">
-                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
-                  <div className="flex flex-col justify-center items-center h-[30%]">
-                    <div className="flex">
-                      {/* <!-- Logo (1/4) --> */}
-                      <div className="w-1/4 flex items-center justify-center">
-                        <Image
-                          src={"/logo.png"}
-                          alt="logo"
-                          width={48}
-                          height={48}
-                        />
+              <div className="grid grid-cols-2 gap-10 mb-5 lg:grid-cols-3  lg:gap-24 mt-10 ml-6">
+                {results.length > 0 ? (
+                  results.map((result) => (
+                    <div
+                      className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
+                      key={result.id}
+                    >
+                      {/* Bagian Atas 30% */}
+                      <div className="flex flex-col justify-center items-center h-[30%]">
+                        <div className="flex">
+                          {/* Logo (1/4) */}
+                          <div className="w-1/4 flex items-center justify-center">
+                            <Image
+                              src={"/" + result.image}
+                              alt="logo"
+                              width={48}
+                              height={48}
+                            />
+                          </div>
+                          {/* Nama dan Lokasi Perusahaan (3/4) */}
+                          <div className="w-3/4 pl-2">
+                            <Link href={`/browse/${result.id}`}>
+                              <h3 className="text-lg font-semibold">
+                                {result.name}
+                              </h3>
+                            </Link>
+                            <p className="text-sm text-gray-600">
+                              {result.location}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
-                      <div className="w-3/4 pl-2">
-                        <h3 className="text-lg font-semibold">
-                          PT. Helvi Studio
-                        </h3>
-                        <p className="text-sm text-gray-600">Kota Surabaya</p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* <!-- Bagian Bawah 70% --> */}
-                  <div className="h-[70%] flex flex-col justify-center items-center">
-                    {/* <!-- Judul Posisi dan Lokasi --> */}
-                    <div className="flex flex-col items-start mt-10">
-                      <h5 className="text-base font-bold mb-2">
-                        Web Developer - Surabaya
-                      </h5>
-                      <div className="flex flex-wrap mb-1 ">
-                        <div className="flex mr-4 gap-1">
-                          <TagIcon />
-                          <p className="text-sm">Seminar</p>
+                      {/* Bagian Bawah 70% */}
+                      <div className="h-[70%] flex flex-col justify-center items-center">
+                        {/* Judul Posisi dan Lokasi */}
+                        <div className="flex flex-col items-start mt-10">
+                          <h5 className="text-muted-foreground text-sm mb-4">
+                            {result.description}
+                          </h5>
+                          <div className="flex flex-wrap mb-1 ml-3">
+                            <div className="flex mr-4 gap-1">
+                              <TagIcon />
+                              <p className="text-sm">{result?.tags?.name}</p>
+                            </div>
+                            <div className="flex gap-1">
+                              <GanttChartSquare />
+                              <p className="text-sm">
+                                {result?.categories?.name}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-1 ml-3">
+                            <Clock />
+                            <p className="text-sm">
+                              {formatDateIndonesian(result.event_date)}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex gap-1">
-                          <Files />
-                          <p className="text-sm">Page</p>
+                        {/* Tombol Claim dan Icon Simpan */}
+                        <div className="flex justify-between items-center mt-auto">
+                          <Button className="text-white px-10 py-2 rounded-lg mb-3">
+                            Join Event
+                          </Button>
+                          <Button className="text-white hover:text-white-700 ml-3 mb-3">
+                            <BookmarkCheck />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex gap-1">
-                        <Clock />
-                        <p className="text-sm">2h ago</p>
-                      </div>
                     </div>
-                    {/* <!-- Tombol Claim dan Icon Simpan --> */}
-                    <div className="flex justify-between items-center mt-auto">
-                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
-                        Claim
-                      </Button>
-                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
-                        <BookmarkCheck />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
-                  <div className="flex flex-col justify-center items-center h-[30%]">
-                    <div className="flex">
-                      {/* <!-- Logo (1/4) --> */}
-                      <div className="w-1/4 flex items-center justify-center">
-                        <Image
-                          src={"/logo.png"}
-                          alt="logo"
-                          width={48}
-                          height={48}
-                        />
+                  ))
+                ) : isSearching ? (
+                  <p>Data tidak ditemukan</p>
+                ) : (
+                  events.map((event) => (
+                    <div
+                      className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
+                      key={event.id}
+                    >
+                      {/* Bagian Atas 30% */}
+                      <div className="flex flex-col justify-center items-center h-[30%]">
+                        <div className="flex">
+                          {/* Logo (1/4) */}
+                          <div className="w-1/4 flex items-center justify-center">
+                            <Image
+                              src={"/" + event.image}
+                              alt="logo"
+                              width={48}
+                              height={48}
+                            />
+                          </div>
+                          {/* Nama dan Lokasi Perusahaan (3/4) */}
+                          <div className="w-3/4 pl-2">
+                            <Link href={`/browse/${event.id}`}>
+                              <h3 className="text-lg font-semibold">
+                                {event.name}
+                              </h3>
+                            </Link>
+                            <p className="text-sm text-gray-600">
+                              {event.location}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
-                      <div className="w-3/4 pl-2">
-                        <h3 className="text-lg font-semibold">
-                          PT. Helvi Studio
-                        </h3>
-                        <p className="text-sm text-gray-600">Kota Surabaya</p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* <!-- Bagian Bawah 70% --> */}
-                  <div className="h-[70%] flex flex-col justify-center items-center">
-                    {/* <!-- Judul Posisi dan Lokasi --> */}
-                    <div className="flex flex-col items-start mt-10">
-                      <h5 className="text-base font-bold mb-2">
-                        Web Developer - Surabaya
-                      </h5>
-                      <div className="flex flex-wrap mb-1 ">
-                        <div className="flex mr-4 gap-1">
-                          <TagIcon />
-                          <p className="text-sm">Seminar</p>
+                      {/* Bagian Bawah 70% */}
+                      <div className="h-[70%] flex flex-col justify-center items-center">
+                        {/* Judul Posisi dan Lokasi */}
+                        <div className="flex flex-col items-start mt-10">
+                          <h5 className="text-muted-foreground text-sm mb-4">
+                            {event.description}
+                          </h5>
+                          <div className="flex flex-wrap mb-1 ml-3">
+                            <div className="flex mr-4 gap-1">
+                              <TagIcon />
+                              <p className="text-sm">{event?.tags?.name}</p>
+                            </div>
+                            <div className="flex gap-1">
+                              <GanttChartSquare />
+                              <p className="text-sm">
+                                {event?.categories?.name}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-1 ml-3">
+                            <Clock />
+                            <p className="text-sm">
+                              {formatDateIndonesian(event.event_date)}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex gap-1">
-                          <Files />
-                          <p className="text-sm">Page</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-1">
-                        <Clock />
-                        <p className="text-sm">2h ago</p>
-                      </div>
-                    </div>
-                    {/* <!-- Tombol Claim dan Icon Simpan --> */}
-                    <div className="flex justify-between items-center mt-auto">
-                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
-                        Claim
-                      </Button>
-                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
-                        <BookmarkCheck />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className=" bg-blue-50 h-72 w-56 rounded-lg border border-slate-200">
-                  <div className="flex flex-col justify-center items-center h-[30%]">
-                    <div className="flex">
-                      {/* <!-- Logo (1/4) --> */}
-                      <div className="w-1/4 flex items-center justify-center">
-                        <Image
-                          src={"/logo.png"}
-                          alt="logo"
-                          width={48}
-                          height={48}
-                        />
-                      </div>
-                      {/* <!-- Nama dan Lokasi Perusahaan (3/4) --> */}
-                      <div className="w-3/4 pl-2">
-                        <h3 className="text-lg font-semibold">
-                          PT. Helvi Studio
-                        </h3>
-                        <p className="text-sm text-gray-600">Kota Surabaya</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* <!-- Bagian Bawah 70% --> */}
-                  <div className="h-[70%] flex flex-col justify-center items-center">
-                    {/* <!-- Judul Posisi dan Lokasi --> */}
-                    <div className="flex flex-col items-start mt-10">
-                      <h5 className="text-base font-bold mb-2">
-                        Web Developer - Surabaya
-                      </h5>
-                      <div className="flex flex-wrap mb-1 ">
-                        <div className="flex mr-4 gap-1">
-                          <TagIcon />
-                          <p className="text-sm">Seminar</p>
-                        </div>
-                        <div className="flex gap-1">
-                          <Files />
-                          <p className="text-sm">Page</p>
+                        {/* Tombol Claim dan Icon Simpan */}
+                        <div className="flex justify-between items-center mt-auto">
+                          <Button className="text-white px-10 py-2 rounded-lg mb-3">
+                            Join Event
+                          </Button>
+                          <Button className="text-white hover:text-white-700 ml-3 mb-3">
+                            <BookmarkCheck />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex gap-1">
-                        <Clock />
-                        <p className="text-sm">2h ago</p>
-                      </div>
                     </div>
-                    {/* <!-- Tombol Claim dan Icon Simpan --> */}
-                    <div className="flex justify-between items-center mt-auto">
-                      <Button className=" text-white px-12 py-2 rounded-lg mb-3">
-                        Claim
-                      </Button>
-                      <Button className="text-white hover:text-white-700 ml-3 mb-3">
-                        <BookmarkCheck />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
