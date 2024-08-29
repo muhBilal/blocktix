@@ -42,10 +42,17 @@ export default function Page() {
 
   const isLoading = form.formState.isSubmitting;
 
-  const createHandler = async (tag: string) => {
+  const createHandler = async (categories: string) => {
     try {
       const req = await fetch(
-        process.env.NEXT_PUBLIC_API_BASE_URL + "/categories"
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/categories",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: categories }),
+        }
       );
       if (req.ok) {
         toast.success("Success!");

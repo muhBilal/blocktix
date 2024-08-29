@@ -44,7 +44,13 @@ export default function Page() {
 
   const createHandler = async (tag: string) => {
     try {
-      const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/tags");
+      const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/tags", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: tag }),
+      });
       if (req.ok) {
         toast.success("Success!");
 

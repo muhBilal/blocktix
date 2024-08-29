@@ -5,6 +5,12 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
   try {
+    // const channels = await db.channels.findMany({
+    //   include: {
+    //     users: true,
+    //   },
+    // });
+    // return channels;
     const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/channels");
 
     if (req.ok) {
@@ -13,6 +19,7 @@ export const getAllData = async () => {
     }
   } catch (err) {
     console.log(err);
+    return null;
   }
 };
 

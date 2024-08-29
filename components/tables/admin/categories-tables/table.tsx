@@ -22,6 +22,12 @@ export const CategoryTable: React.FC<ProductsClientProps> = ({ data }) => {
           title={`Categories (${data.length})`}
           description="Kelola data kategori."
         />
+        <Button
+          className="text-xs md:text-sm"
+          onClick={() => router.push(`/admin/categories/create`)}
+        >
+          <Plus className="mr-2 h-4 w-4" /> Tambah Data
+        </Button>
       </div>
       <Separator />
       <DataTable searchKey="name" columns={columns} data={data} />

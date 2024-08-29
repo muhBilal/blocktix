@@ -16,7 +16,6 @@ const breadcrumbItems = [
 
 export default async function page() {
   const channels: channels[] = await getAllData();
-  console.log(channels);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
