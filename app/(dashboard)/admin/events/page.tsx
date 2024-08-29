@@ -1,3 +1,4 @@
+"use client";
 import { getAllData } from "@/actions/eventAction";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { EventTable } from "@/components/tables/admin/event-tables/table";
@@ -7,14 +8,24 @@ import { cn } from "@/lib/utils";
 import { events } from "@prisma/client";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/admin" },
   { title: "Event", link: "/admin/events" },
 ];
 
-export default async function page() {
-  const events: events[] = await getAllData();
+export default function Page() {
+  const [events, setEvents] = useState([]);
+
+  const getData = async () => {
+    const req = await getAllData();
+    setEvents(req);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
