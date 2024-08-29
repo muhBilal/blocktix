@@ -20,8 +20,14 @@ export const TagTable: React.FC<ProductsClientProps> = ({ data }) => {
       <div className="flex items-start justify-between">
         <Heading
           title={`Tags (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
+          description="Kelola data tag."
         />
+        <Button
+          className="text-xs md:text-sm"
+          onClick={() => router.push(`/admin/tags/create`)}
+        >
+          <Plus className="mr-2 h-4 w-4" /> Tambah Data
+        </Button>
       </div>
       <Separator />
       <DataTable searchKey="name" columns={columns} data={data} />

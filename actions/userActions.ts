@@ -74,11 +74,27 @@ export const checkUser = async () => {
 
 export const getAllData = async () => {
   try {
-    const req = await fetch(process.env.API_BASE_URL + "/users");
+    const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/users");
 
     if (req.ok) {
       const res = await req.json();
-      console.log(res);
+      return res;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getUserDashboardData = async () => {
+  const user = await currentUser();
+  try {
+    const req = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + "/users/" + user?.id
+    );
+
+    if (req.ok) {
+      const res = await req.json();
+      return res;
     }
   } catch (err) {
     console.log(err);

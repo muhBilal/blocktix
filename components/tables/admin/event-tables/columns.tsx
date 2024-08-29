@@ -33,8 +33,12 @@ export const columns: ColumnDef<events>[] = [
     header: "NAME",
   },
   {
-    accessorKey: "role",
-    header: "ROLE",
+    accessorKey: "tags.name",
+    header: "TAG",
+  },
+  {
+    accessorKey: "categories.name",
+    header: "CATEGORY",
   },
   {
     accessorKey: "price",

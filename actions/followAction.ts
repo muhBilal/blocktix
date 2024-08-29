@@ -1,12 +1,17 @@
 "use server";
 
-export const getAllData = async (id: string) => {
+import { currentUser } from "@clerk/nextjs/server";
+
+export const getAllData = async () => {
+  const user = await currentUser();
   try {
-    const req = await fetch(process.env.API_BASE_URL + `/users/${id}/follows`);
+    const req = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + `/users/${user?.id}/follows`
+    );
 
     if (req.ok) {
       const res = await req.json();
-      console.log(res);
+      return res;
     }
   } catch (err) {
     console.log(err);
@@ -16,7 +21,7 @@ export const getAllData = async (id: string) => {
 export const getAllDataFollowers = async (id: string) => {
   try {
     const req = await fetch(
-      process.env.API_BASE_URL + `/channels/${id}/followers`
+      process.env.NEXT_PUBLIC_API_BASE_URL + `/channels/${id}/followers`
     );
 
     if (req.ok) {

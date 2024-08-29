@@ -24,9 +24,23 @@ import { Clock, FileClock, LayoutGrid, Tag } from "lucide-react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { getUserDashboardData } from "@/actions/userActions";
 
 export default function Page() {
   const { user } = useUser();
+  const [events, setEvents] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+
+  const getDashboardData = async () => {
+    const req = await getUserDashboardData();
+    console.log(req);
+  };
+
+  useEffect(() => {
+    getDashboardData();
+  }, []);
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -36,7 +50,7 @@ export default function Page() {
             <span className="text-primary">{user?.firstName}</span> 👋
           </h2>
           <Link
-            href={"/users/channels/create"}
+            href={"/users/channels"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Buat Channel
@@ -54,68 +68,73 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 gap-5">
-              <Card className="hover:-translate-y-3 hover:border-primary transition-all duration-300">
-                <div className="flex flex-col lg:flex-row gap-4 p-2">
-                  <Image
-                    src={"/preview.png"}
-                    alt="events"
-                    width={500}
-                    height={500}
-                    className="object-contain border border-muted rounded-md"
-                  />
-                  <div className="flex flex-col gap-2">
-                    <CardTitle>Event Kemanusiaan</CardTitle>
-                    <CardDescription>
-                      Diadakan oleh{" "}
-                      <Link href={"#"} className="text-primary">
-                        Budiono Siregar
-                      </Link>
-                    </CardDescription>
-                    <div className="flex gap-4">
-                      <div className="flex gap-2 items-center text-muted-foreground">
-                        <Clock />
-                        <p className="text-xs">17 Agustus 2024</p>
+              {events.map((item, index) => (
+                <Card
+                  key={index}
+                  className="hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <div className="flex flex-col lg:flex-row gap-4 p-2">
+                    <Image
+                      src={"/preview.png"}
+                      alt="events"
+                      width={500}
+                      height={500}
+                      className="object-contain border border-muted rounded-md"
+                    />
+                    <div className="flex flex-col gap-2">
+                      <CardTitle>Event Kemanusiaan</CardTitle>
+                      <CardDescription>
+                        Diadakan oleh{" "}
+                        <Link href={"#"} className="text-primary">
+                          Budiono Siregar
+                        </Link>
+                      </CardDescription>
+                      <div className="flex gap-4">
+                        <div className="flex gap-2 items-center text-muted-foreground">
+                          <Clock />
+                          <p className="text-xs">17 Agustus 2024</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="flex gap-2 items-center text-muted-foreground">
-                        <LayoutGrid />
-                        <p className="text-xs">Lomba</p>
+                      <div className="flex gap-4">
+                        <div className="flex gap-2 items-center text-muted-foreground">
+                          <LayoutGrid />
+                          <p className="text-xs">Lomba</p>
+                        </div>
+                        <div className="flex gap-2 items-center text-muted-foreground">
+                          <Tag />
+                          <p className="text-xs">Rp. 17.000</p>
+                        </div>
                       </div>
-                      <div className="flex gap-2 items-center text-muted-foreground">
-                        <Tag />
-                        <p className="text-xs">Rp. 17.000</p>
+                      <div className="mt-5">
+                        <div className="text-sm text-muted-foreground">
+                          Lorem ipsum dolor sit, amet consectetur adipisicing
+                          elit. Quod nam ea labore natus rerum eum sit culpa!
+                          Nobis quas consequuntur velit quaerat impedit culpa
+                          expedita sit incidunt, ullam tempore ex modi doloribus
+                          saepe magnam quod qui a facilis voluptatibus aliquam
+                          placeat minima optio quis! Facilis, eligendi ad.
+                          Voluptate vitae ab obcaecati minus ea facere
+                          voluptatibus tempore maxime! Quis doloremque
+                          necessitatibus accusantium. Maxime aperiam vel dolor
+                          fugiat ullam velit eligendi deserunt obcaecati officia
+                          quo, molestias et similique deleniti optio officiis
+                          accusamus...
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-5">
-                      <div className="text-sm text-muted-foreground">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Quod nam ea labore natus rerum eum sit culpa!
-                        Nobis quas consequuntur velit quaerat impedit culpa
-                        expedita sit incidunt, ullam tempore ex modi doloribus
-                        saepe magnam quod qui a facilis voluptatibus aliquam
-                        placeat minima optio quis! Facilis, eligendi ad.
-                        Voluptate vitae ab obcaecati minus ea facere
-                        voluptatibus tempore maxime! Quis doloremque
-                        necessitatibus accusantium. Maxime aperiam vel dolor
-                        fugiat ullam velit eligendi deserunt obcaecati officia
-                        quo, molestias et similique deleniti optio officiis
-                        accusamus...
+                      <div className="mt-3 ms-auto">
+                        <Link href={"#"}>
+                          <Button
+                            variant={"secondary"}
+                            className="hover:text-primary transition-all duration-300"
+                          >
+                            Lihat detail
+                          </Button>
+                        </Link>
                       </div>
-                    </div>
-                    <div className="mt-3 ms-auto">
-                      <Link href={"#"}>
-                        <Button
-                          variant={"secondary"}
-                          className="hover:text-primary transition-all duration-300"
-                        >
-                          Lihat detail
-                        </Button>
-                      </Link>
                     </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
@@ -131,44 +150,49 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              <Card className="group hover:-translate-y-3 hover:border-primary transition-all duration-300">
-                <CardHeader>
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <Image
-                      src={"/preview.png"}
-                      alt="image"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                      className="object-contain rounded"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <h3 className="font-bold text-xl">Jonathan Evan</h3>
-                      <p className="text-muted-foreground text-xs">
-                        since 20 Agustus 2024
-                      </p>
+              {channels.map((channel, index) => (
+                <Card
+                  key={index}
+                  className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="grid grid-cols-2 gap-4 mb-5">
+                      <Image
+                        src={"/preview.png"}
+                        alt="image"
+                        width={500}
+                        height={500}
+                        loading="lazy"
+                        className="object-contain rounded"
+                      />
+                      <div className="flex flex-col gap-2">
+                        <h3 className="font-bold text-xl">Jonathan Evan</h3>
+                        <p className="text-muted-foreground text-xs">
+                          since 20 Agustus 2024
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <CardTitle>Bersih itu sehat!!</CardTitle>
-                  <CardDescription className="max-w-lg">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Doloremque, expedita quo! Consectetur sunt placeat vero
-                    laudantium sapiente. Id, excepturi magnam....
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <div className="ms-auto">
-                    <Link href={"#"}>
-                      <Button
-                        variant={"secondary"}
-                        className="hover:text-primary transition-all duration-300"
-                      >
-                        Lihat detail
-                      </Button>
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
+                    <CardTitle>Bersih itu sehat!!</CardTitle>
+                    <CardDescription className="max-w-lg">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Doloremque, expedita quo! Consectetur sunt placeat vero
+                      laudantium sapiente. Id, excepturi magnam....
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="ms-auto">
+                      <Link href={"#"}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
@@ -184,36 +208,41 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              <Card className="group hover:-translate-y-3 hover:border-primary transition-all duration-300">
-                <Image
-                  src={"/preview.png"}
-                  alt="image"
-                  width={600}
-                  height={600}
-                  loading="lazy"
-                  className="object-contain rounded-t-lg"
-                />
-                <CardHeader>
-                  <CardTitle>Bersih itu sehat!!</CardTitle>
-                  <CardDescription className="max-w-lg">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Doloremque, expedita quo! Consectetur sunt placeat vero
-                    laudantium sapiente. Id, excepturi magnam....
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <div className="ms-auto">
-                    <Link href={"#"}>
-                      <Button
-                        variant={"secondary"}
-                        className="hover:text-primary transition-all duration-300"
-                      >
-                        Lihat detail
-                      </Button>
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
+              {favorites.map((favorite, index) => (
+                <Card
+                  key={index}
+                  className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <Image
+                    src={"/preview.png"}
+                    alt="image"
+                    width={600}
+                    height={600}
+                    loading="lazy"
+                    className="object-contain rounded-t-lg"
+                  />
+                  <CardHeader>
+                    <CardTitle>Bersih itu sehat!!</CardTitle>
+                    <CardDescription className="max-w-lg">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Doloremque, expedita quo! Consectetur sunt placeat vero
+                      laudantium sapiente. Id, excepturi magnam....
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="ms-auto">
+                      <Link href={"#"}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           </div>
         </div>

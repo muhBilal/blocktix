@@ -20,7 +20,7 @@ export const EventTable: React.FC<ProductsClientProps> = ({ data }) => {
       <div className="flex items-start justify-between">
         <Heading
           title={`Events (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
+          description="Kelola data event."
         />
       </div>
       <Separator />

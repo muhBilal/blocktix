@@ -41,8 +41,6 @@ import { format } from "date-fns";
 import EditableEditor from "@/components/EditableEditor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
-import { categories, tags } from "@prisma/client";
-import { createEvents } from "@/actions/eventAction";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -81,23 +79,34 @@ export default function Page() {
     resolver: zodResolver(formSchema),
   });
 
-  const [tags, setTags] = useState<tags[]>([]);
-  const [categories, setCategories] = useState<categories[]>([]);
+  const [tags, setTags] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const router = useRouter();
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const create = await createEvents(values);
+  const createHandler = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const req = await fetch(
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/channels",
+        {
+          body: JSON.stringify(values),
+        }
+      );
+      if (req.ok) {
+        toast.success("Success!");
 
-    if (create) {
-      toast.success("Success!");
-
-      router.push("/users/channels");
+        router.push("/admin/tags");
+      }
+    } catch (err) {
+      toast.error("Failed!");
+      console.log(err);
     }
+  };
 
-    toast.error("Failed!");
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await createHandler(values);
   };
 
   useEffect(() => {
@@ -105,8 +114,8 @@ export default function Page() {
       try {
         const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tags`);
         const res = await req.json();
-        if (res.length > 0) {
-          setTags(res);
+        if (res.data.length > 0) {
+          setTags(res.data);
         }
       } catch (error) {
         console.error("Error fetching tags:", error);
@@ -119,8 +128,8 @@ export default function Page() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`
         );
         const res = await req.json();
-        if (res.length > 0) {
-          setCategories(res);
+        if (res.data.length > 0) {
+          setCategories(res.data);
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -275,11 +284,10 @@ export default function Page() {
                           <SelectValue placeholder="Pilih Tipe" />
                         </SelectTrigger>
                         <SelectContent>
-                          {tags.map((tag, index) => (
-                            <SelectItem key={index} value={tag.id}>
-                              {tag.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="siswa">Tingkat Siswa</SelectItem>
+                          <SelectItem value="mahasiswa">
+                            Tingkat Mahasiswa
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -302,11 +310,10 @@ export default function Page() {
                           <SelectValue placeholder="Pilih Kategori" />
                         </SelectTrigger>
                         <SelectContent>
-                          {categories.map((item, index) => (
-                            <SelectItem key={index} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="siswa">Tingkat Siswa</SelectItem>
+                          <SelectItem value="mahasiswa">
+                            Tingkat Mahasiswa
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

@@ -20,7 +20,7 @@ export const ChannelTable: React.FC<ProductsClientProps> = ({ data }) => {
       <div className="flex items-start justify-between">
         <Heading
           title={`Channels (${data.length})`}
-          description="Manage users (Client side table functionalities.)"
+          description="Kelola data channel."
         />
       </div>
       <Separator />

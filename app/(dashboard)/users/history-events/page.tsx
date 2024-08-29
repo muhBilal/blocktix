@@ -36,7 +36,7 @@ export default async function Page({ searchParams }: paramsProps) {
   const offset = (page - 1) * pageLimit;
   // const { user } = useUser();
 
-  // const res = await fetch(process.env.API_BASE_URL + "/users/{user?.id}/favorites");
+  // const res = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/users/{user?.id}/favorites");
   const res = await fetch(
     `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
       (country ? `&search=${country}` : "")

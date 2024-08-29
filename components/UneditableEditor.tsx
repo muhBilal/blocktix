@@ -21,15 +21,14 @@ const UneditableEditor = ({ blogId }: Props) => {
   const blockNoteTheme =
     theme === "light" || theme === "dark" ? theme : "light";
 
-  const loadInitialContent = async () => {
-    const content = `<p class="bn-inline-content">Hello, <strong>world!</strong></p><p class="bn-inline-content"></p>`;
-    setTitle("Bank Sampah");
-
-    const blocks = await editor.tryParseHTMLToBlocks(content);
-    editor.replaceBlocks(editor.document, blocks);
-  };
-
   useEffect(() => {
+    const loadInitialContent = async () => {
+      const content = `<p class="bn-inline-content">Hello, <strong>world!</strong></p><p class="bn-inline-content"></p>`;
+      setTitle("Bank Sampah");
+
+      const blocks = await editor.tryParseHTMLToBlocks(content);
+      editor.replaceBlocks(editor.document, blocks);
+    };
     loadInitialContent();
   }, [editor]);
 

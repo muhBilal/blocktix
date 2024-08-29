@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import FileUpload from "@/components/FileUpload";
+import { createChannels } from "@/actions/channelAction";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -49,24 +50,15 @@ export default function Page() {
 
   const isLoading = form.formState.isSubmitting;
 
-  const createHandler = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const req = await fetch(process.env.API_BASE_URL + "/channels", {
-        body: JSON.stringify(values),
-      });
-      if (req.ok) {
-        toast.success("Success!");
-
-        router.push("/admin/tags");
-      }
-    } catch (err) {
-      toast.error("Failed!");
-      console.log(err);
-    }
-  };
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createHandler(values);
+    const create = await createChannels(values);
+
+    if (create) {
+      toast.success("Success!");
+      router.push("/users/channels");
+    }
+
+    toast.error("Failed!");
   };
 
   return (

@@ -21,6 +21,8 @@ model channels {
   name        String?   @db.VarChar(255)
   description String?   @db.VarChar(255)
   image       String?   @db.VarChar(255)
+  nik         String?   @db.VarChar(255)
+  no_rek      String?   @db.VarChar(255)
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   users       users?    @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "channels_ibfk_1")
@@ -52,20 +54,20 @@ model events {
   name        String?        @db.VarChar(255)
   description String?        @db.VarChar(255)
   image       String?        @db.VarChar(255)
-  tf_image    String?        @db.VarChar(255)
   location    String?        @db.VarChar(255)
+  link_group  String         @db.VarChar(255)
   is_paid     Boolean?
   price       Float?
-  status      events_status?
+  status      events_status? @default(PENDING)
   event_date  DateTime?      @db.DateTime(0)
   created_at  DateTime       @default(now())
   updated_at  DateTime       @updatedAt
+  chats       chats[]
   channels    channels?      @relation(fields: [channel_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "events_ibfk_1")
   categories  categories?    @relation(fields: [category_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "events_ibfk_2")
   tags        tags?          @relation(fields: [tag_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "events_ibfk_3")
   favorites   favorites[]
   user_events user_events[]
-  chats       chats[]
 
   @@index([category_id], map: "category_id")
   @@index([channel_id], map: "channel_id")
