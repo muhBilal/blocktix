@@ -15,11 +15,23 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getAllData, searchChannelByName } from "@/actions/channelAction";
 
+type UserType = {
+  id: string;
+  name: string;
+};
+
+type ChannelType = {
+  id: string;
+  name: string;
+  description?: string;
+  users: UserType;
+};
+
 export default function Page() {
-  const [channels, setChannels] = useState([]);
-  const [results, setResults] = useState([]);
-  const [query, setQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [channels, setChannels] = useState<ChannelType[]>([]);
+  const [results, setResults] = useState<ChannelType[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   const getAllChannels = async () => {
     const eventAction = await getAllData();

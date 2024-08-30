@@ -18,8 +18,23 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { getEventById } from "@/actions/eventAction";
 
+type EventType = {
+  id: string;
+  name: string;
+  description: string;
+  event_date: string;
+  channels: {
+    name: string;
+  };
+  similar_event?: Array<{
+    id: string;
+    name: string;
+    event_date: string;
+  }>;
+};
+
 export default function Page({ params }: { params: { id: string } }) {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventType>();
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
     setEvents(data);
@@ -79,12 +94,12 @@ export default function Page({ params }: { params: { id: string } }) {
             </TabsList>
             <TabsContent value="events" className="space-y-4">
               <h2 className="font-semibold text-3xl">Nama Acara</h2>
-              <p>{events.name}</p>
+              <p>{events?.name}</p>
               <Button>Ikuti Event</Button>
             </TabsContent>
             <TabsContent value="description" className="space-y-4">
               <h2 className="font-semibold text-3xl">Detail Acara</h2>
-              <p>{events.description}</p>
+              <p>{events?.description}</p>
             </TabsContent>
             <TabsContent value="contact" className="space-y-4">
               <div className="flex flex-col">
