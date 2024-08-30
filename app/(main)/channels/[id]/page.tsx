@@ -47,6 +47,13 @@ export default function Page({ params }: { params: { id: string } }) {
     _count: { follows: 0, events: 0 },
     events: [],
   });
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const handleFollowChannel = () => {
+    setIsFollowing(!isFollowing); // Ubah status mengikuti atau tidak
+  };
+
   const getChannelDetail = async () => {
     const data = await getChannelById(params.id);
     setChannels(data);
@@ -93,7 +100,12 @@ export default function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button>Ikuti</Button>
+            <Button
+              onClick={handleFollowChannel}
+              className={isFollowing ? "bg-gray-500" : "bg-blue-500"}
+            >
+              {isFollowing ? "Mengikuti" : "Ikuti"}
+            </Button>
           </div>
         </div>
       </div>

@@ -44,6 +44,7 @@ type EventType = {
 
 export default function Page({ params }: { params: { id: string } }) {
   const [events, setEvents] = useState<EventType>();
+  const [isFollowing, setIsFollowing] = useState(false);
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
     setEvents(data);
@@ -52,6 +53,10 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     getEventDetail();
   }, []);
+
+  const handleFollowEvent = () => {
+    setIsFollowing(!isFollowing); // Ubah status mengikuti atau tidak
+  };
 
   const formatDateIndonesian = (dateString: string): string => {
     const date = new Date(dateString);
@@ -62,6 +67,7 @@ export default function Page({ params }: { params: { id: string } }) {
       day: "numeric",
     });
   };
+
   return (
     <Wrapper>
       <div className="relative mt-32 h-[500px] mb-10">
@@ -89,7 +95,12 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
           <div>
             <Button className="mr-2">Diskusi</Button>
-            <Button>Ikuti Event</Button>
+            <Button
+              onClick={handleFollowEvent}
+              className={isFollowing ? "bg-green-500" : "bg-blue-500"}
+            >
+              {isFollowing ? "Event Diikuti" : "Ikuti Event"}
+            </Button>
           </div>
         </div>
       </div>
@@ -104,7 +115,12 @@ export default function Page({ params }: { params: { id: string } }) {
             <TabsContent value="events" className="space-y-4">
               <h2 className="font-semibold text-3xl">Nama Acara</h2>
               <p>{events?.name}</p>
-              <Button>Ikuti Event</Button>
+              <Button
+                onClick={handleFollowEvent}
+                className={isFollowing ? "bg-green-500" : "bg-blue-500"}
+              >
+                {isFollowing ? "Event Diikuti" : "Ikuti Event"}
+              </Button>
             </TabsContent>
             <TabsContent value="description" className="space-y-4">
               <h2 className="font-semibold text-3xl">Detail Acara</h2>
