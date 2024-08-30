@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { KoalaWelcomeEmail } from "../emails/welcome";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;
@@ -39,6 +40,19 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
       to: email,
       subject: "2FA Token",
       html: `<p>Your token is: ${token}</p>`,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendWelcomeEmail = async (email: string, name: string | null) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <onboarding@resend.dev>",
+      to: email,
+      subject: "Welcome To Annect",
+      react: KoalaWelcomeEmail({ userFirstname: name }),
     });
   } catch (err) {
     console.log(err);

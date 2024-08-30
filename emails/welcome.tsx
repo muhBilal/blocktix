@@ -13,7 +13,7 @@ import {
 import * as React from "react";
 
 interface KoalaWelcomeEmailProps {
-  userFirstname: string;
+  userFirstname: string | null;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -31,7 +31,7 @@ export const KoalaWelcomeEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`${baseUrl}/static/koala-logo.png`}
+          src={`${baseUrl}/static/logo.svg`}
           width="170"
           height="50"
           alt="Koala"
@@ -43,7 +43,7 @@ export const KoalaWelcomeEmail = ({
           uncover qualified leads and close deals faster.
         </Text>
         <Section style={btnContainer}>
-          <Button style={button} href="https://getkoala.com">
+          <Button style={button} href="https://annect.vercel.app/users">
             Get started
           </Button>
         </Section>

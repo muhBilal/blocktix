@@ -22,7 +22,7 @@ export const getChannelByUserId = async () => {
 
   try {
     const req = await fetch(
-      process.env.API_BASE_URL + "/channels/user/" + user?.id
+      process.env.NEXT_PUBLIC_API_BASE_URL + "/channels/user/" + user?.id
     );
 
     if (req.ok) {
