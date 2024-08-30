@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { sendWelcomeEmail } from "@/lib/mail";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { users_role } from "@prisma/client";
 import { redirect } from "next/navigation";
@@ -67,6 +68,8 @@ export const checkUser = async () => {
     };
 
     await insertUser(data);
+
+    await sendWelcomeEmail(data.email, data.name);
   }
 
   return user;
