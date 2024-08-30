@@ -1,35 +1,59 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
-import Image from "next/image";
+import { BookCopy, GraduationCap, Speech, Trophy, Users } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const cards = [
+export default function Home({ params }: { params: { id: string } }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    router.push(`/browse?query=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const cards1 = [
     {
       id: 1,
       jenisAcara: "Seminar",
       deskripsi:
         "Pertemuan edukatif berbagi pengetahuan mengenai topik tertentu",
+      icon: <Speech width={60} height={60} />,
+      bg: "#914F1E",
     },
     {
       id: 2,
       jenisAcara: "Lomba",
       deskripsi:
         "Pertandingan yang diadakan untuk menemukan pemenang dalam suatu bidang",
+      icon: <Trophy width={50} height={50} />,
+      bg: "#FABC3F",
     },
     {
       id: 3,
       jenisAcara: "Workshop",
       deskripsi: "Kegiatan pelatihan",
+      icon: <Users width={50} height={50} />,
+      bg: "#C7253E",
     },
+  ];
+
+  const cards2 = [
     {
-      id: 4,
+      id: 1,
       jenisAcara: "Bootcamp",
       deskripsi: "Pelatihan intensif yang dilakukan dalam waktu singkat",
+      icon: <BookCopy width={50} height={50} />,
+      bg: "#7A1CAC",
     },
     {
-      id: 5,
+      id: 2,
       jenisAcara: "Beasiswa",
       deskripsi: "Bantuan keuangan yang diberikan kepada seseorang",
+      icon: <GraduationCap width={60} height={60} />,
+      bg: "#00712D",
     },
   ];
   return (
@@ -42,33 +66,62 @@ export default function Home() {
           <p className="text-lg">
             A platform where you can get your desired job without any hassle{" "}
           </p>
-          <div className="relative flex items-center rounded-lg overflow-hidden mt-5">
+          <div className="relative flex items-center rounded-full overflow-hidden mt-5 shadow-lg">
             <input
               type="text"
               placeholder="Search..."
               className="px-4 py-4 w-96 focus:outline-none rounded-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2">
+            <Button
+              onClick={() => handleSearch()}
+              className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2"
+            >
               Search
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
-          {cards.map((card) => (
+        <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5 mb-5">
+          {cards1.map((card) => (
             <article
               className="rounded-xl border-2 border-gray-100 bg-white"
               key={card.id}
             >
               <div className="flex items-start gap-4 p-4">
-                <a href="#" className="block shrink-0">
-                  <Image
-                    alt="jenis-event"
-                    src={"/jenis_event.png"}
-                    width={128}
-                    height={128}
-                    className="rounded-lg object-cover"
-                  />
-                </a>
+                <div>
+                  {
+                    <Button
+                      className={`bg-[${card.bg}] w-[128px] h-[128px] hover:visible`}
+                    >
+                      {card.icon}
+                    </Button>
+                  }
+                </div>
+
+                <div>
+                  <h3 className="font-medium sm:text-lg">{card.jenisAcara}</h3>
+
+                  <p className=" text-sm text-gray-700">{card.deskripsi}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div className="flex justify-center gap-5">
+          {cards2.map((card) => (
+            <article
+              className="rounded-xl border-2 border-gray-100 bg-white w-[270px] h-[180px] "
+              key={card.id}
+            >
+              <div className="flex items-start gap-4 p-4">
+                <div>
+                  {
+                    <Button className={`bg-[${card.bg}] w-[128px] h-[128px]`}>
+                      {card.icon}
+                    </Button>
+                  }
+                </div>
 
                 <div>
                   <h3 className="font-medium sm:text-lg">

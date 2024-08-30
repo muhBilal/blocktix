@@ -145,3 +145,38 @@ export const createEvents = async (values: createValues) => {
 
   return null;
 };
+
+export type EventType = {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  event_date: string;
+  image: string;
+  categories?: {
+    id: string;
+    name: string;
+  };
+  tags?: {
+    id: string;
+    name: string;
+  };
+};
+
+export const filterEvents = async (
+  category: string | null,
+  tag: string | null,
+  is_paid: boolean | null,
+  search: string | null
+) => {
+  try {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/`);
+
+    if (req.ok) {
+      const res = await req.json();
+      return res;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

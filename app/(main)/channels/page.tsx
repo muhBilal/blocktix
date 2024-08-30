@@ -32,6 +32,7 @@ export default function Page() {
   const [results, setResults] = useState<ChannelType[]>([]);
   const [query, setQuery] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [followedChannels, setFollowedChannels] = useState<string[]>([]);
 
   const getAllChannels = async () => {
     const eventAction = await getAllData();
@@ -50,6 +51,14 @@ export default function Page() {
     } else {
       setResults(channels);
       setIsSearching(false);
+    }
+  };
+
+  const toggleFollow = (channelId: string) => {
+    if (followedChannels.includes(channelId)) {
+      setFollowedChannels(followedChannels.filter((id) => id !== channelId));
+    } else {
+      setFollowedChannels([...followedChannels, channelId]);
     }
   };
 
@@ -122,7 +131,19 @@ export default function Page() {
                           </Button>
                         </Link>
 
-                        <Button>Ikuti</Button>
+                        <Button
+                          onClick={() => toggleFollow(result.id)}
+                          className={
+                            followedChannels.includes(result.id)
+                              ? "bg-gray-400 text-white"
+                              : ""
+                          }
+                        >
+                          {followedChannels.includes(result.id)
+                            ? "Diikuti"
+                            : "Ikuti"}
+                          Ikuti
+                        </Button>
                       </div>
                     </CardFooter>
                   </Card>
@@ -165,7 +186,18 @@ export default function Page() {
                           </Button>
                         </Link>
 
-                        <Button>Ikuti</Button>
+                        <Button
+                          onClick={() => toggleFollow(channel.id)}
+                          className={
+                            followedChannels.includes(channel.id)
+                              ? "bg-gray-400 text-white"
+                              : ""
+                          }
+                        >
+                          {followedChannels.includes(channel.id)
+                            ? "Diikuti"
+                            : "Ikuti"}
+                        </Button>
                       </div>
                     </CardFooter>
                   </Card>

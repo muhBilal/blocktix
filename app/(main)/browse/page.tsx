@@ -8,7 +8,9 @@ import { getAllData, searchEventByTitle } from "@/actions/eventAction";
 
 import React from "react";
 import Link from "next/link";
-import { ZodNullableDef } from "zod";
+import { useSearchParams } from "next/navigation";
+import { get } from "http";
+import { boolean } from "zod";
 
 type EventType = {
   id: string;
@@ -32,15 +34,29 @@ export default function Page() {
   const [results, setResults] = useState<EventType[]>([]);
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
+
+  const searchParams = useSearchParams();
+  const queryParams = searchParams.get("query");
 
   const getAllEvents = async () => {
     const eventAction = await getAllData();
+    console.log(eventAction);
     setEvents(eventAction);
   };
 
   useEffect(() => {
     getAllEvents();
   }, []);
+
+  useEffect(() => {
+    if (queryParams) {
+      handleSearch(queryParams);
+    } else {
+      setResults(events);
+    }
+  }, [queryParams]);
 
   const handleSearch = async (query: string) => {
     setIsSearching(true);
@@ -50,6 +66,22 @@ export default function Page() {
     } else {
       setResults(events);
       setIsSearching(false);
+    }
+  };
+
+  const toggleFavorite = (eventId: string) => {
+    if (favorites.includes(eventId)) {
+      setFavorites(favorites.filter((id) => id !== eventId));
+    } else {
+      setFavorites([...favorites, eventId]);
+    }
+  };
+
+  const toggleJoinEvent = (eventId: string) => {
+    if (joinedEvents.includes(eventId)) {
+      setJoinedEvents(joinedEvents.filter((id) => id !== eventId));
+    } else {
+      setJoinedEvents([...joinedEvents, eventId]);
     }
   };
 
@@ -81,9 +113,7 @@ export default function Page() {
             height={180}
             className="absolute right-0 bottom-0 mr-5"
           />
-          <h1 className="text-4xl font-semibold">
-            2826 Lowongan Tersedia Saat ini
-          </h1>
+          <h1 className="text-4xl font-semibold">Lowongan Tersedia Saat ini</h1>
           <p className="text-lg">
             A platform where you can get your desired job without any hassle{" "}
           </p>
@@ -127,7 +157,7 @@ export default function Page() {
                         name="group1"
                         value={1}
                       />
-                      <span>Technology</span>
+                      <span>Mahasiswa/Siswa</span>
                     </li>
                     <li>
                       <input
@@ -136,16 +166,7 @@ export default function Page() {
                         name="group1"
                         value={2}
                       />
-                      <span>Gaming</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={3}
-                      />
-                      <span>Health & Wellness</span>
+                      <span>Umum</span>
                     </li>
                   </ul>
                 </div>
@@ -161,7 +182,7 @@ export default function Page() {
                         name="group2"
                         value={1}
                       />
-                      <span>Innovation</span>
+                      <span>Beasiswa</span>
                     </li>
                     <li>
                       <input
@@ -170,7 +191,7 @@ export default function Page() {
                         name="group2"
                         value={2}
                       />
-                      <span>Esport</span>
+                      <span>Seminar</span>
                     </li>
                     <li>
                       <input
@@ -179,7 +200,50 @@ export default function Page() {
                         name="group2"
                         value={3}
                       />
-                      <span>Nutrition</span>
+                      <span>Bootcamp</span>
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        className="transform scale-150 mr-2"
+                        name="group2"
+                        value={3}
+                      />
+                      <span>Workshop</span>
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        className="transform scale-150 mr-2"
+                        name="group2"
+                        value={3}
+                      />
+                      <span>Asisten Riset</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mb-5">
+                <h5 className="font-semibold text-xl mb-2 ">Harga Event</h5>
+                <div>
+                  <ul>
+                    <li>
+                      <input
+                        type="radio"
+                        className="transform scale-150 mr-2"
+                        name="group3"
+                        value={1}
+                      />
+                      <span>Gratis</span>
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        className="transform scale-150 mr-2"
+                        name="group3"
+                        value={2}
+                      />
+                      <span>Berbayar</span>
                     </li>
                   </ul>
                 </div>
@@ -188,7 +252,7 @@ export default function Page() {
             <div className="w-full lg:w-3/4">
               <div className="grid grid-cols-2 gap-10 mb-5 lg:grid-cols-3  lg:gap-24 mt-10 ml-6">
                 {results.length > 0 ? (
-                  results.map((result) => (
+                  results?.map((result) => (
                     <div
                       className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
                       key={result.id}
@@ -199,7 +263,7 @@ export default function Page() {
                           {/* Logo (1/4) */}
                           <div className="w-1/4 flex items-center justify-center">
                             <Image
-                              src={"/" + result.image}
+                              src={result.image}
                               alt="logo"
                               width={48}
                               height={48}
@@ -247,8 +311,17 @@ export default function Page() {
                         </div>
                         {/* Tombol Claim dan Icon Simpan */}
                         <div className="flex justify-between items-center mt-auto">
-                          <Button className="text-white px-10 py-2 rounded-lg mb-3">
-                            Join Event
+                          <Button
+                            onClick={() => toggleJoinEvent(result.id)}
+                            className={`text-white px-10 py-2 rounded-lg mb-3 ${
+                              joinedEvents.includes(result.id)
+                                ? "bg-green-500"
+                                : "bg-blue-500"
+                            }`}
+                          >
+                            {joinedEvents.includes(result.id)
+                              ? "Joined"
+                              : "Join Event"}
                           </Button>
                           <Button className="text-white hover:text-white-700 ml-3 mb-3">
                             <BookmarkCheck />
@@ -260,7 +333,7 @@ export default function Page() {
                 ) : isSearching ? (
                   <p>Data tidak ditemukan</p>
                 ) : (
-                  events.map((event) => (
+                  events?.map((event) => (
                     <div
                       className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
                       key={event.id}
@@ -271,7 +344,7 @@ export default function Page() {
                           {/* Logo (1/4) */}
                           <div className="w-1/4 flex items-center justify-center">
                             <Image
-                              src={"/" + event.image}
+                              src={event.image}
                               alt="logo"
                               width={48}
                               height={48}
@@ -319,10 +392,26 @@ export default function Page() {
                         </div>
                         {/* Tombol Claim dan Icon Simpan */}
                         <div className="flex justify-between items-center mt-auto">
-                          <Button className="text-white px-10 py-2 rounded-lg mb-3">
-                            Join Event
+                          <Button
+                            onClick={() => toggleJoinEvent(event.id)}
+                            className={`text-white px-10 py-2 rounded-lg mb-3 ${
+                              joinedEvents.includes(event.id)
+                                ? "bg-green-500"
+                                : "bg-blue-500"
+                            }`}
+                          >
+                            {joinedEvents.includes(event.id)
+                              ? "Joined"
+                              : "Join Event"}
                           </Button>
-                          <Button className="text-white hover:text-white-700 ml-3 mb-3">
+                          <Button
+                            className={`ml-3 mb-3 ${
+                              favorites.includes(event.id)
+                                ? "bg-blue-600 text-white"
+                                : "bg-transparent text-gray-700"
+                            }`}
+                            onClick={() => toggleFavorite(event.id)}
+                          >
                             <BookmarkCheck />
                           </Button>
                         </div>
