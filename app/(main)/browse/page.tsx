@@ -8,10 +8,28 @@ import { getAllData, searchEventByTitle } from "@/actions/eventAction";
 
 import React from "react";
 import Link from "next/link";
+import { ZodNullableDef } from "zod";
+
+type EventType = {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  event_date: string;
+  image: string;
+  categories?: {
+    id: string;
+    name: string;
+  };
+  tags?: {
+    id: string;
+    name: string;
+  };
+};
 
 export default function Page() {
-  const [events, setEvents] = useState([]);
-  const [results, setResults] = useState([]);
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [results, setResults] = useState<EventType[]>([]);
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
@@ -24,7 +42,7 @@ export default function Page() {
     getAllEvents();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = async (query: string) => {
     setIsSearching(true);
     if (query.trim()) {
       const data = await searchEventByTitle(query);

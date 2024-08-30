@@ -27,8 +27,23 @@ type Event = {
   event_date: string;
 };
 
+type EventType = {
+  id: string;
+  name: string;
+  description: string;
+  event_date: string;
+  channels: {
+    name: string;
+  };
+  similar_event?: Array<{
+    id: string;
+    name: string;
+    event_date: string;
+  }>;
+};
+
 export default function Page({ params }: { params: { id: string } }) {
-  const [events, setEvents] = useState<Event>();
+  const [events, setEvents] = useState<EventType>();
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
     setEvents(data);

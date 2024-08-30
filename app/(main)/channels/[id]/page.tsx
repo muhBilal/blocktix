@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Wrapper from "@/components/Wrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Link from "next/link";
-import { Plus, Settings } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
@@ -17,10 +16,37 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getChannelById } from "@/actions/channelAction";
-import { isArray } from "util";
+
+type UserType = {
+  id: string;
+  name: string;
+};
+
+type EventType = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+type ChannelType = {
+  id: string;
+  name: string;
+  users?: UserType;
+  _count?: {
+    follows: number;
+    events: number;
+  };
+  events?: EventType[];
+};
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [channels, setChannels] = useState([]);
+  const [channels, setChannels] = useState<ChannelType>({
+    id: "",
+    name: "",
+    users: { id: "", name: "" },
+    _count: { follows: 0, events: 0 },
+    events: [],
+  });
   const getChannelDetail = async () => {
     const data = await getChannelById(params.id);
     setChannels(data);
