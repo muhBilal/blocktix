@@ -40,6 +40,7 @@ export default function Page() {
   const [channels, setChannels] = useState<ChannelUser | null>();
   const getData = async () => {
     const req = await getChannelByUserId();
+    console.log(req);
     setChannels(req);
   };
 
@@ -120,7 +121,7 @@ export default function Page() {
                         className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                       >
                         <Image
-                          src={"/preview.png"}
+                          src={event.image || ""}
                           alt="image"
                           width={600}
                           height={600}
@@ -128,17 +129,22 @@ export default function Page() {
                           className="object-contain rounded-t-lg"
                         />
                         <CardHeader>
-                          <CardTitle>Bersih itu sehat!!</CardTitle>
+                          <CardTitle>{event.name}</CardTitle>
                           <CardDescription className="max-w-lg">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing
-                            elit. Doloremque, expedita quo! Consectetur sunt
-                            placeat vero laudantium sapiente. Id, excepturi
-                            magnam....
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: event.description
+                                  ? event.description.length > 100
+                                    ? `${event.description.slice(0, 100)}...`
+                                    : event.description
+                                  : "",
+                              }}
+                            />
                           </CardDescription>
                         </CardHeader>
                         <CardFooter>
                           <div className="ms-auto">
-                            <Link href={"#"}>
+                            <Link href={"/browse/" + event.id}>
                               <Button
                                 variant={"secondary"}
                                 className="hover:text-primary transition-all duration-300"
@@ -153,7 +159,11 @@ export default function Page() {
                   </div>
                 </TabsContent>
                 <TabsContent value="description" className="space-y-4">
-                  {channels.description}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: channels.description || "",
+                    }}
+                  />
                 </TabsContent>
               </Tabs>
             </>

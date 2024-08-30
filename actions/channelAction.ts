@@ -30,6 +30,8 @@ export const getChannelByUserId = async () => {
 
       return res;
     }
+
+    return null;
   } catch (err) {
     console.log(err);
     return null;
