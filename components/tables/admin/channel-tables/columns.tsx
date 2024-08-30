@@ -33,6 +33,10 @@ export const columns: ColumnDef<channels>[] = [
     header: "NAME",
   },
   {
+    accessorKey: "status",
+    header: "STATUS",
+  },
+  {
     accessorKey: "created_at",
     header: "CREATED SINCE",
   },

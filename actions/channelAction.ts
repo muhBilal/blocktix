@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
+import { channels_status } from "@prisma/client";
 
 export const getAllData = async () => {
   try {
@@ -22,7 +23,7 @@ export const getChannelByUserId = async () => {
 
   try {
     const req = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/channels/user/" + user?.id
+      process.env.NEXT_PUBLIC_API_BASE_URL + "/channels/users/" + user?.id
     );
 
     if (req.ok) {
@@ -76,7 +77,7 @@ export const createChannels = async (values: createValue) => {
 export const getChannelById = async (channel_id: string) => {
   try {
     const req = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/user/${channel_id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}`,
       {
         method: "GET",
       }
@@ -87,7 +88,6 @@ export const getChannelById = async (channel_id: string) => {
     }
 
     const data = await req.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching event:", error);
@@ -111,5 +111,29 @@ export const searchChannelByName = async (name: string) => {
   } catch (error) {
     console.error("Error fetching search results:", error);
     return [];
+  }
+};
+
+export const channelVerification = async (channel_id: string) => {
+  try {
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "VERIFIED" }),
+      }
+    );
+    if (!req.ok) {
+      console.error(`Failed to fetch event. Status: ${req.status}`);
+      return null;
+    }
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return null;
   }
 };

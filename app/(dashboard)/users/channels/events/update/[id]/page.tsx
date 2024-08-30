@@ -2,7 +2,7 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -41,11 +41,15 @@ import { format } from "date-fns";
 import EditableEditor from "@/components/EditableEditor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { categories, tags } from "@prisma/client";
+import { getEventById } from "@/actions/eventAction";
+import Link from "next/link";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
   { title: "Channels", link: "/users/channels" },
-  { title: "Create Events", link: "/users/channels/events/create" },
+  { title: "Update Events", link: "/users/channels/events/update" },
 ];
 
 const formSchema = z.object({
@@ -72,15 +76,16 @@ const formSchema = z.object({
   }),
   price: z.coerce.number().min(0),
   event_date: z.date(),
+  is_paid: z.coerce.boolean(),
 });
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState<tags[]>([]);
+  const [categories, setCategories] = useState<categories[]>([]);
 
   const router = useRouter();
 
@@ -105,6 +110,22 @@ export default function Page() {
     }
   };
 
+  const getData = async () => {
+    const req = await getEventById(params.id);
+    if (req) {
+      form.setValue("name", req?.name);
+      form.setValue("is_paid", req?.is_paid);
+      form.setValue("image", req?.image);
+      form.setValue("description", req?.description);
+      form.setValue("price", req?.price);
+      form.setValue("event_date", req?.event_date);
+      form.setValue("location", req?.location);
+      form.setValue("link_group", req?.link_group);
+      form.setValue("tag_id", req?.tag_id);
+      form.setValue("category_id", req?.category_id);
+    }
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await createHandler(values);
   };
@@ -114,7 +135,7 @@ export default function Page() {
       try {
         const req = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tags`);
         const res = await req.json();
-        if (res.data.length > 0) {
+        if (res.length > 0) {
           setTags(res.data);
         }
       } catch (error) {
@@ -128,7 +149,7 @@ export default function Page() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`
         );
         const res = await req.json();
-        if (res.data.length > 0) {
+        if (res.length > 0) {
           setCategories(res.data);
         }
       } catch (error) {
@@ -138,6 +159,7 @@ export default function Page() {
 
     getTags();
     getCategories();
+    getData();
   }, []);
 
   return (
@@ -147,8 +169,8 @@ export default function Page() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Buat Event Baru`}
-            description="Lengkapi form untuk menambahkan event baru"
+            title={`Update Event`}
+            description="Lengkapi form untuk mengupdate event."
           />
         </div>
         <Separator />
@@ -185,6 +207,43 @@ export default function Page() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Deskripsi Event</FormLabel>
+                  <FormControl>
+                    <EditableEditor
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="is_paid"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative flex items-center gap-2 mt-5">
+                      <Checkbox
+                        disabled={isLoading}
+                        onCheckedChange={field.onChange}
+                        checked={field.value}
+                      />
+                      <span className="text-muted-foreground text-xs">
+                        Apakah event berbayar?
+                      </span>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -193,7 +252,13 @@ export default function Page() {
                   <FormItem>
                     <FormLabel>Harga Event</FormLabel>
                     <FormControl>
-                      <Input disabled={isLoading} type="number" {...field} />
+                      <Input
+                        disabled={
+                          isLoading || form.getValues("is_paid") == false
+                        }
+                        type="number"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -284,10 +349,11 @@ export default function Page() {
                           <SelectValue placeholder="Pilih Tipe" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="siswa">Tingkat Siswa</SelectItem>
-                          <SelectItem value="mahasiswa">
-                            Tingkat Mahasiswa
-                          </SelectItem>
+                          {tags?.map((tag, index) => (
+                            <SelectItem key={index} value={tag.id}>
+                              {tag.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -310,10 +376,11 @@ export default function Page() {
                           <SelectValue placeholder="Pilih Kategori" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="siswa">Tingkat Siswa</SelectItem>
-                          <SelectItem value="mahasiswa">
-                            Tingkat Mahasiswa
-                          </SelectItem>
+                          {categories?.map((item, index) => (
+                            <SelectItem key={index} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -322,26 +389,23 @@ export default function Page() {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deskripsi Event</FormLabel>
-                  <FormControl>
-                    <EditableEditor
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Separator className="mt-5" />
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Submit"}
-            </Button>
+            <div className="flex gap-2">
+              <Link
+                href={"/users/channels"}
+                className={cn(
+                  buttonVariants({
+                    variant: "secondary",
+                    className: "text-primary",
+                  })
+                )}
+              >
+                Kembali
+              </Link>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Submit"}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

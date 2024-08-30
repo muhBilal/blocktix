@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { TrendingUp } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
+import { TrendingUp } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -9,39 +9,39 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+  CardTitle,
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 }
+  { month: "Desember", desktop: 186, mobile: 80 },
+  { month: "Januari", desktop: 305, mobile: 200 },
+  { month: "February", desktop: 237, mobile: 120 },
+  { month: "Maret", desktop: 73, mobile: 190 },
+  { month: "Agustus", desktop: 209, mobile: 130 },
+  { month: "September", desktop: 214, mobile: 140 },
 ];
 
 const chartConfig = {
   desktop: {
-    label: 'Desktop',
-    color: 'hsl(var(--chart-1))'
+    label: "Desktop",
+    color: "hsl(var(--chart-1))",
   },
   mobile: {
-    label: 'Mobile',
-    color: 'hsl(var(--chart-2))'
-  }
+    label: "Mobile",
+    color: "hsl(var(--chart-2))",
+  },
 } satisfies ChartConfig;
 
 export function AreaGraph() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardTitle>Area Chart - Pengunjung</CardTitle>
         <CardDescription>
           Showing total visitors for the last 6 months
         </CardDescription>
@@ -56,7 +56,7 @@ export function AreaGraph() {
             data={chartData}
             margin={{
               left: 12,
-              right: 12
+              right: 12,
             }}
           >
             <CartesianGrid vertical={false} />

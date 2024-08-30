@@ -1,4 +1,5 @@
 "use client";
+import { channelVerification } from "@/actions/channelAction";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,10 +9,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { channels } from "@prisma/client";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { channels, channels_status } from "@prisma/client";
+import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface CellActionProps {
   data: channels;
@@ -20,9 +22,17 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    const req = await channelVerification(data.id);
+
+    if (req) {
+      toast.success("Success!");
+      window.location.reload();
+    } else {
+      toast.error("Failed!");
+    }
+  };
 
   return (
     <>
@@ -43,13 +53,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/${data.id}`)}
+            onClick={() => window.open(`/channels/${data.id}`, "_blank")}
           >
-            <Edit className="mr-2 h-4 w-4" /> Update
+            <Eye className="mr-2 h-4 w-4" /> Lihat Channel
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {data.status !== "VERIFIED" && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Edit className="mr-2 h-4 w-4" /> Verifikasi Channel
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

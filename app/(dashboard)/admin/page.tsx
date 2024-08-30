@@ -1,3 +1,5 @@
+"use client";
+import { getDashboardData } from "@/actions/dashboardAction";
 import { AreaGraph } from "@/components/charts/area-graph";
 import { BarGraph } from "@/components/charts/bar-graph";
 import { PieGraph } from "@/components/charts/pie-graph";
@@ -13,8 +15,36 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatPrice } from "@/lib/format";
+import { events, users } from "@prisma/client";
+import { useEffect, useState } from "react";
 
-export default function page() {
+type Tag = {
+  name: string;
+  totalData: number;
+};
+
+type Dashboard = {
+  userCount: number;
+  eventCount: number;
+  channelCount: number;
+  totalprice: number | null;
+  transaction: {
+    users: users;
+    events: events;
+  };
+  tagsWithEventCount: Tag[];
+};
+
+export default function Page() {
+  const [dashboard, setDashboard] = useState<Dashboard>();
+  const getData = async () => {
+    const data = await getDashboardData();
+    setDashboard(data);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -35,7 +65,7 @@ export default function page() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                    Total Pendapatan
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,16 +81,18 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">
+                    {formatPrice(dashboard?.totalprice || 0)}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    +100% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    Pengguna Aktif
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -78,15 +110,19 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
+                  <div className="text-2xl font-bold">
+                    +{dashboard?.userCount}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
+                    +100% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Event yang diupload
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -102,16 +138,18 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
+                  <div className="text-2xl font-bold">
+                    +{dashboard?.eventCount}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +19% from last month
+                    +100% from last month
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Channel yang didirikan
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -127,9 +165,11 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
+                  <div className="text-2xl font-bold">
+                    +{dashboard?.channelCount}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +201 since last hour
+                    +100% since last hour
                   </p>
                 </CardContent>
               </Card>
@@ -140,7 +180,7 @@ export default function page() {
               </div>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Transaksi terakhir</CardTitle>
                   <CardDescription>
                     You made 265 sales this month.
                   </CardDescription>

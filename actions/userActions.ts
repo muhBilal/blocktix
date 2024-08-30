@@ -69,7 +69,9 @@ export const checkUser = async () => {
 
     await insertUser(data);
 
-    await sendWelcomeEmail(data.email, data.name);
+    if (data.email !== "22081010099@student.upnjatim.ac.id") {
+      await sendWelcomeEmail(data.email, data.name);
+    }
   }
 
   return user;

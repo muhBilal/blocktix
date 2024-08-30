@@ -15,11 +15,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { events, follows, users } from "@prisma/client";
+import {
+  channels_status,
+  events,
+  events_status,
+  follows,
+  users,
+} from "@prisma/client";
 import { Plus, UserRoundPen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -31,6 +39,7 @@ type ChannelUser = {
   image: string;
   name: string | null;
   description: string | null;
+  status: channels_status;
   users: users | null;
   events: events[] | null;
   follows: follows[] | null;
@@ -40,8 +49,17 @@ export default function Page() {
   const [channels, setChannels] = useState<ChannelUser | null>();
   const getData = async () => {
     const req = await getChannelByUserId();
-    console.log(req);
     setChannels(req);
+  };
+
+  const router = useRouter();
+
+  const handleCheckChannelVerification = () => {
+    if (channels?.status === "VERIFIED") {
+      router.push("/users/channels/create");
+    }
+
+    toast.error("Tunggu diverifikasi oleh admin!");
   };
 
   useEffect(() => {
@@ -87,17 +105,13 @@ export default function Page() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Link
-                      href={"/users/channels/events/create"}
-                      className={cn(
-                        buttonVariants({
-                          variant: "secondary",
-                          className: "text-primary",
-                        })
-                      )}
+                    <Button
+                      variant={"secondary"}
+                      className="hover:text-primary"
+                      onClick={handleCheckChannelVerification}
                     >
                       <Plus className="mr-2 h-4 w-4" /> Tambah Event
-                    </Link>
+                    </Button>
                     <Link
                       href={"/users/channels/update/" + channels.id}
                       className={cn(buttonVariants({ variant: "default" }))}
@@ -143,7 +157,7 @@ export default function Page() {
                           </CardDescription>
                         </CardHeader>
                         <CardFooter>
-                          <div className="ms-auto">
+                          <div className="ms-auto flex gap-2">
                             <Link href={"/browse/" + event.id}>
                               <Button
                                 variant={"secondary"}
@@ -151,6 +165,11 @@ export default function Page() {
                               >
                                 Lihat detail
                               </Button>
+                            </Link>
+                            <Link
+                              href={"/users/channels/events/update/" + event.id}
+                            >
+                              <Button variant={"default"}>Edit Event</Button>
                             </Link>
                           </div>
                         </CardFooter>

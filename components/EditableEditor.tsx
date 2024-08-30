@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme } from "next-themes";
 
 import { useCreateBlockNote } from "@blocknote/react";
@@ -27,6 +27,15 @@ const EditableEditor = ({ onChange, value }: Props) => {
 
     onChange(html);
   };
+
+  const handleConvertHtmlToBlock = async () => {
+    const blocks = await editor.tryParseHTMLToBlocks(value ?? "");
+    editor.replaceBlocks(editor.document, blocks);
+  };
+
+  if (value) {
+    handleConvertHtmlToBlock();
+  }
 
   return (
     <div className="-mx-[40px]">

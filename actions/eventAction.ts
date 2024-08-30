@@ -33,10 +33,33 @@ export const getEventById = async (event_id: string) => {
     }
 
     const data = await req.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching event:", error);
+    return null;
+  }
+};
+
+export const eventVerification = async (event_id: string) => {
+  try {
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${event_id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "ONGOING" }),
+      }
+    );
+    if (!req.ok) {
+      console.error(`Failed to fetch event. Status: ${req.status}`);
+      return null;
+    }
+
+    return true;
+  } catch (err) {
+    console.log(err);
     return null;
   }
 };

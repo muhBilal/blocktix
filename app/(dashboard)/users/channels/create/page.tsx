@@ -50,6 +50,9 @@ const formSchema = z.object({
   no_rek: z.string().min(2, {
     message: "No. Rek must be exists.",
   }),
+  phone: z.string().min(2, {
+    message: "Phone must be exists.",
+  }),
 });
 
 export default function Page() {
@@ -154,6 +157,21 @@ export default function Page() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>No. Rekening</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nomor Telepon</FormLabel>
                     <FormControl>
                       <Input disabled={isLoading} {...field} />
                     </FormControl>

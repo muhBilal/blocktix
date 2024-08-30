@@ -1,4 +1,5 @@
 "use client";
+import { eventVerification } from "@/actions/eventAction";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,9 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { events } from "@prisma/client";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface CellActionProps {
   data: events;
@@ -22,7 +24,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    const req = await eventVerification(data.id);
+
+    if (req) {
+      toast.success("Success!");
+      window.location.reload();
+    } else {
+      toast.error("Failed!");
+    }
+  };
 
   return (
     <>
@@ -43,13 +54,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/${data.id}`)}
+            onClick={() => window.open(`/browse/${data.id}`, "_blank")}
           >
-            <Edit className="mr-2 h-4 w-4" /> Update
+            <Eye className="mr-2 h-4 w-4" /> Lihat Event
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {data.status === "PENDING" && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Edit className="mr-2 h-4 w-4" /> Verifikasi Event
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
