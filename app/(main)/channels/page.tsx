@@ -85,8 +85,8 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={200} className="text-primary" /> Channel Akademik Yang
-            Aktif
+            <CountUp end={1000} className="text-primary" /> Channel Akademik
+            Yang Aktif
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
             Temukan dan ikuti berbagai channel terpercaya yang menyediakan

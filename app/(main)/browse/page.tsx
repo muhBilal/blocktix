@@ -167,7 +167,7 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={200} className="text-primary" /> Event Akademik
+            <CountUp end={2000} className="text-primary" /> Event Akademik
             Tersedia Sekarang
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
