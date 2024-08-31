@@ -220,7 +220,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 </Card>
               ))}
             </div>
-            <div className="flex flex-col lg:flex-row justify-center gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {tagsDown.map((card) => (
                 <Card
                   key={card.id}
