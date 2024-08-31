@@ -92,8 +92,11 @@ export default function Page({ params }: { params: { id: string } }) {
                 <p className="font-bold text-xl">{channels?.users?.name}</p>
               </div>
             </div>
-            <Button variant={"secondary"} className="hover:text-primary">
-              Ikuti Channel
+            <Button
+              onClick={handleFollowChannel}
+              className={isFollowing ? "bg-gray-500" : "bg-blue-500"}
+            >
+              {isFollowing ? "Mengikuti" : "Ikuti Channel"}
             </Button>
           </div>
         </div>
