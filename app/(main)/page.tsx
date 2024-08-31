@@ -157,7 +157,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   <div className="col-span-2">
                     <div className="flex flex-col items-center justify-center">
                       <h3 className="text-2xl font-bold">
-                        <CountUp end={2000} />
+                        <CountUp end={2000} duration={8} />
                       </h3>
                       <p className="text-muted-foreground">Event</p>
                     </div>
@@ -165,7 +165,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   <div className="col-span-2">
                     <div className="flex flex-col items-center justify-center">
                       <h3 className="text-2xl font-bold">
-                        <CountUp end={1000} />
+                        <CountUp end={1000} duration={8} />
                       </h3>
                       <p className="text-muted-foreground">Channel</p>
                     </div>
@@ -173,7 +173,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   <div className="col-span-2">
                     <div className="flex flex-col items-center justify-center">
                       <h3 className="text-2xl font-bold">
-                        <CountUp end={5000} />
+                        <CountUp end={5000} duration={8} />
                       </h3>
                       <p className="text-muted-foreground">Pengguna</p>
                     </div>
