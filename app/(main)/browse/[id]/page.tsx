@@ -32,13 +32,16 @@ type EventType = {
   name: string;
   description: string;
   event_date: string;
+  image: string;
   channels: {
     name: string;
+    phone: string;
   };
   similar_event?: Array<{
     id: string;
     name: string;
     event_date: string;
+    image: string;
   }>;
 };
 
@@ -47,6 +50,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
+    console.log(data);
     setEvents(data);
   };
 
@@ -83,10 +87,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Avatar className="w-20 h-20 ">
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                className="rounded-lg"
-              />
+              <AvatarImage src={events?.image} className="rounded-lg" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-2">
@@ -97,7 +98,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <Button className="mr-2">Diskusi</Button>
             <Button
               onClick={handleFollowEvent}
-              className={isFollowing ? "bg-green-500" : "bg-blue-500"}
+              className={isFollowing ? "bg-slate-500" : "bg-blue-600"}
             >
               {isFollowing ? "Event Diikuti" : "Ikuti Event"}
             </Button>
@@ -117,7 +118,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <p>{events?.name}</p>
               <Button
                 onClick={handleFollowEvent}
-                className={isFollowing ? "bg-green-500" : "bg-blue-500"}
+                className={isFollowing ? "bg-slate-500" : "bg-blue-500"}
               >
                 {isFollowing ? "Event Diikuti" : "Ikuti Event"}
               </Button>
@@ -148,7 +149,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   <div className="flex flex-col text-xl gap-5 ml-5">
                     <div>
                       <h5>No. Telepon</h5>
-                      <p className="font-semibold">08810282726</p>
+                      <p className="font-semibold">{events?.channels.phone}</p>
                     </div>
                     <div>
                       <h5>Alamat Email</h5>
@@ -189,7 +190,7 @@ export default function Page({ params }: { params: { id: string } }) {
               >
                 <Link href={`/browse/${event.id}`}>
                   <Image
-                    src={"/event_lain.png"}
+                    src={event.image}
                     alt="gambar event lain"
                     width={224}
                     height={224}

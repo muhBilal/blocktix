@@ -113,9 +113,12 @@ export default function Page() {
             height={180}
             className="absolute right-0 bottom-0 mr-5"
           />
-          <h1 className="text-4xl font-semibold">Lowongan Tersedia Saat ini</h1>
+          <h1 className="text-4xl font-semibold text-center">
+            Event Akademik Tersedia Sekarang
+          </h1>
           <p className="text-lg">
-            A platform where you can get your desired job without any hassle{" "}
+            Jelajahi berbagai event akademik terverifikasi yang dirancang untuk
+            mendukung pengembangan diri Anda dengan mudah dan aman.{" "}
           </p>
           <div className="relative flex items-center overflow-hidden mt-5 rounded-full shadow-lg">
             <input
@@ -315,7 +318,7 @@ export default function Page() {
                             onClick={() => toggleJoinEvent(result.id)}
                             className={`text-white px-10 py-2 rounded-lg mb-3 ${
                               joinedEvents.includes(result.id)
-                                ? "bg-green-500"
+                                ? "bg-slate-500"
                                 : "bg-blue-500"
                             }`}
                           >
@@ -396,7 +399,7 @@ export default function Page() {
                             onClick={() => toggleJoinEvent(event.id)}
                             className={`text-white px-10 py-2 rounded-lg mb-3 ${
                               joinedEvents.includes(event.id)
-                                ? "bg-green-500"
+                                ? "bg-slate-500"
                                 : "bg-blue-500"
                             }`}
                           >
