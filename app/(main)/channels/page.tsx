@@ -18,6 +18,8 @@ import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/format";
 import CountUp from "react-countup";
 import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
+import { Heart } from "lucide-react";
 
 type UserType = {
   id: string;
@@ -54,6 +56,10 @@ export default function Page() {
       setResults(channels);
       setIsSearching(false);
     }
+  };
+
+  const handleFavorite = async () => {
+    toast.success("Berhasil ditambahkan!");
   };
 
   useEffect(() => {
@@ -139,7 +145,7 @@ export default function Page() {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <div className="ms-auto">
+                  <div className="flex gap-2 ms-auto">
                     <Link href={"/channels/" + item.id}>
                       <Button
                         variant={"secondary"}
@@ -148,6 +154,9 @@ export default function Page() {
                         Lihat detail
                       </Button>
                     </Link>
+                    <Button variant={"ghost"} onClick={handleFavorite}>
+                      <Heart className="text-red-500" />
+                    </Button>
                   </div>
                 </CardFooter>
               </Card>
