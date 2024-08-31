@@ -12,7 +12,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface KoalaWelcomeEmailProps {
+interface WelcomeEmailProps {
   userFirstname: string | null;
 }
 
@@ -20,27 +20,26 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-export const KoalaWelcomeEmail = ({
-  userFirstname,
-}: KoalaWelcomeEmailProps) => (
+export const WelcomeEmail = ({ userFirstname }: WelcomeEmailProps) => (
   <Html>
     <Head />
     <Preview>
-      The sales intelligence platform that helps you uncover qualified leads.
+      Temukan potensi penuh keterampilan diri Anda dengan Annect.
     </Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`${baseUrl}/static/logo.svg`}
+          src={`https://utfs.io/f/95f2b4b1-7ad5-42e9-88ff-aefdb873a2eb-1zbfv.svg`}
           width="170"
           height="50"
-          alt="Koala"
+          alt="Annect"
           style={logo}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Welcome to Annect, the sales intelligence platform that helps you
-          uncover qualified leads and close deals faster.
+          Selamat datang di Annect! Kami sangat senang Anda telah bergabung
+          dengan platform kami yang dirancang untuk membantu Anda menemukan
+          peluang baru dan mengembangkan kemampuan Anda dengan lebih cepat.
         </Text>
         <Section style={btnContainer}>
           <Button style={button} href="https://annect.vercel.app/users">
@@ -54,18 +53,18 @@ export const KoalaWelcomeEmail = ({
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
-          470 Noor Ave STE B #1148, South San Francisco, CA 94080
+          Universitas Pembangunan Negeri Veteran Jawa Timur, Indonesia
         </Text>
       </Container>
     </Body>
   </Html>
 );
 
-KoalaWelcomeEmail.PreviewProps = {
+WelcomeEmail.PreviewProps = {
   userFirstname: "Alan",
-} as KoalaWelcomeEmailProps;
+} as WelcomeEmailProps;
 
-export default KoalaWelcomeEmail;
+export default WelcomeEmail;
 
 const main = {
   backgroundColor: "#ffffff",

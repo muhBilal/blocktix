@@ -1,80 +1,121 @@
-// import React from "react";
-// import {
-//   Html,
-//   Body,
-//   Container,
-//   Section,
-//   Text,
-//   Link,
-//   Button,
-// } from "@react-email/components";
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
+import * as React from "react";
 
-// const ChannelValidated = () => {
-//   return (
-//     <Html>
-//       <Body
-//         style={{
-//           fontFamily: "Helvetica, sans-serif",
-//           backgroundColor: "#f4f5f6",
-//           margin: 0,
-//           padding: 0,
-//         }}
-//       >
-//         <Container
-//           style={{
-//             maxWidth: "600px",
-//             padding: "0",
-//             paddingTop: "24px",
-//             margin: "0 auto",
-//           }}
-//         >
-//           <Section
-//             style={{
-//               background: "#ffffff",
-//               border: "1px solid #eaebed",
-//               borderRadius: "16px",
-//               padding: "24px",
-//             }}
-//           >
-//             <Text style={{ fontSize: "16px", margin: "0 0 16px" }}>Halo,</Text>
-//             <Text style={{ fontSize: "16px", margin: "0 0 16px" }}>
-//               Channel yang Anda submit telah divalidasi oleh admin.
-//             </Text>
-//             <Button
-//               style={{
-//                 backgroundColor: "#0867ec",
-//                 borderRadius: "4px",
-//                 color: "#ffffff",
-//                 fontSize: "16px",
-//                 fontWeight: "bold",
-//                 textTransform: "capitalize",
-//                 padding: "12px 24px",
-//                 textDecoration: "none",
-//                 display: "inline-block",
-//               }}
-//               href="#"
-//             >
-//               Cek sekarang
-//             </Button>
-//             <Text style={{ fontSize: "16px", margin: "0 0 16px" }}>
-//               Terima kasih telah mempercayai ANNECT!
-//             </Text>
-//           </Section>
-//           <Section style={{ paddingTop: "24px", textAlign: "center" }}>
-//             <Text style={{ fontSize: "16px", color: "#9a9ea6" }}>
-//               PT. Karya Anak Bangsat
-//             </Text>
-//             <Link
-//               href="http://htmlemail.io"
-//               style={{ color: "#0867ec", textDecoration: "none" }}
-//             >
-//               Made by Human
-//             </Link>
-//           </Section>
-//         </Container>
-//       </Body>
-//     </Html>
-//   );
-// };
+interface ChannelValidatedEmailProps {
+  userFirstname: string | null;
+}
 
-// export default ChannelValidated;
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "";
+
+export const ChannelValidatedEmail = ({
+  userFirstname,
+}: ChannelValidatedEmailProps) => (
+  <Html>
+    <Head />
+    <Preview>
+      Channel Anda kini sudah diverifikasi dan siap digunakan di Annect.
+    </Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Img
+          src={`https://utfs.io/f/95f2b4b1-7ad5-42e9-88ff-aefdb873a2eb-1zbfv.svg`}
+          width="170"
+          height="50"
+          alt="Annect"
+          style={logo}
+        />
+        <Text style={paragraph}>Hi {userFirstname},</Text>
+        <Text style={paragraph}>
+          Kami dengan senang hati memberi tahu Anda bahwa channel Anda telah
+          berhasil diverifikasi dan sekarang aktif di Annect! 🎉
+        </Text>
+        <Text style={paragraph}>
+          Anda dapat mulai mengunggah berbagai macam event akademik di channel
+          Anda. Ini adalah kesempatan Anda untuk membangun komunitas yang
+          dinamis dan bermanfaat.
+        </Text>
+        <Section style={btnContainer}>
+          <Button
+            style={button}
+            href="https://annect.vercel.app/users/channels"
+          >
+            Kelola Channel
+          </Button>
+        </Section>
+        <Text style={paragraph}>
+          Best,
+          <br />
+          The Annect team
+        </Text>
+        <Hr style={hr} />
+        <Text style={footer}>
+          Universitas Pembangunan Negeri Veteran Jawa Timur, Indonesia
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+);
+
+ChannelValidatedEmail.PreviewProps = {
+  userFirstname: "Alan",
+} as ChannelValidatedEmailProps;
+
+export default ChannelValidatedEmail;
+
+const main = {
+  backgroundColor: "#ffffff",
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+};
+
+const container = {
+  margin: "0 auto",
+  padding: "20px 0 48px",
+};
+
+const logo = {
+  margin: "0 auto",
+};
+
+const paragraph = {
+  fontSize: "16px",
+  lineHeight: "26px",
+};
+
+const btnContainer = {
+  textAlign: "center" as const,
+};
+
+const button = {
+  backgroundColor: "#5F51E8",
+  borderRadius: "3px",
+  color: "#fff",
+  fontSize: "16px",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "block",
+  padding: "12px",
+};
+
+const hr = {
+  borderColor: "#cccccc",
+  margin: "20px 0",
+};
+
+const footer = {
+  color: "#8898aa",
+  fontSize: "12px",
+};
