@@ -61,10 +61,11 @@ export default function Home({ params }: { params: { id: string } }) {
       <main className="flex min-h-screen flex-col items-center justify-between p-24 pt-40">
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
         <div className="flex flex-col items-center gap-5">
-          <h1 className="text-6xl font-semibold">Find Your Remote Work</h1>
-          <h1 className="text-6xl font-semibold">Easy And Fast</h1>
+          <h1 className="text-6xl font-semibold">Temukan Peluangmu</h1>
+          <h1 className="text-6xl font-semibold">Lebih Mudah Dan Terpercaya</h1>
           <p className="text-lg">
-            A platform where you can get your desired job without any hassle{" "}
+            Platform untuk menemukan beasiswa, seminar, workshop, dan lomba yang
+            aman dan terverifikasi.{" "}
           </p>
           <div className="relative flex items-center rounded-full overflow-hidden mt-5 shadow-lg">
             <input
