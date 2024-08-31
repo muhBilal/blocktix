@@ -83,6 +83,7 @@ export default function Page() {
 
   const getData = async () => {
     const getTags = await getBrowseData();
+    console.log(getTags);
 
     setTags(getTags?.tags);
     setCategories(getTags?.categories);
@@ -169,7 +170,7 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={2000} duration={8} className="text-primary" /> Event
+            <CountUp end={2000} duration={6} className="text-primary" /> Event
             Akademik Tersedia Sekarang
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
