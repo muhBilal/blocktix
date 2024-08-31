@@ -31,6 +31,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import toast from "react-hot-toast";
+import Loading from "@/components/Loading";
+import FallbackLoading from "@/components/Loading";
 
 type EventType = {
   id: string;
@@ -195,129 +197,133 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-10">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 lg:col-span-3">
-              <div className="flex justify-between items-center">
-                <h5 className="font-semibold text-xl">Filter</h5>
+          {events.length <= 0 ? (
+            <FallbackLoading />
+          ) : (
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 lg:col-span-3">
+                <div className="flex justify-between items-center">
+                  <h5 className="font-semibold text-xl">Filter</h5>
 
-                <Button
-                  variant={"secondary"}
-                  onClick={handleResetFilter}
-                  className="hover:text-primary"
-                >
-                  Reset
-                </Button>
-              </div>
-
-              <Separator className="my-3" />
-
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4">
-                  <h5 className="font-bold text-xl mb-2">Tipe Event</h5>
-                  <ul className="flex flex-col gap-2">
-                    {tags?.map((item) => (
-                      <li key={item.id}>
-                        <input
-                          type="radio"
-                          className="transform scale-150 mr-2"
-                          name="group1"
-                          value={item.id}
-                        />
-                        <span>{item.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <h5 className="font-bold text-xl mb-2">Kategori Event</h5>
-                  <ul className="flex flex-col gap-2">
-                    {categories?.map((item) => (
-                      <li key={item.id}>
-                        <input
-                          type="radio"
-                          className="transform scale-150 mr-2"
-                          name="group1"
-                          value={item.id}
-                        />
-                        <span>{item.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <h5 className="font-bold text-xl mb-2">Harga Event</h5>
-                  <ul className="flex flex-col gap-2">
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                      />
-                      <span>Berbayar</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                      />
-                      <span>Gratis</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="col-span-12 lg:col-span-9">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {events?.map((event, index: number) => (
-                  <Card
-                    key={index}
-                    className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                  <Button
+                    variant={"secondary"}
+                    onClick={handleResetFilter}
+                    className="hover:text-primary"
                   >
-                    <div className="relative w-full h-[200px]">
-                      <Image
-                        src={event.image || ""}
-                        alt="image"
-                        width={0}
-                        height={0}
-                        fill
-                        sizes="100%"
-                        loading="lazy"
-                        className="object-cover w-full h-full rounded-t-lg"
-                      />
-                    </div>
-                    <CardHeader>
-                      <CardTitle>{event.name}</CardTitle>
-                      <CardDescription className="max-w-lg">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: event.description
-                              ? event.description.length > 100
-                                ? `${event.description.slice(0, 100)}...`
-                                : event.description
-                              : "",
-                          }}
+                    Reset
+                  </Button>
+                </div>
+
+                <Separator className="my-3" />
+
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4">
+                    <h5 className="font-bold text-xl mb-2">Tipe Event</h5>
+                    <ul className="flex flex-col gap-2">
+                      {tags?.map((item) => (
+                        <li key={item.id}>
+                          <input
+                            type="radio"
+                            className="transform scale-150 mr-2"
+                            name="group1"
+                            value={item.id}
+                          />
+                          <span>{item.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <h5 className="font-bold text-xl mb-2">Kategori Event</h5>
+                    <ul className="flex flex-col gap-2">
+                      {categories?.map((item) => (
+                        <li key={item.id}>
+                          <input
+                            type="radio"
+                            className="transform scale-150 mr-2"
+                            name="group1"
+                            value={item.id}
+                          />
+                          <span>{item.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <h5 className="font-bold text-xl mb-2">Harga Event</h5>
+                    <ul className="flex flex-col gap-2">
+                      <li>
+                        <input
+                          type="radio"
+                          className="transform scale-150 mr-2"
                         />
-                      </CardDescription>
-                    </CardHeader>
-                    <CardFooter>
-                      <div className="flex gap-2 ms-auto">
-                        <Link href={"/browse/" + event.id}>
-                          <Button
-                            variant={"secondary"}
-                            className="hover:text-primary transition-all duration-300"
-                          >
-                            Lihat detail
-                          </Button>
-                        </Link>
-                        <Button variant={"ghost"} onClick={handleFavorite}>
-                          <Bookmark className="text-primary" />
-                        </Button>
+                        <span>Berbayar</span>
+                      </li>
+                      <li>
+                        <input
+                          type="radio"
+                          className="transform scale-150 mr-2"
+                        />
+                        <span>Gratis</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-12 lg:col-span-9">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {events?.map((event, index: number) => (
+                    <Card
+                      key={index}
+                      className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                    >
+                      <div className="relative w-full h-[200px]">
+                        <Image
+                          src={event.image || ""}
+                          alt="image"
+                          width={0}
+                          height={0}
+                          fill
+                          sizes="100%"
+                          loading="lazy"
+                          className="object-cover w-full h-full rounded-t-lg"
+                        />
                       </div>
-                    </CardFooter>
-                  </Card>
-                ))}
+                      <CardHeader>
+                        <CardTitle>{event.name}</CardTitle>
+                        <CardDescription className="max-w-lg">
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: event.description
+                                ? event.description.length > 100
+                                  ? `${event.description.slice(0, 100)}...`
+                                  : event.description
+                                : "",
+                            }}
+                          />
+                        </CardDescription>
+                      </CardHeader>
+                      <CardFooter>
+                        <div className="flex gap-2 ms-auto">
+                          <Link href={"/browse/" + event.id}>
+                            <Button
+                              variant={"secondary"}
+                              className="hover:text-primary transition-all duration-300"
+                            >
+                              Lihat detail
+                            </Button>
+                          </Link>
+                          <Button variant={"ghost"} onClick={handleFavorite}>
+                            <Bookmark className="text-primary" />
+                          </Button>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
     </Wrapper>

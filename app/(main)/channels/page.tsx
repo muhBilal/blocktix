@@ -20,6 +20,7 @@ import CountUp from "react-countup";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import { Heart } from "lucide-react";
+import FallbackLoading from "@/components/Loading";
 
 type UserType = {
   id: string;
@@ -114,54 +115,58 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {channels?.map((item, index) => (
-              <Card
-                key={index}
-                className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <Image
-                      src={item.image || ""}
-                      alt="image"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                      className="object-cover rounded"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <h3 className="font-bold text-xl">{item.users.name}</h3>
-                      <p className="text-muted-foreground text-xs">
-                        since {formatDate(item.created_at)}
-                      </p>
+          {channels.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {channels?.map((item, index) => (
+                <Card
+                  key={index}
+                  className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="grid grid-cols-2 gap-4 mb-5">
+                      <Image
+                        src={item.image || ""}
+                        alt="image"
+                        width={500}
+                        height={500}
+                        loading="lazy"
+                        className="object-cover rounded"
+                      />
+                      <div className="flex flex-col gap-2">
+                        <h3 className="font-bold text-xl">{item.users.name}</h3>
+                        <p className="text-muted-foreground text-xs">
+                          since {formatDate(item.created_at)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <CardTitle>{item.name}</CardTitle>
-                  <CardDescription className="max-w-lg">
-                    <div
-                      dangerouslySetInnerHTML={{ __html: item.description }}
-                    />
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <div className="flex gap-2 ms-auto">
-                    <Link href={"/channels/" + item.id}>
-                      <Button
-                        variant={"secondary"}
-                        className="hover:text-primary transition-all duration-300"
-                      >
-                        Lihat detail
+                    <CardTitle>{item.name}</CardTitle>
+                    <CardDescription className="max-w-lg">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                      />
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="flex gap-2 ms-auto">
+                      <Link href={"/channels/" + item.id}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                      <Button variant={"ghost"} onClick={handleFavorite}>
+                        <Heart className="text-red-500" />
                       </Button>
-                    </Link>
-                    <Button variant={"ghost"} onClick={handleFavorite}>
-                      <Heart className="text-red-500" />
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <FallbackLoading />
+          )}
         </div>
       </main>
     </Wrapper>
