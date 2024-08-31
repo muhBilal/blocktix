@@ -69,8 +69,11 @@ export const checkUser = async () => {
 
     await insertUser(data);
 
-    if (data.email !== "22081010099@student.upnjatim.ac.id") {
-      await sendWelcomeEmail(data.email, data.name);
+    console.log("sebelum email");
+    if (data.role == "USER") {
+      console.log("masuk");
+      const mails = await sendWelcomeEmail(data.email, data.name);
+      console.log(mails);
     }
   }
 

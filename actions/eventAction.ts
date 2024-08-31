@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { sendEventCreatedEmail } from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
@@ -132,6 +133,10 @@ export const createEvents = async (values: createValues) => {
         );
 
         if (req.ok) {
+          await sendEventCreatedEmail(
+            user?.emailAddresses[0].emailAddress,
+            user?.firstName
+          );
           return true;
         }
 
