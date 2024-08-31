@@ -1,7 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
-import { BookmarkCheck, Clock, TagIcon, GanttChartSquare } from "lucide-react";
+import {
+  BookmarkCheck,
+  Clock,
+  TagIcon,
+  GanttChartSquare,
+  Bookmark,
+} from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getAllData, searchEventByTitle } from "@/actions/eventAction";
@@ -24,6 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import toast from "react-hot-toast";
 
 type EventType = {
   id: string;
@@ -86,6 +93,10 @@ export default function Page() {
 
   const handleResetFilter = async () => {
     window.location.reload();
+  };
+
+  const handleFavorite = async () => {
+    toast.success("Berhasil ditambahkan!");
   };
 
   useEffect(() => {
@@ -288,7 +299,7 @@ export default function Page() {
                       </CardDescription>
                     </CardHeader>
                     <CardFooter>
-                      <div className="ms-auto">
+                      <div className="flex gap-2 ms-auto">
                         <Link href={"/browse/" + event.id}>
                           <Button
                             variant={"secondary"}
@@ -297,6 +308,9 @@ export default function Page() {
                             Lihat detail
                           </Button>
                         </Link>
+                        <Button variant={"ghost"} onClick={handleFavorite}>
+                          <Bookmark className="text-primary" />
+                        </Button>
                       </div>
                     </CardFooter>
                   </Card>
