@@ -91,11 +91,14 @@ export default function Home({ params }: { params: { id: string } }) {
               <div className="flex items-start gap-4 p-4">
                 <div>
                   {
-                    <Button
-                      className={`bg-[${card.bg}] w-[128px] h-[128px] hover:visible`}
+                    <div
+                      style={{ backgroundColor: card.bg }}
+                      className={
+                        "w-[128px] h-[128px] flex justify-center items-center rounded-lg text-white"
+                      }
                     >
                       {card.icon}
-                    </Button>
+                    </div>
                   }
                 </div>
 
@@ -117,9 +120,14 @@ export default function Home({ params }: { params: { id: string } }) {
               <div className="flex items-start gap-4 p-4">
                 <div>
                   {
-                    <Button className={`bg-[${card.bg}] w-[128px] h-[128px]`}>
+                    <div
+                      style={{ backgroundColor: card.bg }}
+                      className={
+                        "w-[128px] h-[128px] flex justify-center items-center rounded-lg text-white"
+                      }
+                    >
                       {card.icon}
-                    </Button>
+                    </div>
                   }
                 </div>
 
