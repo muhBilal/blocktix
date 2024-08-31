@@ -9,8 +9,21 @@ import { getAllData, searchEventByTitle } from "@/actions/eventAction";
 import React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { get } from "http";
-import { boolean } from "zod";
+import CountUp from "react-countup";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { categories, tags } from "@prisma/client";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getBrowseData } from "@/actions/browseAction";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type EventType = {
   id: string;
@@ -29,25 +42,54 @@ type EventType = {
   };
 };
 
+const filterSchema = z.object({
+  tag_id: z.string().nullable(),
+  category_id: z.string().nullable(),
+  name: z.string().nullable(),
+  is_paid: z.coerce.boolean().nullable(),
+});
+
 export default function Page() {
   const [events, setEvents] = useState<EventType[]>([]);
+  const [tags, setTags] = useState<tags[]>([]);
+  const [categories, setCategories] = useState<categories[]>([]);
   const [results, setResults] = useState<EventType[]>([]);
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
 
+  const form = useForm<z.infer<typeof filterSchema>>({
+    resolver: zodResolver(filterSchema),
+    defaultValues: {
+      name: "",
+      category_id: "",
+      tag_id: "",
+      is_paid: null,
+    },
+  });
+
   const searchParams = useSearchParams();
   const queryParams = searchParams.get("query");
 
-  const getAllEvents = async () => {
-    const eventAction = await getAllData();
-    console.log(eventAction);
-    setEvents(eventAction);
+  const getData = async () => {
+    const getTags = await getBrowseData();
+
+    setTags(getTags?.tags);
+    setCategories(getTags?.categories);
+    setEvents(getTags?.events);
+  };
+
+  const onSubmit = async (values: z.infer<typeof filterSchema>) => {
+    console.log(values);
+  };
+
+  const handleResetFilter = async () => {
+    window.location.reload();
   };
 
   useEffect(() => {
-    getAllEvents();
+    getData();
   }, []);
 
   useEffect(() => {
@@ -97,8 +139,8 @@ export default function Page() {
 
   return (
     <Wrapper>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24 pt-40">
-        <div className="flex flex-col items-center gap-5 px-36 py-16 lg:px-44 lg:py-16 bg-blue-50 mb-8 rounded-lg relative">
+      <main className="pt-40">
+        <div className="flex flex-col items-center gap-5 px-10 md:px-36 py-16 lg:px-44 lg:py-16 bg-blue-50 dark:bg-blue-800/10 rounded-lg relative">
           <Image
             src={"/undraw_globe.svg"}
             alt="icon-chart"
@@ -113,315 +155,152 @@ export default function Page() {
             height={180}
             className="absolute right-0 bottom-0 mr-5"
           />
-          <h1 className="text-4xl font-semibold text-center">
-            Event Akademik Tersedia Sekarang
+          <h1 className="text-4xl text-center font-semibold">
+            <CountUp end={200} className="text-primary" /> Event Akademik
+            Tersedia Sekarang
           </h1>
-          <p className="text-lg">
+          <p className="text-muted-foreground max-w-lg text-center">
             Jelajahi berbagai event akademik terverifikasi yang dirancang untuk
-            mendukung pengembangan diri Anda dengan mudah dan aman.{" "}
+            mendukung pengembangan diri Anda dengan mudah dan aman.
           </p>
-          <div className="relative flex items-center overflow-hidden mt-5 rounded-full shadow-lg">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="px-4 py-4 w-96 focus:outline-none "
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <Button
-              onClick={() => handleSearch(query)}
-              className="absolute right-0 bg-blue-500 text-white px-4 py-2 rounded-full mr-2"
-            >
-              Search
-            </Button>
+          <div className="max-w-2xl z-10 w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
+            <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
+              <Input
+                type="text"
+                placeholder="cari nama event..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full text-lg border-none bg-transparent focus-visible::outline-none focus-visible::border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
+              />
+            </div>
+            <div className="lg:col-span-3 col-span-12 p-2">
+              <Button
+                onClick={() => handleSearch(query)}
+                className="w-full h-full p-4 text-lg text-white"
+              >
+                Search
+              </Button>
+            </div>
           </div>
         </div>
-        <div className="w-full">
-          <div className="flex flex-col-reverse lg:flex-row">
-            <div className="w-full lg:w-1/4">
-              <div className="mb-3">
-                <div className="flex justify-between">
-                  <h5 className="font-semibold text-xl">Filter</h5>
+        <div className="mt-10">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-12 lg:col-span-3">
+              <div className="flex justify-between items-center">
+                <h5 className="font-semibold text-xl">Filter</h5>
 
-                  <span className="ml-32 cursor-pointer text-blue-500 font-base">
-                    Reset
-                  </span>
-                </div>
-
-                <hr className="mt-2" />
+                <Button
+                  variant={"secondary"}
+                  onClick={handleResetFilter}
+                  className="hover:text-primary"
+                >
+                  Reset
+                </Button>
               </div>
-              <div className="mb-5">
-                <h5 className="font-semibold text-xl mb-2 ">Kategori</h5>
-                <div>
-                  <ul>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={1}
-                      />
-                      <span>Mahasiswa/Siswa</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group1"
-                        value={2}
-                      />
-                      <span>Umum</span>
-                    </li>
+
+              <Separator className="my-3" />
+
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
+                  <h5 className="font-bold text-xl mb-2">Tipe Event</h5>
+                  <ul className="flex flex-col gap-2">
+                    {tags?.map((item) => (
+                      <li key={item.id}>
+                        <input
+                          type="radio"
+                          className="transform scale-150 mr-2"
+                          name="group1"
+                          value={item.id}
+                        />
+                        <span>{item.name}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
-              </div>
-              <div className="mb-5">
-                <h5 className="font-semibold text-xl mb-2 ">Tag</h5>
-                <div>
-                  <ul>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={1}
-                      />
-                      <span>Beasiswa</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={2}
-                      />
-                      <span>Seminar</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={3}
-                      />
-                      <span>Bootcamp</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={3}
-                      />
-                      <span>Workshop</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group2"
-                        value={3}
-                      />
-                      <span>Asisten Riset</span>
-                    </li>
+                <div className="flex flex-col gap-4">
+                  <h5 className="font-bold text-xl mb-2">Kategori Event</h5>
+                  <ul className="flex flex-col gap-2">
+                    {categories?.map((item) => (
+                      <li key={item.id}>
+                        <input
+                          type="radio"
+                          className="transform scale-150 mr-2"
+                          name="group1"
+                          value={item.id}
+                        />
+                        <span>{item.name}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
-              </div>
-              <div className="mb-5">
-                <h5 className="font-semibold text-xl mb-2 ">Harga Event</h5>
-                <div>
-                  <ul>
+                <div className="flex flex-col gap-4">
+                  <h5 className="font-bold text-xl mb-2">Harga Event</h5>
+                  <ul className="flex flex-col gap-2">
                     <li>
                       <input
                         type="radio"
                         className="transform scale-150 mr-2"
-                        name="group3"
-                        value={1}
-                      />
-                      <span>Gratis</span>
-                    </li>
-                    <li>
-                      <input
-                        type="radio"
-                        className="transform scale-150 mr-2"
-                        name="group3"
-                        value={2}
                       />
                       <span>Berbayar</span>
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        className="transform scale-150 mr-2"
+                      />
+                      <span>Gratis</span>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div className="w-full lg:w-3/4">
-              <div className="grid grid-cols-2 gap-10 mb-5 lg:grid-cols-3  lg:gap-24 mt-10 ml-6">
-                {results.length > 0 ? (
-                  results?.map((result) => (
-                    <div
-                      className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
-                      key={result.id}
-                    >
-                      {/* Bagian Atas 30% */}
-                      <div className="flex flex-col justify-center items-center h-[30%]">
-                        <div className="flex">
-                          {/* Logo (1/4) */}
-                          <div className="w-1/4 flex items-center justify-center">
-                            <Image
-                              src={result.image}
-                              alt="logo"
-                              width={48}
-                              height={48}
-                            />
-                          </div>
-                          {/* Nama dan Lokasi Perusahaan (3/4) */}
-                          <div className="w-3/4 pl-2">
-                            <Link href={`/browse/${result.id}`}>
-                              <h3 className="text-lg font-semibold">
-                                {result.name}
-                              </h3>
-                            </Link>
-                            <p className="text-sm text-gray-600">
-                              {result.location}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bagian Bawah 70% */}
-                      <div className="h-[70%] flex flex-col justify-center items-center">
-                        {/* Judul Posisi dan Lokasi */}
-                        <div className="flex flex-col items-start mt-10">
-                          <h5 className="text-muted-foreground text-sm mb-4">
-                            {result.description}
-                          </h5>
-                          <div className="flex flex-wrap mb-1 ml-3">
-                            <div className="flex mr-4 gap-1">
-                              <TagIcon />
-                              <p className="text-sm">{result?.tags?.name}</p>
-                            </div>
-                            <div className="flex gap-1">
-                              <GanttChartSquare />
-                              <p className="text-sm">
-                                {result?.categories?.name}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-1 ml-3">
-                            <Clock />
-                            <p className="text-sm">
-                              {formatDateIndonesian(result.event_date)}
-                            </p>
-                          </div>
-                        </div>
-                        {/* Tombol Claim dan Icon Simpan */}
-                        <div className="flex justify-between items-center mt-auto">
-                          <Button
-                            onClick={() => toggleJoinEvent(result.id)}
-                            className={`text-white px-10 py-2 rounded-lg mb-3 ${
-                              joinedEvents.includes(result.id)
-                                ? "bg-slate-500"
-                                : "bg-blue-500"
-                            }`}
-                          >
-                            {joinedEvents.includes(result.id)
-                              ? "Joined"
-                              : "Join Event"}
-                          </Button>
-                          <Button className="text-white hover:text-white-700 ml-3 mb-3">
-                            <BookmarkCheck />
-                          </Button>
-                        </div>
-                      </div>
+            <div className="col-span-12 lg:col-span-9">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {events?.map((event, index: number) => (
+                  <Card
+                    key={index}
+                    className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                  >
+                    <div className="relative w-full h-[200px]">
+                      <Image
+                        src={event.image || ""}
+                        alt="image"
+                        width={0}
+                        height={0}
+                        fill
+                        sizes="100%"
+                        loading="lazy"
+                        className="object-cover w-full h-full rounded-t-lg"
+                      />
                     </div>
-                  ))
-                ) : isSearching ? (
-                  <p>Data tidak ditemukan</p>
-                ) : (
-                  events?.map((event) => (
-                    <div
-                      className="bg-blue-50 h-80 w-60 rounded-lg border border-slate-200"
-                      key={event.id}
-                    >
-                      {/* Bagian Atas 30% */}
-                      <div className="flex flex-col justify-center items-center h-[30%]">
-                        <div className="flex">
-                          {/* Logo (1/4) */}
-                          <div className="w-1/4 flex items-center justify-center">
-                            <Image
-                              src={event.image}
-                              alt="logo"
-                              width={48}
-                              height={48}
-                            />
-                          </div>
-                          {/* Nama dan Lokasi Perusahaan (3/4) */}
-                          <div className="w-3/4 pl-2">
-                            <Link href={`/browse/${event.id}`}>
-                              <h3 className="text-lg font-semibold">
-                                {event.name}
-                              </h3>
-                            </Link>
-                            <p className="text-sm text-gray-600">
-                              {event.location}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bagian Bawah 70% */}
-                      <div className="h-[70%] flex flex-col justify-center items-center">
-                        {/* Judul Posisi dan Lokasi */}
-                        <div className="flex flex-col items-start mt-10">
-                          <h5 className="text-muted-foreground text-sm mb-4">
-                            {event.description}
-                          </h5>
-                          <div className="flex flex-wrap mb-1 ml-3">
-                            <div className="flex mr-4 gap-1">
-                              <TagIcon />
-                              <p className="text-sm">{event?.tags?.name}</p>
-                            </div>
-                            <div className="flex gap-1">
-                              <GanttChartSquare />
-                              <p className="text-sm">
-                                {event?.categories?.name}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-1 ml-3">
-                            <Clock />
-                            <p className="text-sm">
-                              {formatDateIndonesian(event.event_date)}
-                            </p>
-                          </div>
-                        </div>
-                        {/* Tombol Claim dan Icon Simpan */}
-                        <div className="flex justify-between items-center mt-auto">
+                    <CardHeader>
+                      <CardTitle>{event.name}</CardTitle>
+                      <CardDescription className="max-w-lg">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: event.description
+                              ? event.description.length > 100
+                                ? `${event.description.slice(0, 100)}...`
+                                : event.description
+                              : "",
+                          }}
+                        />
+                      </CardDescription>
+                    </CardHeader>
+                    <CardFooter>
+                      <div className="ms-auto">
+                        <Link href={"/browse/" + event.id}>
                           <Button
-                            onClick={() => toggleJoinEvent(event.id)}
-                            className={`text-white px-10 py-2 rounded-lg mb-3 ${
-                              joinedEvents.includes(event.id)
-                                ? "bg-slate-500"
-                                : "bg-blue-500"
-                            }`}
+                            variant={"secondary"}
+                            className="hover:text-primary transition-all duration-300"
                           >
-                            {joinedEvents.includes(event.id)
-                              ? "Joined"
-                              : "Join Event"}
+                            Lihat detail
                           </Button>
-                          <Button
-                            className={`ml-3 mb-3 ${
-                              favorites.includes(event.id)
-                                ? "bg-blue-600 text-white"
-                                : "bg-transparent text-gray-700"
-                            }`}
-                            onClick={() => toggleFavorite(event.id)}
-                          >
-                            <BookmarkCheck />
-                          </Button>
-                        </div>
+                        </Link>
                       </div>
-                    </div>
-                  ))
-                )}
+                    </CardFooter>
+                  </Card>
+                ))}
               </div>
             </div>
           </div>

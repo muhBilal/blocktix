@@ -1,11 +1,17 @@
-export function formatPrice(number: number) {
+export function formatPrice(number: number | undefined | null) {
+  if (number === undefined || number === null) {
+    return "IDR 0"; // Atau format lain sesuai kebutuhan
+  }
+
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
   }).format(number);
 }
 
-export function formatDate(date: string | Date | null): string | undefined {
+export function formatDate(
+  date: string | Date | null | undefined
+): string | undefined {
   if (!date) return undefined;
 
   const parsedDate = typeof date === "string" ? new Date(date) : date;

@@ -6,7 +6,7 @@ import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
 import Wrapper from "./Wrapper";
 import { ChevronRight, GanttChart } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import {
@@ -39,6 +39,7 @@ const items = [
 ];
 
 const Navbar = (props: Props) => {
+  const { user } = useUser();
   const pathname = usePathname();
   return (
     <div className="w-full fixed top-0 left-0 right-0 z-20 p-4">
@@ -108,7 +109,7 @@ const Navbar = (props: Props) => {
                           },
                         }}
                       />
-                      <SheetTitle>| App Name</SheetTitle>
+                      <SheetTitle>| {user?.firstName}</SheetTitle>
                     </div>
                   </SheetHeader>
                   <nav className="gap-4 pt-10 flex flex-col flex-grow">
@@ -138,7 +139,7 @@ const Navbar = (props: Props) => {
                   </nav>
                   <SheetFooter>
                     <SheetDescription>
-                      &copy; 2024 Helvi | All rights reserved
+                      &copy; 2024 Annect | All rights reserved
                     </SheetDescription>
                   </SheetFooter>
                 </SheetContent>
