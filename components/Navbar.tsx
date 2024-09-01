@@ -99,20 +99,41 @@ const Navbar = (props: Props) => {
                 </SheetTrigger>
                 <SheetContent className="flex flex-col justify-between">
                   <SheetHeader>
-                    <div className="flex gap-2 items-center">
-                      <UserButton
-                        appearance={{
-                          elements: {
-                            userButtonPopoverActionButton__manageAccount: {
-                              display: "none",
-                            },
-                          },
-                        }}
-                      />
-                      <SheetTitle>| {user?.firstName}</SheetTitle>
+                    <div className="grid grid-cols-2 justify-center items-center gap-4 mt-10">
+                      {user ? (
+                        <>
+                          <div className="flex gap-2 items-center">
+                            <UserButton
+                              appearance={{
+                                elements: {
+                                  userButtonPopoverActionButton__manageAccount:
+                                    {
+                                      display: "none",
+                                    },
+                                },
+                              }}
+                            />
+                          </div>
+
+                          <SheetTitle>| {user?.firstName}</SheetTitle>
+                        </>
+                      ) : (
+                        <Link
+                          href={"/users"}
+                          className="border border-input text-primary bg-background hover:bg-accent rounded-md px-4 py-2 flex justify-center items-center"
+                        >
+                          Login
+                          <ChevronRight />
+                        </Link>
+                      )}
+                      <ModeToggle />
                     </div>
                   </SheetHeader>
-                  <nav className="gap-4 pt-10 flex flex-col flex-grow">
+                  <nav
+                    className={`gap-4 flex flex-col flex-grow ${
+                      user ? "pt-10" : "pt-3"
+                    }`}
+                  >
                     {items.map((nav) => (
                       <Link
                         href={nav.url}

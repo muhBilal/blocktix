@@ -177,7 +177,7 @@ export default function Page() {
             Jelajahi berbagai event akademik terverifikasi yang dirancang untuk
             mendukung pengembangan diri Anda dengan mudah dan aman.
           </p>
-          <div className="max-w-2xl z-10 w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
+          <div className="max-w-2xl z-10 w-full bg-muted lg:dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
             <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
               <Input
                 type="text"

@@ -94,7 +94,7 @@ export default function Page() {
             beragam event untuk mendukung perjalanan belajar dan pengembangan
             diri Anda dengan informasi yang selalu up-to-date.
           </p>
-          <div className="max-w-2xl z-10 w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
+          <div className="max-w-2xl z-10 w-full bg-muted lg:dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
             <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
               <Input
                 type="text"
