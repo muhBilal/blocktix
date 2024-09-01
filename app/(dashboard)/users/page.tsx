@@ -113,7 +113,7 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 gap-5">
-              {dashboard.user_events.map((item, index) => (
+              {dashboard?.user_events?.map((item, index) => (
                 <Card
                   key={index}
                   className="hover:-translate-y-3 hover:border-primary transition-all duration-300"
@@ -195,7 +195,7 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              {dashboard.channels?.map((item, index) => (
+              {dashboard?.channels?.map((item, index) => (
                 <Card
                   key={index}
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
@@ -253,7 +253,7 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              {dashboard.favorites?.map((item, index) => (
+              {dashboard?.favorites?.map((item, index) => (
                 <Card
                   key={index}
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"

@@ -170,7 +170,7 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={2000} duration={6} className="text-primary" /> Event
+            <CountUp end={2000} duration={3} className="text-primary" /> Event
             Akademik Tersedia Sekarang
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
@@ -198,7 +198,7 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-10">
-          {events.length <= 0 ? (
+          {events?.length <= 0 ? (
             <FallbackLoading />
           ) : (
             <div className="grid grid-cols-12 gap-4">

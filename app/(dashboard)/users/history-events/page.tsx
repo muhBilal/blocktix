@@ -48,12 +48,12 @@ export default function Page() {
         <Breadcrumbs items={breadcrumbItems} />
 
         <Heading
-          title={`Total event yang diikuti (${histories.length ?? 0})`}
+          title={`Total event yang diikuti (${histories?.length ?? 0})`}
           description="Daftar riwayat event yang pernah diikuti."
         />
         <Separator />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {histories.map((history) => (
+          {histories?.map((history) => (
             <Card
               key={history.id}
               className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"

@@ -93,6 +93,16 @@ export const getAllData = async () => {
   }
 };
 
+export const getCurrentUser = async () => {
+  const user = await currentUser();
+
+  if (user?.id) {
+    return user;
+  }
+
+  return null;
+};
+
 export const getUserDashboardData = async () => {
   const user = await currentUser();
   try {

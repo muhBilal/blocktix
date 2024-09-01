@@ -86,7 +86,7 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={1000} duration={6} className="text-primary" /> Channel
+            <CountUp end={1000} duration={3} className="text-primary" /> Channel
             Akademik Yang Aktif
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
@@ -115,7 +115,7 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-10">
-          {channels.length > 0 ? (
+          {channels?.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {channels?.map((item, index) => (
                 <Card

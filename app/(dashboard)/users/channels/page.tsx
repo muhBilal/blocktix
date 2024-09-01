@@ -74,7 +74,7 @@ export default function Page() {
             <>
               <div className="relative h-[300px]">
                 <Image
-                  src={channels.image || ""}
+                  src={channels?.image || ""}
                   fill
                   alt="background"
                   sizes="100%"
@@ -85,22 +85,22 @@ export default function Page() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <Avatar className="w-40 h-40">
-                      <AvatarImage src={channels.users?.image || ""} />
+                      <AvatarImage src={channels?.users?.image || ""} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-2">
-                      <h3 className="font-bold text-2xl">{channels.name}</h3>
+                      <h3 className="font-bold text-2xl">{channels?.name}</h3>
                       <div className="flex gap-2">
                         <p className="text-muted-foreground text-sm">
-                          {channels.users?.name}
+                          {channels?.users?.name}
                         </p>
                         <p className="text-muted-foreground text-sm">|</p>
                         <p className="text-muted-foreground text-sm">
-                          {channels.follows?.length ?? 0} Followers
+                          {channels?.follows?.length ?? 0} Followers
                         </p>
                       </div>
                       <p className="text-muted-foreground text-sm">
-                        {channels.events?.length ?? 0} Event
+                        {channels?.events?.length ?? 0} Event
                       </p>
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export default function Page() {
                       <Plus className="mr-2 h-4 w-4" /> Tambah Event
                     </Button>
                     <Link
-                      href={"/users/channels/update/" + channels.id}
+                      href={"/users/channels/update/" + channels?.id}
                       className={cn(buttonVariants({ variant: "default" }))}
                     >
                       <UserRoundPen className="mr-2 h-4 w-4" /> Edit Channel
@@ -129,7 +129,7 @@ export default function Page() {
                 </TabsList>
                 <TabsContent value="events" className="space-y-4">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    {channels.events?.map((event, index: number) => (
+                    {channels?.events?.map((event, index: number) => (
                       <Card
                         key={index}
                         className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
@@ -180,7 +180,7 @@ export default function Page() {
                 <TabsContent value="description" className="space-y-4">
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: channels.description || "",
+                      __html: channels?.description || "",
                     }}
                   />
                 </TabsContent>
