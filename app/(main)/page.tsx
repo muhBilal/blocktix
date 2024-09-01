@@ -115,7 +115,7 @@ export default function Home({ params }: { params: { id: string } }) {
                 Terpercaya
               </span>
             </h2>
-            <p className="dark:text-muted-foreground max-w-lg mt-5">
+            <p className="dark:text-muted-foreground w-full md:max-w-lg mt-5 text-start md:text-center">
               Temukan berbagai event akademik{" "}
               <span className="text-primary">terverifikasi</span> dengan mudah
               dan aman, fokus pada{" "}
