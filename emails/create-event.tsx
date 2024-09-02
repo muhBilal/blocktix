@@ -31,11 +31,14 @@ export const EventCreatedEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`https://utfs.io/f/95f2b4b1-7ad5-42e9-88ff-aefdb873a2eb-1zbfv.svg`}
+          src={`${baseUrl}/logo.png`}
           width="170"
           height="50"
-          alt="Annect"
-          style={logo}
+          alt="Company Logo"
+          style={{
+            objectFit: "contain",
+            margin: "0 auto",
+          }}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>

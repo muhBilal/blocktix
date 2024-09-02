@@ -53,7 +53,7 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 export const sendWelcomeEmail = async (email: string, name: string | null) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Selamat Datang di Annect! 🚀",
       react: WelcomeEmail({ userFirstname: name }),
@@ -69,7 +69,7 @@ export const sendEventCreatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
       react: EventCreatedEmail({ userFirstname: name }),
@@ -85,7 +85,7 @@ export const sendChannelCreatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
       react: ChannelCreatedEmail({ userFirstname: name }),
@@ -101,7 +101,7 @@ export const sendChannelValidatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
       react: ChannelValidatedEmail({ userFirstname: name }),
@@ -118,9 +118,9 @@ export const sendPaymentDoneEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      subject: "Pembayaran Anda telah diterima. Selamat bergabung!",
       react: PaymentDoneEmail({ userFirstname: name, linkGroup: link_group }),
     });
   } catch (err) {
