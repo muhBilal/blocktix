@@ -78,7 +78,7 @@ export default function Page() {
               </CardHeader>
               <CardFooter>
                 <div className="ms-auto">
-                  <Link href={"/browse/" + history.events.id}>
+                  <Link href={"/events/" + history.events.id}>
                     <Button
                       variant={"secondary"}
                       className="hover:text-primary transition-all duration-300"

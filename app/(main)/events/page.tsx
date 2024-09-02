@@ -99,7 +99,7 @@ export default function Page() {
   };
 
   const handleFavorite = async () => {
-    toast.success("Berhasil ditambahkan!");
+    toast.success("Berhasil disimpan!");
   };
 
   useEffect(() => {
@@ -306,7 +306,7 @@ export default function Page() {
                       </CardHeader>
                       <CardFooter>
                         <div className="flex gap-2 ms-auto">
-                          <Link href={"/browse/" + event.id}>
+                          <Link href={"/events/" + event.id}>
                             <Button
                               variant={"secondary"}
                               className="hover:text-primary transition-all duration-300"
@@ -314,8 +314,12 @@ export default function Page() {
                               Lihat detail
                             </Button>
                           </Link>
-                          <Button variant={"ghost"} onClick={handleFavorite}>
-                            <Bookmark className="text-primary" />
+                          <Button
+                            variant={"ghost"}
+                            onClick={handleFavorite}
+                            className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
+                          >
+                            <Bookmark />
                           </Button>
                         </div>
                       </CardFooter>

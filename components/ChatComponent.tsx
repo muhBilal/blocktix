@@ -1,5 +1,9 @@
 "use client";
-
+import React from "react";
+import Wrapper from "@/components/Wrapper";
+import FallbackLoading from "@/components/Loading";
+import { User } from "@clerk/nextjs/server";
+import { generateToken } from "@/lib/stream";
 import { useCallback } from "react";
 import {
   Channel,
@@ -16,31 +20,42 @@ import {
 import "stream-chat-react/dist/css/v2/index.css";
 import { ChannelSort } from "stream-chat";
 
-export default function ChatComponent({
-  apiKey,
-  createToken,
-  userId,
-  userName,
-  image,
-}: {
-  apiKey: string;
-  createToken: (userId: string) => Promise<string>;
+type DiscussionType = {
   userId: string;
-  userName: string;
-  image: string | null;
-}) {
+  fullName: string | null;
+  imageUrl: string | null;
+  eventId: string;
+  eventName: string | null | undefined;
+  eventImage: string | null | undefined;
+};
+
+const ChatComponent = ({
+  userId,
+  fullName,
+  imageUrl,
+  eventId,
+  eventImage,
+  eventName,
+}: DiscussionType) => {
+  const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY ?? "f8xhcwkqn9sg";
+
   const tokenProvider = useCallback(async () => {
-    return await createToken(userId);
-  }, [createToken, userId]);
+    return await generateToken();
+  }, []);
 
   const client = useCreateChatClient({
     apiKey,
     tokenOrProvider: tokenProvider,
     userData: {
       id: userId,
-      name: userName,
-      image: image ?? `https://getstream.io/random_png/?name=${userName}`,
+      name: fullName ?? "Guest",
+      image: imageUrl ?? `https://getstream.io/random_png/?name=${fullName}`,
     },
+  });
+
+  client?.channel("messaging", eventId, {
+    name: eventName ? "Channel " + eventName : "",
+    image: eventImage ?? "",
   });
 
   const sort: ChannelSort<DefaultStreamChatGenerics> = { last_message_at: -1 };
@@ -52,18 +67,27 @@ export default function ChatComponent({
     limit: 10,
   };
 
-  if (!client) return "Terjadi Masalah Sistem";
   return (
-    <Chat client={client}>
-      <ChannelList filters={filters} sort={sort} options={options} />
-      <Channel>
-        <Window>
-          <ChannelHeader />
-          <MessageList />
-          <MessageInput />
-        </Window>
-        <Thread />
-      </Channel>
-    </Chat>
+    <Wrapper>
+      <div className="mt-40">
+        {client ? (
+          <Chat client={client}>
+            <ChannelList filters={filters} sort={sort} options={options} />
+            <Channel>
+              <Window>
+                <ChannelHeader />
+                <MessageList />
+                <MessageInput />
+              </Window>
+              <Thread />
+            </Channel>
+          </Chat>
+        ) : (
+          <FallbackLoading />
+        )}
+      </div>
+    </Wrapper>
   );
-}
+};
+
+export default ChatComponent;

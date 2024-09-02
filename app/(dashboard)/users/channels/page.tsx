@@ -158,7 +158,7 @@ export default function Page() {
                         </CardHeader>
                         <CardFooter>
                           <div className="ms-auto flex gap-2">
-                            <Link href={"/browse/" + event.id}>
+                            <Link href={"/events/" + event.id}>
                               <Button
                                 variant={"secondary"}
                                 className="hover:text-primary transition-all duration-300"

@@ -16,7 +16,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const handleSearch = () => {
-    router.push(`/browse?query=${encodeURIComponent(searchQuery)}`);
+    router.push(`/events?query=${encodeURIComponent(searchQuery)}`);
   };
 
   const tagsUp = [

@@ -30,7 +30,7 @@ const items = [
   },
   {
     name: "Jelajahi",
-    url: "/browse",
+    url: "/events",
   },
   {
     name: "Channel",

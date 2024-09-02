@@ -167,7 +167,7 @@ export default function Page() {
                         />
                       </div>
                       <div className="mt-3 ms-auto">
-                        <Link href={"/browse/" + item.events.id}>
+                        <Link href={"/events/" + item.events.id}>
                           <Button
                             variant={"secondary"}
                             className="hover:text-primary transition-all duration-300"
@@ -278,7 +278,7 @@ export default function Page() {
                   </CardHeader>
                   <CardFooter>
                     <div className="ms-auto">
-                      <Link href={"/browse/" + item.events.id}>
+                      <Link href={"/events/" + item.events.id}>
                         <Button
                           variant={"secondary"}
                           className="hover:text-primary transition-all duration-300"
