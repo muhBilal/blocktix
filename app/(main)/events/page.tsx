@@ -33,6 +33,12 @@ import {
 import toast from "react-hot-toast";
 import Loading from "@/components/Loading";
 import FallbackLoading from "@/components/Loading";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type EventType = {
   id: string;
@@ -314,13 +320,22 @@ export default function Page() {
                               Lihat detail
                             </Button>
                           </Link>
-                          <Button
-                            variant={"ghost"}
-                            onClick={handleFavorite}
-                            className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
-                          >
-                            <Bookmark />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant={"ghost"}
+                                  onClick={handleFavorite}
+                                  className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
+                                >
+                                  <Bookmark />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Simpan Event</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </CardFooter>
                     </Card>

@@ -21,6 +21,12 @@ import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import { Heart } from "lucide-react";
 import FallbackLoading from "@/components/Loading";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type UserType = {
   id: string;
@@ -90,9 +96,8 @@ export default function Page() {
             Akademik Yang Aktif
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
-            Temukan dan ikuti berbagai channel terpercaya yang menyediakan
-            beragam event untuk mendukung perjalanan belajar dan pengembangan
-            diri Anda dengan informasi yang selalu up-to-date.
+            Ikuti berbagai channel terpercaya yang menyediakan beragam event
+            untuk mendukung perjalanan belajar dan pengembangan diri Anda.
           </p>
           <div className="max-w-2xl z-10 w-full bg-muted lg:dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
             <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
@@ -156,9 +161,22 @@ export default function Page() {
                           Lihat detail
                         </Button>
                       </Link>
-                      <Button variant={"ghost"} onClick={handleFavorite}>
-                        <Heart className="text-red-500" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={"ghost"}
+                              onClick={handleFavorite}
+                              className="text-red-500 hover:text-white hover:bg-red-500"
+                            >
+                              <Heart />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ikuti Channel</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </CardFooter>
                 </Card>
