@@ -45,14 +45,14 @@ const Page = () => {
         >
           <ChevronLeft className="mr-2 h-4 w-4" /> Kembali
         </Link>
-        {isLoaded && user ? (
+        {isLoaded && user && event ? (
           <ChatComponent
             userId={user.id}
             imageUrl={user.imageUrl}
             fullName={user.fullName}
             eventId={eventId}
-            eventName={event?.name}
-            eventImage={event?.image}
+            eventName={event.name}
+            eventImage={event.image}
           />
         ) : (
           <FallbackLoading />

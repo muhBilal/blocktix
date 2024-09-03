@@ -113,16 +113,29 @@ export default function Page({ params }: { params: { id: string } }) {
                       key={index}
                       className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                     >
-                      <Image
-                        src={event.image || ""}
-                        alt="image"
-                        width={600}
-                        height={600}
-                        loading="lazy"
-                        className="object-contain rounded-t-lg"
-                      />
+                      <Link href={"/events/" + event.id}>
+                        <div className="relative w-full h-[200px]">
+                          <Image
+                            src={event.image || ""}
+                            alt="image"
+                            width={0}
+                            height={0}
+                            fill
+                            sizes="100%"
+                            loading="lazy"
+                            className="object-cover w-full h-full rounded-t-lg"
+                          />
+                        </div>
+                      </Link>
                       <CardHeader>
-                        <CardTitle>{event.name}</CardTitle>
+                        <CardTitle>
+                          <Link
+                            href={"/events/" + event.id}
+                            className="hover:text-primary"
+                          >
+                            {event.name}
+                          </Link>
+                        </CardTitle>
                         <CardDescription className="max-w-lg">
                           <div
                             dangerouslySetInnerHTML={{
@@ -132,7 +145,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         </CardDescription>
                       </CardHeader>
                       <CardFooter>
-                        <div className="ms-auto flex gap-2">
+                        <div className="ms-auto">
                           <Link href={"/events/" + event.id}>
                             <Button
                               variant={"secondary"}
@@ -140,11 +153,6 @@ export default function Page({ params }: { params: { id: string } }) {
                             >
                               Lihat detail
                             </Button>
-                          </Link>
-                          <Link
-                            href={"/users/channels/events/update/" + event.id}
-                          >
-                            <Button variant={"default"}>Edit Event</Button>
                           </Link>
                         </div>
                       </CardFooter>

@@ -19,6 +19,8 @@ import {
 } from "stream-chat-react";
 import "stream-chat-react/dist/css/v2/index.css";
 import { ChannelSort } from "stream-chat";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type DiscussionType = {
   userId: string;
@@ -39,6 +41,8 @@ const ChatComponent = ({
 }: DiscussionType) => {
   const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY ?? "f8xhcwkqn9sg";
 
+  const router = useRouter();
+
   const tokenProvider = useCallback(async () => {
     return await generateToken();
   }, []);
@@ -53,10 +57,43 @@ const ChatComponent = ({
     },
   });
 
-  client?.channel("messaging", eventId, {
-    name: eventName ? "Channel " + eventName : "",
-    image: eventImage ?? "",
-  });
+  const setupChannel = async () => {
+    try {
+      if (!client) {
+        toast.error("Ruang Diskusi tidak tersedia!");
+        router.back();
+      }
+
+      const existingChannels = await client?.queryChannels({ id: eventId });
+      let channel;
+
+      if (existingChannels && existingChannels?.length > 0) {
+        channel = existingChannels[0];
+      } else {
+        channel = client?.channel("messaging", eventId, {
+          name: eventName ? "Channel " + eventName : "Channel",
+          image: eventImage ?? "",
+        });
+        await channel?.create();
+      }
+
+      if (channel) {
+        const isUserMember = channel.state.members[userId];
+
+        if (!isUserMember) {
+          await channel.addMembers([userId]);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Ruang Diskusi tidak tersedia!");
+      router.back();
+    }
+  };
+
+  if (client) {
+    setupChannel();
+  }
 
   const sort: ChannelSort<DefaultStreamChatGenerics> = { last_message_at: -1 };
   const filters = {
@@ -68,25 +105,23 @@ const ChatComponent = ({
   };
 
   return (
-    <Wrapper>
-      <div className="mt-40">
-        {client ? (
-          <Chat client={client}>
-            <ChannelList filters={filters} sort={sort} options={options} />
-            <Channel>
-              <Window>
-                <ChannelHeader />
-                <MessageList />
-                <MessageInput />
-              </Window>
-              <Thread />
-            </Channel>
-          </Chat>
-        ) : (
-          <FallbackLoading />
-        )}
-      </div>
-    </Wrapper>
+    <div className="mt-10">
+      {client ? (
+        <Chat client={client}>
+          {/* <ChannelList filters={filters} sort={sort} options={options} /> */}
+          <Channel key={eventId} channel={client.channel("messaging", eventId)}>
+            <Window>
+              <ChannelHeader />
+              <MessageList />
+              <MessageInput />
+            </Window>
+            <Thread />
+          </Channel>
+        </Chat>
+      ) : (
+        <FallbackLoading />
+      )}
+    </div>
   );
 };
 

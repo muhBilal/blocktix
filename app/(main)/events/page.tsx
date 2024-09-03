@@ -190,7 +190,7 @@ export default function Page() {
                 placeholder="cari nama event..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full text-lg border-none bg-transparent focus-visible::outline-none focus-visible::border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
+                className="w-full text-lg border-none bg-transparent focus-visible:outline-none focus-visible:border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
               />
             </div>
             <div className="lg:col-span-3 col-span-12 p-2">
@@ -211,7 +211,6 @@ export default function Page() {
               <div className="col-span-12 lg:col-span-3">
                 <div className="flex justify-between items-center">
                   <h5 className="font-semibold text-xl">Filter</h5>
-
                   <Button
                     variant={"secondary"}
                     onClick={handleResetFilter}
@@ -220,9 +219,7 @@ export default function Page() {
                     Reset
                   </Button>
                 </div>
-
                 <Separator className="my-3" />
-
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-4">
                     <h5 className="font-bold text-xl mb-2">Tipe Event</h5>
