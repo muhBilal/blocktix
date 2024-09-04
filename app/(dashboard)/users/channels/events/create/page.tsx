@@ -70,15 +70,15 @@ const formSchema = z.object({
   category_id: z.string().min(2, {
     message: "category must be exists.",
   }),
-  location: z.string().min(2, {
-    message: "location must be exists.",
-  }),
+  location: z.string(),
   link_group: z.string().min(2, {
     message: "link must be exists.",
   }),
   price: z.coerce.number().min(0),
+  post_duration: z.coerce.number().min(0),
   event_date: z.date(),
   is_paid: z.coerce.boolean(),
+  is_online: z.coerce.boolean(),
 });
 
 export default function Page() {
@@ -93,8 +93,10 @@ export default function Page() {
       location: "",
       name: "",
       price: 0,
+      post_duration: 0,
       tag_id: "",
       is_paid: false,
+      is_online: false,
     },
   });
 
@@ -108,6 +110,9 @@ export default function Page() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (values.is_paid == false) {
       values.price = 0;
+    }
+    if (values.is_online == true) {
+      values.location = "ONLINE";
     }
     const create = await createEvents(values);
 
@@ -183,19 +188,37 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nama Event</FormLabel>
-                  <FormControl>
-                    <Input disabled={isLoading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nama Event</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="post_duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Durasi Postingan{" "}
+                      <span className="text-red-500">(Rp. 1000/hari)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="description"
@@ -294,6 +317,27 @@ export default function Page() {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="is_online"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative flex items-center gap-2 mt-5">
+                      <Checkbox
+                        disabled={isLoading}
+                        onCheckedChange={field.onChange}
+                        checked={field.value}
+                      />
+                      <span className="text-muted-foreground text-xs">
+                        Apakah online?
+                      </span>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -302,7 +346,12 @@ export default function Page() {
                   <FormItem>
                     <FormLabel>Lokasi Event</FormLabel>
                     <FormControl>
-                      <Input disabled={isLoading} {...field} />
+                      <Input
+                        disabled={
+                          isLoading || form.getValues("is_online") == true
+                        }
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -63,7 +63,7 @@ const Navbar = (props: Props) => {
                 href={nav.url}
                 key={nav.name}
                 className={clsx("hover:text-blue-600 transition-all", {
-                  "text-blue-600": pathname === nav.url,
+                  "text-blue-600 font-semibold": pathname === nav.url,
                 })}
               >
                 {nav.name}

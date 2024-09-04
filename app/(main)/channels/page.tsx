@@ -128,26 +128,48 @@ export default function Page() {
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                 >
                   <CardHeader>
-                    <div className="grid grid-cols-2 gap-4 mb-5">
-                      <Image
-                        src={item.image || ""}
-                        alt="image"
-                        width={500}
-                        height={500}
-                        loading="lazy"
-                        className="object-cover rounded"
-                      />
-                      <div className="flex flex-col gap-2">
-                        <h3 className="font-bold text-xl">{item.users.name}</h3>
-                        <p className="text-muted-foreground text-xs">
-                          since {formatDate(item.created_at)}
+                    <div className="flex flex-col mb-5 gap-4">
+                      <div className="relative w-full h-[300px]">
+                        <Image
+                          src={item.image || ""}
+                          alt="image"
+                          fill
+                          sizes="100%"
+                          loading="lazy"
+                          className="object-cover w-full h-full rounded"
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <p className="text-xs text-muted-foreground">
+                          Created by{" "}
+                          <span className="text-primary">
+                            {item.users.name}
+                          </span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">|</p>
+                        <p className="text-xs text-muted-foreground">
+                          Tersedia{" "}
+                          <span className="text-primary">40 Event</span>
                         </p>
                       </div>
                     </div>
-                    <CardTitle>{item.name}</CardTitle>
+                    <CardTitle>
+                      <Link
+                        href={"/channels/" + item.id}
+                        className="hover:text-primary"
+                      >
+                        {item.name}
+                      </Link>
+                    </CardTitle>
                     <CardDescription className="max-w-lg">
                       <div
-                        dangerouslySetInnerHTML={{ __html: item.description }}
+                        dangerouslySetInnerHTML={{
+                          __html: item.description
+                            ? item.description.length > 150
+                              ? `${item.description.slice(0, 150)}...`
+                              : item.description
+                            : "",
+                        }}
                       />
                     </CardDescription>
                   </CardHeader>

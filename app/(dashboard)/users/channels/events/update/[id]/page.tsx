@@ -45,6 +45,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { categories, tags } from "@prisma/client";
 import { getEventById } from "@/actions/eventAction";
 import Link from "next/link";
+import FallbackLoading from "@/components/Loading";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -86,6 +87,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const [tags, setTags] = useState<tags[]>([]);
   const [categories, setCategories] = useState<categories[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
 
@@ -123,6 +125,8 @@ export default function Page({ params }: { params: { id: string } }) {
       form.setValue("link_group", req?.link_group);
       form.setValue("tag_id", req?.tag_id);
       form.setValue("category_id", req?.category_id);
+
+      setLoading(false);
     }
   };
 
@@ -175,89 +179,22 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         <Separator />
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Poster Event</FormLabel>
-                  <FormControl>
-                    <FileUpload
-                      apiEndpoint="image"
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nama Event</FormLabel>
-                  <FormControl>
-                    <Input disabled={isLoading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deskripsi Event</FormLabel>
-                  <FormControl>
-                    <EditableEditor
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="is_paid"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative flex items-center gap-2 mt-5">
-                      <Checkbox
-                        disabled={isLoading}
-                        onCheckedChange={field.onChange}
-                        checked={field.value}
-                      />
-                      <span className="text-muted-foreground text-xs">
-                        Apakah event berbayar?
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-4">
+        {loading ? (
+          <FallbackLoading />
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="price"
+                name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Harga Event</FormLabel>
+                    <FormLabel>Poster Event</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={
-                          isLoading || form.getValues("is_paid") == false
-                        }
-                        type="number"
-                        {...field}
+                      <FileUpload
+                        apiEndpoint="image"
+                        onChange={field.onChange}
+                        value={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -266,148 +203,219 @@ export default function Page({ params }: { params: { id: string } }) {
               />
               <FormField
                 control={form.control}
-                name="event_date"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tanggal Event</FormLabel>
+                    <FormLabel>Nama Event</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Deskripsi Event</FormLabel>
+                    <FormControl>
+                      <EditableEditor
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="is_paid"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="relative flex items-center gap-2 mt-5">
+                        <Checkbox
+                          disabled={isLoading}
+                          onCheckedChange={field.onChange}
+                          checked={field.value}
+                        />
+                        <span className="text-muted-foreground text-xs">
+                          Apakah event berbayar?
+                        </span>
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Lokasi Event</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="link_group"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Link Grub Event</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="tag_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tag / Tipe Event</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih Tipe" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {tags?.map((tag, index) => (
-                            <SelectItem key={index} value={tag.id}>
-                              {tag.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="category_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kategori Event</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih Kategori" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories?.map((item, index) => (
-                            <SelectItem key={index} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Separator className="mt-5" />
-            <div className="flex gap-2">
-              <Link
-                href={"/users/channels"}
-                className={cn(
-                  buttonVariants({
-                    variant: "secondary",
-                    className: "text-primary",
-                  })
-                )}
-              >
-                Kembali
-              </Link>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Submit"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Harga Event</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={
+                            isLoading || form.getValues("is_paid") == false
+                          }
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="event_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tanggal Event</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full justify-start text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Lokasi Event</FormLabel>
+                      <FormControl>
+                        <Input disabled={isLoading} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="link_group"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Link Grub Event</FormLabel>
+                      <FormControl>
+                        <Input disabled={isLoading} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="tag_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tag / Tipe Event</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih Tipe" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tags?.map((tag, index) => (
+                              <SelectItem key={index} value={tag.id}>
+                                {tag.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="category_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Kategori Event</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih Kategori" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories?.map((item, index) => (
+                              <SelectItem key={index} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator className="mt-5" />
+              <div className="flex gap-2">
+                <Link
+                  href={"/users/channels"}
+                  className={cn(
+                    buttonVariants({
+                      variant: "secondary",
+                      className: "text-primary",
+                    })
+                  )}
+                >
+                  Kembali
+                </Link>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Loading..." : "Submit"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        )}
       </div>
     </ScrollArea>
   );

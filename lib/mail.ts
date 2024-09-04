@@ -65,14 +65,15 @@ export const sendWelcomeEmail = async (email: string, name: string | null) => {
 
 export const sendEventCreatedEmail = async (
   email: string,
-  name: string | null
+  name: string | null,
+  price: number
 ) => {
   try {
     await resend.emails.send({
       from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
-      react: EventCreatedEmail({ userFirstname: name }),
+      react: EventCreatedEmail({ userFirstname: name, eventPrice: price }),
     });
   } catch (err) {
     console.log(err);
