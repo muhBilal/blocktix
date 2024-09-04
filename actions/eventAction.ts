@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { sendEventCreatedEmail } from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
@@ -132,6 +133,10 @@ export const createEvents = async (values: createValues) => {
         );
 
         if (req.ok) {
+          await sendEventCreatedEmail(
+            user?.emailAddresses[0].emailAddress,
+            user?.firstName
+          );
           return true;
         }
 
@@ -178,5 +183,25 @@ export const filterEvents = async (
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const getHistoryUserEvent = async () => {
+  const user = await currentUser();
+
+  try {
+    const req = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL +
+        `/users/${user?.id}/event-histories`
+    );
+
+    if (req.ok) {
+      const res = await req.json();
+
+      return res;
+    }
+  } catch (err) {
+    console.log(err);
+    return null;
   }
 };

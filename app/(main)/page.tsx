@@ -16,7 +16,7 @@ export default function Home({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const handleSearch = () => {
-    router.push(`/browse?query=${encodeURIComponent(searchQuery)}`);
+    router.push(`/events?query=${encodeURIComponent(searchQuery)}`);
   };
 
   const tagsUp = [
@@ -96,14 +96,17 @@ export default function Home({ params }: { params: { id: string } }) {
   ];
   return (
     <ScrollArea className="h-full">
-      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#e0e0e0_1px,transparent_1px),linear-gradient(to_bottom,#e0e0e0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
       <Wrapper>
         <main className="pt-40">
           <div className="flex flex-col mx-auto justify-center items-center text-center">
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider flex gap-4">
-              Cari <TextEffect /> Dengan
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider flex flex-col justify-center w-full md:flex-row gap-0 md:gap-4">
+              <div className="flex gap-4 text-start md:text-center">
+                Cari <TextEffect />
+              </div>{" "}
+              <div className="text-start md:text-center">Dengan</div>
             </h2>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-start md:text-center w-full">
               Mudah Dan{" "}
               <span
                 className="underline"
@@ -112,12 +115,15 @@ export default function Home({ params }: { params: { id: string } }) {
                 Terpercaya
               </span>
             </h2>
-            <p className="dark:text-muted-foreground max-w-lg mt-5">
-              Temukan berbagai event akademik terverifikasi dengan mudah dan
-              aman, fokus pada pengembangan diri tanpa khawatir akan penipuan.
+            <p className="dark:text-muted-foreground w-full md:max-w-lg mt-5 text-start md:text-center">
+              Temukan berbagai event akademik{" "}
+              <span className="text-primary">terverifikasi</span> dengan mudah
+              dan aman, fokus pada{" "}
+              <span className="text-primary">pengembangan diri</span> tanpa
+              khawatir akan <span className="text-primary">penipuan</span>.
             </p>
             <div className="max-w-2xl w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
-              <div className="col-span-9 p-2 flex items-center">
+              <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
                 <Input
                   type="text"
                   placeholder="cari nama event..."
@@ -126,7 +132,7 @@ export default function Home({ params }: { params: { id: string } }) {
                   className="w-full text-lg border-none bg-transparent focus-visible::outline-none focus-visible::border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
                 />
               </div>
-              <div className="col-span-3 p-2">
+              <div className="lg:col-span-3 col-span-12 p-2">
                 <Button
                   onClick={() => handleSearch()}
                   className="w-full h-full p-4 text-lg text-white"
@@ -140,42 +146,46 @@ export default function Home({ params }: { params: { id: string } }) {
           <div className="mt-32">
             <div className="flex justify-center items-center w-full">
               <Card className="max-w-4xl w-full">
-                <div className="grid grid-cols-12 items-center p-6 w-full">
-                  <div className="col-span-4">
+                <div className="grid grid-cols-12 items-center p-6 gap-4 md:gap-0 w-full">
+                  <div className="md:col-span-4 col-span-12">
                     <h3 className="text-4xl font-bold text-primary">
                       Tersedia
                     </h3>
                   </div>
-                  <div className="col-span-2">
-                    <div className="flex flex-col items-center justify-center">
-                      <h3 className="text-2xl font-bold">
-                        <CountUp end={7} />
-                      </h3>
-                      <p className="text-muted-foreground">Tipe Event</p>
-                    </div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="flex flex-col items-center justify-center">
-                      <h3 className="text-2xl font-bold">
-                        <CountUp end={10} />
-                      </h3>
-                      <p className="text-muted-foreground">Event</p>
-                    </div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="flex flex-col items-center justify-center">
-                      <h3 className="text-2xl font-bold">
-                        <CountUp end={3} />
-                      </h3>
-                      <p className="text-muted-foreground">Channel</p>
-                    </div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="flex flex-col items-center justify-center">
-                      <h3 className="text-2xl font-bold">
-                        <CountUp end={15} />
-                      </h3>
-                      <p className="text-muted-foreground">Pengguna</p>
+                  <div className="md:col-span-8 col-span-12">
+                    <div className="grid grid-cols-12">
+                      <div className="col-span-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <h3 className="text-2xl font-bold">
+                            <CountUp end={7} duration={7} />
+                          </h3>
+                          <p className="text-muted-foreground">Tipe Event</p>
+                        </div>
+                      </div>
+                      <div className="col-span-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <h3 className="text-2xl font-bold">
+                            <CountUp end={2000} duration={3} />
+                          </h3>
+                          <p className="text-muted-foreground">Event</p>
+                        </div>
+                      </div>
+                      <div className="col-span-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <h3 className="text-2xl font-bold">
+                            <CountUp end={1000} duration={3} />
+                          </h3>
+                          <p className="text-muted-foreground">Channel</p>
+                        </div>
+                      </div>
+                      <div className="col-span-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <h3 className="text-2xl font-bold">
+                            <CountUp end={5000} duration={3} />
+                          </h3>
+                          <p className="text-muted-foreground">Pengguna</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

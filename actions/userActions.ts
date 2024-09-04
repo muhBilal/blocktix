@@ -69,8 +69,11 @@ export const checkUser = async () => {
 
     await insertUser(data);
 
-    if (data.email !== "22081010099@student.upnjatim.ac.id") {
-      await sendWelcomeEmail(data.email, data.name);
+    console.log("sebelum email");
+    if (data.role == "USER") {
+      console.log("masuk");
+      const mails = await sendWelcomeEmail(data.email, data.name);
+      console.log(mails);
     }
   }
 
@@ -88,6 +91,16 @@ export const getAllData = async () => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const getCurrentUser = async () => {
+  const user = await currentUser();
+
+  if (user?.id) {
+    return user;
+  }
+
+  return null;
 };
 
 export const getUserDashboardData = async () => {

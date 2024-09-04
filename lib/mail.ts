@@ -1,5 +1,9 @@
 import { Resend } from "resend";
-import { KoalaWelcomeEmail } from "../emails/welcome";
+import EventCreatedEmail from "@/emails/create-event";
+import WelcomeEmail from "@/emails/welcome";
+import ChannelCreatedEmail from "@/emails/create-channel";
+import ChannelValidatedEmail from "@/emails/channel-validated";
+import PaymentDoneEmail from "@/emails/payment-done";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;
@@ -49,10 +53,75 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 export const sendWelcomeEmail = async (email: string, name: string | null) => {
   try {
     await resend.emails.send({
-      from: "Annect <onboarding@resend.dev>",
+      from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Welcome To Annect",
-      react: KoalaWelcomeEmail({ userFirstname: name }),
+      subject: "Selamat Datang di Annect! 🚀",
+      react: WelcomeEmail({ userFirstname: name }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendEventCreatedEmail = async (
+  email: string,
+  name: string | null
+) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <marketing@awsd-qwerty.com>",
+      to: email,
+      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      react: EventCreatedEmail({ userFirstname: name }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendChannelCreatedEmail = async (
+  email: string,
+  name: string | null
+) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <marketing@awsd-qwerty.com>",
+      to: email,
+      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      react: ChannelCreatedEmail({ userFirstname: name }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendChannelValidatedEmail = async (
+  email: string,
+  name: string | null
+) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <marketing@awsd-qwerty.com>",
+      to: email,
+      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      react: ChannelValidatedEmail({ userFirstname: name }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendPaymentDoneEmail = async (
+  email: string,
+  name: string | null,
+  link_group: string
+) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <marketing@awsd-qwerty.com>",
+      to: email,
+      subject: "Pembayaran Anda telah diterima. Selamat bergabung!",
+      react: PaymentDoneEmail({ userFirstname: name, linkGroup: link_group }),
     });
   } catch (err) {
     console.log(err);

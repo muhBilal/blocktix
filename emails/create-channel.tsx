@@ -1,176 +1,125 @@
-// import React from "react";
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
+import * as React from "react";
 
-// const CreateChannel = () => {
-//   const styles = {
-//     body: {
-//       fontFamily: "Helvetica, sans-serif",
-//       fontSize: "16px",
-//       lineHeight: "1.3",
-//       backgroundColor: "#f4f5f6",
-//       margin: "0",
-//       padding: "0",
-//     },
-//     container: {
-//       margin: "0 auto",
-//       maxWidth: "600px",
-//       paddingTop: "24px",
-//       width: "600px",
-//     },
-//     main: {
-//       background: "#ffffff",
-//       border: "1px solid #eaebed",
-//       borderRadius: "16px",
-//       width: "100%",
-//     },
-//     wrapper: {
-//       padding: "24px",
-//     },
-//     footer: {
-//       clear: "both",
-//       paddingTop: "24px",
-//       textAlign: "center",
-//       width: "100%",
-//     },
-//     footerText: {
-//       color: "#9a9ea6",
-//       fontSize: "16px",
-//       textAlign: "center",
-//     },
-//     button: {
-//       boxSizing: "border-box",
-//       minWidth: "100%",
-//       width: "100%",
-//       paddingBottom: "16px",
-//     },
-//     buttonTable: {
-//       width: "auto",
-//     },
-//     buttonCell: {
-//       backgroundColor: "#ffffff",
-//       borderRadius: "4px",
-//       textAlign: "center",
-//     },
-//     buttonLink: {
-//       backgroundColor: "#ffffff",
-//       border: "solid 2px #0867ec",
-//       borderRadius: "4px",
-//       color: "#0867ec",
-//       cursor: "pointer",
-//       display: "inline-block",
-//       fontSize: "16px",
-//       fontWeight: "bold",
-//       padding: "12px 24px",
-//       textDecoration: "none",
-//       textTransform: "capitalize",
-//     },
-//     buttonPrimary: {
-//       backgroundColor: "#0867ec",
-//       borderColor: "#0867ec",
-//       color: "#ffffff",
-//     },
-//     buttonPrimaryHover: {
-//       backgroundColor: "#ec0867",
-//       borderColor: "#ec0867",
-//     },
-//     preheader: {
-//       color: "transparent",
-//       display: "none",
-//       height: "0",
-//       maxHeight: "0",
-//       maxWidth: "0",
-//       opacity: "0",
-//       overflow: "hidden",
-//       visibility: "hidden",
-//       width: "0",
-//     },
-//     textLink: {
-//       color: "#0867ec",
-//       textDecoration: "underline",
-//     },
-//   };
+interface ChannelCreatedEmailProps {
+  userFirstname: string | null;
+}
 
-//   return (
-//     <table
-//       role="presentation"
-//       border="0"
-//       cellpadding="0"
-//       cellspacing="0"
-//       style={styles.body}
-//     >
-//       <tr>
-//         <td>&nbsp;</td>
-//         <td style={styles.container}>
-//           <div style={styles.wrapper}>
-//             <span style={styles.preheader}>
-//               This is preheader text. Some clients will show this text as a
-//               preview.
-//             </span>
-//             <table
-//               role="presentation"
-//               border="0"
-//               cellpadding="0"
-//               cellspacing="0"
-//               style={styles.main}
-//             >
-//               <tr>
-//                 <td style={styles.wrapper}>
-//                   <p>Halo,</p>
-//                   <p>Channel yang Anda submit telah divalidasi oleh admin</p>
-//                   <table
-//                     role="presentation"
-//                     border="0"
-//                     cellpadding="0"
-//                     cellspacing="0"
-//                     style={styles.button}
-//                   >
-//                     <tbody>
-//                       <tr>
-//                         <td style={styles.buttonCell}>
-//                           <a
-//                             href="#"
-//                             target="_blank"
-//                             style={{
-//                               ...styles.buttonLink,
-//                               ...styles.buttonPrimary,
-//                             }}
-//                           >
-//                             Cek sekarang
-//                           </a>
-//                         </td>
-//                       </tr>
-//                     </tbody>
-//                   </table>
-//                   <p>Terima kasih telah mempercayai ANNECT!</p>
-//                 </td>
-//               </tr>
-//             </table>
-//             <div style={styles.footer}>
-//               <table
-//                 role="presentation"
-//                 border="0"
-//                 cellpadding="0"
-//                 cellspacing="0"
-//               >
-//                 <tr>
-//                   <td style={styles.footerText}>
-//                     <span className="apple-link">PT. Karya Anak Bangsat</span>
-//                   </td>
-//                 </tr>
-//                 <tr>
-//                   <td style={styles.footerText}>
-//                     <a href="http://htmlemail.io" style={styles.textLink}>
-//                       Made by Human
-//                     </a>
-//                   </td>
-//                 </tr>
-//               </table>
-//             </div>
-//           </div>
-//         </td>
-//         <td>&nbsp;</td>
-//       </tr>
-//     </table>
-//   );
-// };
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "";
 
-// export default CreateChannel;
+export const ChannelCreatedEmail = ({
+  userFirstname,
+}: ChannelCreatedEmailProps) => (
+  <Html>
+    <Head />
+    <Preview>
+      Channel Anda telah berhasil dibuat dan sedang menunggu verifikasi dari tim
+      Annect.
+    </Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Img
+          src={`${baseUrl}/logo.png`}
+          width="170"
+          height="50"
+          alt="Company Logo"
+          style={{
+            objectFit: "contain",
+            margin: "0 auto",
+          }}
+        />
+        <Text style={paragraph}>Hi {userFirstname},</Text>
+        <Text style={paragraph}>
+          Selamat! Channel Anda telah berhasil dibuat di Annect. Langkah
+          selanjutnya adalah verifikasi oleh tim kami untuk memastikan bahwa
+          channel Anda sesuai dengan pedoman komunitas Annect.
+        </Text>
+        <Text style={paragraph}>
+          Ingin mengelola channel Anda? Klik tombol di bawah ini untuk melihat
+          atau mengedit channel Anda.
+        </Text>
+        <Section style={btnContainer}>
+          <Button
+            style={button}
+            href="https://annect.vercel.app/users/channels"
+          >
+            Kelola Channel
+          </Button>
+        </Section>
+        <Text style={paragraph}>
+          Best,
+          <br />
+          The Annect team
+        </Text>
+        <Hr style={hr} />
+        <Text style={footer}>
+          Universitas Pembangunan Negeri Veteran Jawa Timur, Indonesia
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+);
+
+ChannelCreatedEmail.PreviewProps = {
+  userFirstname: "Alan",
+} as ChannelCreatedEmailProps;
+
+export default ChannelCreatedEmail;
+
+const main = {
+  backgroundColor: "#ffffff",
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+};
+
+const container = {
+  margin: "0 auto",
+  padding: "20px 0 48px",
+};
+
+const logo = {
+  margin: "0 auto",
+};
+
+const paragraph = {
+  fontSize: "16px",
+  lineHeight: "26px",
+};
+
+const btnContainer = {
+  textAlign: "center" as const,
+};
+
+const button = {
+  backgroundColor: "#5F51E8",
+  borderRadius: "3px",
+  color: "#fff",
+  fontSize: "16px",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "block",
+  padding: "12px",
+};
+
+const hr = {
+  borderColor: "#cccccc",
+  margin: "20px 0",
+};
+
+const footer = {
+  color: "#8898aa",
+  fontSize: "12px",
+};

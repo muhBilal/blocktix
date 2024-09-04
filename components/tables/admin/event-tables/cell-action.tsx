@@ -54,7 +54,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => window.open(`/browse/${data.id}`, "_blank")}
+            onClick={() => window.open(`/events/${data.id}`, "_blank")}
           >
             <Eye className="mr-2 h-4 w-4" /> Lihat Event
           </DropdownMenuItem>

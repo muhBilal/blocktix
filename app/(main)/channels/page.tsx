@@ -20,6 +20,13 @@ import CountUp from "react-countup";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import { Heart } from "lucide-react";
+import FallbackLoading from "@/components/Loading";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type UserType = {
   id: string;
@@ -85,15 +92,14 @@ export default function Page() {
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={200} className="text-primary" /> Channel Akademik Yang
-            Aktif
+            <CountUp end={1000} duration={3} className="text-primary" /> Channel
+            Akademik Yang Aktif
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
-            Temukan dan ikuti berbagai channel terpercaya yang menyediakan
-            beragam event untuk mendukung perjalanan belajar dan pengembangan
-            diri Anda dengan informasi yang selalu up-to-date.
+            Ikuti berbagai channel terpercaya yang menyediakan beragam event
+            untuk mendukung perjalanan belajar dan pengembangan diri Anda.
           </p>
-          <div className="max-w-2xl z-10 w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
+          <div className="max-w-2xl z-10 w-full bg-muted lg:dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
             <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
               <Input
                 type="text"
@@ -114,54 +120,71 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {channels?.map((item, index) => (
-              <Card
-                key={index}
-                className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <Image
-                      src={item.image || ""}
-                      alt="image"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                      className="object-cover rounded"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <h3 className="font-bold text-xl">{item.users.name}</h3>
-                      <p className="text-muted-foreground text-xs">
-                        since {formatDate(item.created_at)}
-                      </p>
+          {channels?.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {channels?.map((item, index) => (
+                <Card
+                  key={index}
+                  className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="grid grid-cols-2 gap-4 mb-5">
+                      <Image
+                        src={item.image || ""}
+                        alt="image"
+                        width={500}
+                        height={500}
+                        loading="lazy"
+                        className="object-cover rounded"
+                      />
+                      <div className="flex flex-col gap-2">
+                        <h3 className="font-bold text-xl">{item.users.name}</h3>
+                        <p className="text-muted-foreground text-xs">
+                          since {formatDate(item.created_at)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <CardTitle>{item.name}</CardTitle>
-                  <CardDescription className="max-w-lg">
-                    <div
-                      dangerouslySetInnerHTML={{ __html: item.description }}
-                    />
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <div className="flex gap-2 ms-auto">
-                    <Link href={"/channels/" + item.id}>
-                      <Button
-                        variant={"secondary"}
-                        className="hover:text-primary transition-all duration-300"
-                      >
-                        Lihat detail
-                      </Button>
-                    </Link>
-                    <Button variant={"ghost"} onClick={handleFavorite}>
-                      <Heart className="text-red-500" />
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+                    <CardTitle>{item.name}</CardTitle>
+                    <CardDescription className="max-w-lg">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                      />
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="flex gap-2 ms-auto">
+                      <Link href={"/channels/" + item.id}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={"ghost"}
+                              onClick={handleFavorite}
+                              className="text-red-500 hover:text-white hover:bg-red-500"
+                            >
+                              <Heart />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ikuti Channel</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <FallbackLoading />
+          )}
         </div>
       </main>
     </Wrapper>

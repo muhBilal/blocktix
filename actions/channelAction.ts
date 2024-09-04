@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { sendChannelCreatedEmail, sendChannelValidatedEmail } from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
 import { channels_status } from "@prisma/client";
 
@@ -51,27 +52,35 @@ export const createChannels = async (values: createValue) => {
   const data = values;
   data.user_id = user?.id;
 
-  try {
-    const req = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/channels",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+  if (user) {
+    try {
+      const req = await fetch(
+        process.env.NEXT_PUBLIC_API_BASE_URL + "/channels",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (req.ok) {
+        await sendChannelCreatedEmail(
+          user?.emailAddresses[0].emailAddress,
+          user?.firstName
+        );
+        return true;
       }
-    );
 
-    if (req.ok) {
-      return true;
+      return false;
+    } catch (err) {
+      console.log(err);
+      return null;
     }
-
-    return false;
-  } catch (err) {
-    console.log(err);
-    return null;
   }
+
+  return null;
 };
 
 export const getChannelById = async (channel_id: string) => {
@@ -116,22 +125,39 @@ export const searchChannelByName = async (name: string) => {
 
 export const channelVerification = async (channel_id: string) => {
   try {
-    const req = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "VERIFIED" }),
+    const channel = await db.channels.findUnique({
+      where: {
+        id: channel_id,
+      },
+      include: {
+        users: true,
+      },
+    });
+
+    if (channel?.users) {
+      const req = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: "VERIFIED" }),
+        }
+      );
+      if (!req.ok) {
+        console.error(`Failed to fetch event. Status: ${req.status}`);
+        return null;
       }
-    );
-    if (!req.ok) {
-      console.error(`Failed to fetch event. Status: ${req.status}`);
-      return null;
+
+      await sendChannelValidatedEmail(
+        channel.users?.email || "",
+        channel.users?.name
+      );
+      return true;
     }
 
-    return true;
+    return false;
   } catch (err) {
     console.log(err);
     return null;

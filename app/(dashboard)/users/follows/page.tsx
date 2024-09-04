@@ -67,7 +67,7 @@ export default function Page() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {followings &&
-            followings.map((item, index: number) => (
+            followings?.map((item, index: number) => (
               <Card
                 key={index}
                 className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"

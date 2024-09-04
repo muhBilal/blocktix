@@ -13,7 +13,7 @@ const TextEffect = () => {
 
   return (
     <span className="text-primary">
-      <TextTransition springConfig={presets.wobbly}>
+      <TextTransition springConfig={presets.wobbly} className="!h-[52px]">
         {TEXTS[index % TEXTS.length]}
       </TextTransition>
     </span>

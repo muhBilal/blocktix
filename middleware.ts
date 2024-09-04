@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher([
   "/users(.*)",
   "/admin(.*)",
-  "/favorites(.*)",
+  "/events(.*)/discussions,",
 ]);
 
 const isUserDashboardRoute = createRouteMatcher(["/users(.*)"]);
