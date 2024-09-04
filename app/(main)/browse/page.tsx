@@ -95,10 +95,6 @@ export default function Page() {
     window.location.reload();
   };
 
-  const handleFavorite = async () => {
-    toast.success("Berhasil ditambahkan!");
-  };
-
   useEffect(() => {
     getData();
   }, []);
@@ -122,22 +118,6 @@ export default function Page() {
     }
   };
 
-  const toggleFavorite = (eventId: string) => {
-    if (favorites.includes(eventId)) {
-      setFavorites(favorites.filter((id) => id !== eventId));
-    } else {
-      setFavorites([...favorites, eventId]);
-    }
-  };
-
-  const toggleJoinEvent = (eventId: string) => {
-    if (joinedEvents.includes(eventId)) {
-      setJoinedEvents(joinedEvents.filter((id) => id !== eventId));
-    } else {
-      setJoinedEvents([...joinedEvents, eventId]);
-    }
-  };
-
   const formatDateIndonesian = (dateString: string): string => {
     const date = new Date(dateString);
 
@@ -146,6 +126,14 @@ export default function Page() {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const toggleFavorite = (eventId: string) => {
+    if (favorites.includes(eventId)) {
+      setFavorites(favorites.filter((id) => id !== eventId));
+    } else {
+      setFavorites([...favorites, eventId]);
+    }
   };
 
   return (
@@ -308,7 +296,7 @@ export default function Page() {
                             Lihat detail
                           </Button>
                         </Link>
-                        <Button variant={"ghost"} onClick={handleFavorite}>
+                        <Button variant={"ghost"}>
                           <Bookmark className="text-primary" />
                         </Button>
                       </div>
