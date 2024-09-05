@@ -49,6 +49,8 @@ import {
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import FileUpload from "@/components/FileUpload";
+import { updateUserEvent } from "@/actions/eventAction";
 
 type EventType = {
   id: string;
@@ -83,6 +85,11 @@ type ChannelType = {
   };
 };
 
+type FollowType = {
+  id: string;
+  channels: ChannelType;
+};
+
 type FavoriteType = {
   id: string;
   events: EventType;
@@ -90,27 +97,18 @@ type FavoriteType = {
 
 type DashboardType = {
   user_events: UserEventType[];
-  channels: ChannelType[];
+  follows: FollowType[];
   favorites: FavoriteType[];
-};
-
-const LoadingFallback = () => {
-  return (
-    <div className="mt-48 flex items-center justify-center">
-      <Loading />
-    </div>
-  );
 };
 
 export default function Page() {
   const { user } = useUser();
   const [dashboard, setDashboard] = useState<DashboardType>({
     user_events: [],
-    channels: [],
+    follows: [],
     favorites: [],
   });
-
-  const router = useRouter();
+  const [paymentImage, setPaymentImage] = useState<string | undefined>("");
 
   const getDashboardData = async () => {
     const dashboardData = await getUserDashboardData();
@@ -125,9 +123,27 @@ export default function Page() {
     toast.success("Berhasil disimpan!");
   };
 
-  const handleSubmitPayment = async () => {
-    toast.success("Pembayaran berhasil!");
-    window.location.reload();
+  const handleUpdatePayment = async (
+    user_event_id: string,
+    image_url: string
+  ) => {
+    const req = await updateUserEvent(user_event_id, image_url);
+
+    if (req) {
+      toast.success("Pembayaran berhasil!");
+      window.location.reload();
+      return;
+    }
+
+    toast.error("Terjadi kesalahan!");
+  };
+
+  const handleSubmitPayment = async (user_event_id: string) => {
+    if (paymentImage == "" || !paymentImage) {
+      toast.error("Upload bukti pembayaran!");
+    } else {
+      await handleUpdatePayment(user_event_id, paymentImage);
+    }
   };
 
   useEffect(() => {
@@ -235,7 +251,11 @@ export default function Page() {
                       <div className="mt-3 ms-auto flex gap-2">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button>Lunasi Pembayaran</Button>
+                            {new Date(item.events.event_date) > new Date() ? (
+                              <Button>Lunasi Pembayaran</Button>
+                            ) : (
+                              <Button disabled>Event Berakhir</Button>
+                            )}
                           </DialogTrigger>
                           <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
@@ -244,8 +264,15 @@ export default function Page() {
                                 Upload bukti pembayaranmu disini.
                               </DialogDescription>
                             </DialogHeader>
+                            <FileUpload
+                              apiEndpoint="image"
+                              onChange={(url) => setPaymentImage(url)}
+                              value={paymentImage}
+                            />
                             <DialogFooter>
-                              <Button onClick={handleSubmitPayment}>
+                              <Button
+                                onClick={() => handleSubmitPayment(item.id)}
+                              >
                                 Submit
                               </Button>
                             </DialogFooter>
@@ -279,7 +306,7 @@ export default function Page() {
           </div>
           <div className="mt-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-              {dashboard?.channels?.map((item, index) => (
+              {dashboard?.follows?.map((item, index) => (
                 <Card
                   key={index}
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
@@ -288,7 +315,7 @@ export default function Page() {
                     <div className="flex flex-col mb-5 gap-4">
                       <div className="relative w-full h-[300px]">
                         <Image
-                          src={item.image || ""}
+                          src={item.channels.image || ""}
                           alt="image"
                           fill
                           sizes="100%"
@@ -300,33 +327,33 @@ export default function Page() {
                         <p className="text-xs text-muted-foreground">
                           Created by{" "}
                           <span className="text-primary">
-                            {item.users.name}
+                            {item.channels.users.name}
                           </span>
                         </p>
                         <p className="text-xs text-muted-foreground">|</p>
                         <p className="text-xs text-muted-foreground">
                           Tersedia{" "}
                           <span className="text-primary">
-                            {item._count.events} Event
+                            {item.channels._count.events} Event
                           </span>
                         </p>
                       </div>
                     </div>
                     <CardTitle>
                       <Link
-                        href={"/channels/" + item.id}
+                        href={"/channels/" + item.channels.id}
                         className="hover:text-primary"
                       >
-                        {item.name}
+                        {item.channels.name}
                       </Link>
                     </CardTitle>
                     <CardDescription className="max-w-lg">
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: item.description
-                            ? item.description.length > 150
-                              ? `${item.description.slice(0, 150)}...`
-                              : item.description
+                          __html: item.channels.description
+                            ? item.channels.description.length > 150
+                              ? `${item.channels.description.slice(0, 150)}...`
+                              : item.channels.description
                             : "",
                         }}
                       />
@@ -334,7 +361,7 @@ export default function Page() {
                   </CardHeader>
                   <CardFooter>
                     <div className="flex gap-2 ms-auto">
-                      <Link href={"/channels/" + item.id}>
+                      <Link href={"/channels/" + item.channels.id}>
                         <Button
                           variant={"secondary"}
                           className="hover:text-primary transition-all duration-300"

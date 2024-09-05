@@ -208,3 +208,30 @@ export const getHistoryUserEvent = async () => {
     return null;
   }
 };
+
+export const updateUserEvent = async (
+  user_event_id: string,
+  image_url: string | null
+) => {
+  try {
+    const req = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + `/user_events/update`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: user_event_id, tf_image: image_url }),
+      }
+    );
+
+    if (req.ok) {
+      const res = await req.json();
+
+      return res;
+    }
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};

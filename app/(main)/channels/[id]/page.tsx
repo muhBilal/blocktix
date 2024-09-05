@@ -16,8 +16,24 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getChannelById } from "@/actions/channelAction";
-import { Plus } from "lucide-react";
+import {
+  BookmarkCheck,
+  Clock,
+  Bookmark,
+  Tag,
+  LayoutGrid,
+  MapPin,
+  UserRound,
+} from "lucide-react";
 import FallbackLoading from "@/components/Loading";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { formatDate, formatPrice } from "@/lib/format";
+import toast from "react-hot-toast";
 
 type UserType = {
   id: string;
@@ -28,8 +44,21 @@ type UserType = {
 type EventType = {
   id: string;
   name: string;
-  image: string;
   description: string;
+  location: string;
+  event_date: string;
+  image: string;
+  price: number;
+  is_paid: boolean;
+  is_online: boolean;
+  categories?: {
+    id: string;
+    name: string;
+  };
+  tags?: {
+    id: string;
+    name: string;
+  };
 };
 
 type ChannelType = {
@@ -52,6 +81,10 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const handleFollowChannel = () => {
     setIsFollowing(!isFollowing);
+  };
+
+  const handleFavorite = async () => {
+    toast.success("Berhasil disimpan!");
   };
 
   const getChannelDetail = async () => {
@@ -81,10 +114,11 @@ export default function Page({ params }: { params: { id: string } }) {
                 <div className="flex items-center gap-4">
                   <div className="relative w-20 h-20">
                     <Image
-                      // src={
-                      //   channels?.users?.image ?? "https://github.com/shadcn.png"
-                      // }
-                      src={"https://github.com/shadcn.png"}
+                      src={
+                        channels?.users?.image ??
+                        "https://github.com/shadcn.png"
+                      }
+                      // src={"https://github.com/shadcn.png"}
                       fill
                       sizes="100%"
                       alt="avatar"
@@ -113,39 +147,80 @@ export default function Page({ params }: { params: { id: string } }) {
                       key={index}
                       className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                     >
-                      <Link href={"/events/" + event.id}>
-                        <div className="relative w-full h-[200px]">
-                          <Image
-                            src={event.image || ""}
-                            alt="image"
-                            width={0}
-                            height={0}
-                            fill
-                            sizes="100%"
-                            loading="lazy"
-                            className="object-cover w-full h-full rounded-t-lg"
-                          />
-                        </div>
-                      </Link>
+                      <div className="relative w-full h-[300px]">
+                        <Image
+                          src={event.image || ""}
+                          alt="image"
+                          width={0}
+                          height={0}
+                          fill
+                          sizes="100%"
+                          loading="lazy"
+                          className="object-cover w-full h-full rounded-t-lg"
+                        />
+                      </div>
                       <CardHeader>
+                        <div className="flex flex-col gap-4 mb-5">
+                          <div className="flex gap-2">
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <UserRound className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.categories?.name}
+                              </p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <LayoutGrid className="w-4 h-4" />
+                              <p className="text-xs">{event.tags?.name}</p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <MapPin className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.is_online ? "Online" : "Offline"}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <Clock className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.event_date &&
+                                  formatDate(event.event_date)}
+                              </p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <Tag className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.is_paid
+                                  ? formatPrice(event.price)
+                                  : "Gratis"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                         <CardTitle>
                           <Link
                             href={"/events/" + event.id}
                             className="hover:text-primary"
                           >
-                            {event.name}
+                            {event.name.length > 20
+                              ? event.name.slice(0, 20) + "..."
+                              : event.name}
                           </Link>
                         </CardTitle>
                         <CardDescription className="max-w-lg">
                           <div
                             dangerouslySetInnerHTML={{
-                              __html: event.description,
+                              __html: event.description
+                                ? event.description.length > 150
+                                  ? `${event.description.slice(0, 150)}...`
+                                  : event.description
+                                : "",
                             }}
                           />
                         </CardDescription>
                       </CardHeader>
                       <CardFooter>
-                        <div className="ms-auto">
+                        <div className="flex gap-2 ms-auto">
                           <Link href={"/events/" + event.id}>
                             <Button
                               variant={"secondary"}
@@ -154,6 +229,22 @@ export default function Page({ params }: { params: { id: string } }) {
                               Lihat detail
                             </Button>
                           </Link>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant={"ghost"}
+                                  onClick={handleFavorite}
+                                  className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
+                                >
+                                  <Bookmark />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Simpan Event</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </CardFooter>
                     </Card>
