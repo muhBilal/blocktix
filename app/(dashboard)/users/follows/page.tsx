@@ -11,14 +11,18 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Employee } from "@/constants/data";
-import { formatDate } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import { follows } from "@prisma/client";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Heart } from "lucide-react";
+import toast from "react-hot-toast";
+import FallbackLoading from "@/components/Loading";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -33,10 +37,13 @@ type UserType = {
 type ChannelType = {
   id: string;
   name: string;
-  description: string;
   image: string;
+  description: string;
   created_at: Date;
   users: UserType;
+  _count: {
+    events: number;
+  };
 };
 
 type FollowType = {
@@ -46,9 +53,15 @@ type FollowType = {
 
 export default function Page() {
   const [followings, setFollowings] = useState<FollowType[]>();
+  const [loading, setLoading] = useState<boolean>(true);
   const getData = async () => {
     const req = await getAllData();
     setFollowings(req);
+    setLoading(false);
+  };
+
+  const handleFollow = async () => {
+    toast.success("Berhasil ditambahkan!");
   };
 
   useEffect(() => {
@@ -65,56 +78,96 @@ export default function Page() {
         />
         <Separator />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {followings &&
-            followings?.map((item, index: number) => (
-              <Card
-                key={index}
-                className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <Image
-                      src={item.channels.image}
-                      alt="image"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                      className="object-contain rounded"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <h3 className="font-bold text-xl">
-                        {item.channels.users.name}
-                      </h3>
-                      <p className="text-muted-foreground text-xs">
-                        since {formatDate(item.channels.created_at)}
-                      </p>
+        {loading ? (
+          <FallbackLoading />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {followings &&
+              followings?.map((item, index: number) => (
+                <Card
+                  key={index}
+                  className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="flex flex-col mb-5 gap-4">
+                      <div className="relative w-full h-[300px]">
+                        <Image
+                          src={item.channels.image || ""}
+                          alt="image"
+                          fill
+                          sizes="100%"
+                          loading="lazy"
+                          className="object-cover w-full h-full rounded"
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <p className="text-xs text-muted-foreground">
+                          Created by{" "}
+                          <span className="text-primary">
+                            {item.channels.users.name}
+                          </span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">|</p>
+                        <p className="text-xs text-muted-foreground">
+                          Tersedia{" "}
+                          <span className="text-primary">
+                            {item.channels._count.events} Event
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <CardTitle>Bersih itu sehat!!</CardTitle>
-                  <CardDescription className="max-w-lg">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: item.channels.description,
-                      }}
-                    />
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <div className="ms-auto">
-                    <Link href={"/channels/" + item.channels.id}>
-                      <Button
-                        variant={"secondary"}
-                        className="hover:text-primary transition-all duration-300"
+                    <CardTitle>
+                      <Link
+                        href={"/channels/" + item.channels.id}
+                        className="hover:text-primary"
                       >
-                        Lihat detail
-                      </Button>
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-        </div>
+                        {item.channels.name}
+                      </Link>
+                    </CardTitle>
+                    <CardDescription className="max-w-lg">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: item.channels.description
+                            ? item.channels.description.length > 150
+                              ? `${item.channels.description.slice(0, 150)}...`
+                              : item.channels.description
+                            : "",
+                        }}
+                      />
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="flex gap-2 ms-auto">
+                      <Link href={"/channels/" + item.channels.id}>
+                        <Button
+                          variant={"secondary"}
+                          className="hover:text-primary transition-all duration-300"
+                        >
+                          Lihat detail
+                        </Button>
+                      </Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={"ghost"}
+                              onClick={handleFollow}
+                              className="text-red-500 hover:text-white hover:bg-red-500"
+                            >
+                              <Heart />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ikuti Channel</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+          </div>
+        )}
       </div>
     </>
   );

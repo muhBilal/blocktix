@@ -18,7 +18,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Bookmark,
   Clock,
-  FileClock,
   Heart,
   LayoutGrid,
   MapPin,
@@ -39,7 +38,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type EventType = {
   id: string;
@@ -57,6 +66,7 @@ type EventType = {
 
 type UserEventType = {
   id: string;
+  status: string;
   events: EventType;
   users: users;
 };
@@ -100,6 +110,8 @@ export default function Page() {
     favorites: [],
   });
 
+  const router = useRouter();
+
   const getDashboardData = async () => {
     const dashboardData = await getUserDashboardData();
     setDashboard(dashboardData);
@@ -111,6 +123,11 @@ export default function Page() {
 
   const handleFavorite = async () => {
     toast.success("Berhasil disimpan!");
+  };
+
+  const handleSubmitPayment = async () => {
+    toast.success("Pembayaran berhasil!");
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -215,7 +232,25 @@ export default function Page() {
                           }}
                         />
                       </div>
-                      <div className="mt-3 ms-auto">
+                      <div className="mt-3 ms-auto flex gap-2">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button>Lunasi Pembayaran</Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Lunasi Pembayaran</DialogTitle>
+                              <DialogDescription>
+                                Upload bukti pembayaranmu disini.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <Button onClick={handleSubmitPayment}>
+                                Submit
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                         <Link href={"/events/" + item.events.id}>
                           <Button
                             variant={"secondary"}
