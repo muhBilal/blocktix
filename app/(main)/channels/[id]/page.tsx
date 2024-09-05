@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { getChannelById } from "@/actions/channelAction";
 import { Plus } from "lucide-react";
 import FallbackLoading from "@/components/Loading";
+import toast from "react-hot-toast";
 
 type UserType = {
   id: string;

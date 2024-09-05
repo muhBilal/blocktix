@@ -17,3 +17,32 @@ export const getAllData = async () => {
     console.log(err);
   }
 };
+
+export const addFavorite = async (event_id: string) => {
+  let user = await currentUser();
+
+  if (user) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/favorites/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ event_id, user_id: user.id }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add favorite");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error adding favorite:", error);
+      return null;
+    }
+  }
+};
