@@ -39,6 +39,9 @@ type ChannelType = {
   description: string;
   image: string;
   created_at: Date;
+  _count: {
+    events: number;
+  };
   users: UserType;
 };
 
@@ -149,7 +152,9 @@ export default function Page() {
                         <p className="text-xs text-muted-foreground">|</p>
                         <p className="text-xs text-muted-foreground">
                           Tersedia{" "}
-                          <span className="text-primary">40 Event</span>
+                          <span className="text-primary">
+                            {item._count.events} Event
+                          </span>
                         </p>
                       </div>
                     </div>

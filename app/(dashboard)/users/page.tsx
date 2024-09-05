@@ -15,15 +15,31 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Clock, FileClock, LayoutGrid, Tag } from "lucide-react";
+import {
+  Bookmark,
+  Clock,
+  FileClock,
+  Heart,
+  LayoutGrid,
+  MapPin,
+  Tag,
+  UserRound,
+} from "lucide-react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getUserDashboardData } from "@/actions/userActions";
-import { channels, events, tags, users } from "@prisma/client";
+import { categories, channels, events, tags, users } from "@prisma/client";
 import Loading from "@/components/Loading";
 import { formatDate, formatPrice } from "@/lib/format";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import toast from "react-hot-toast";
 
 type EventType = {
   id: string;
@@ -32,7 +48,10 @@ type EventType = {
   description: string;
   event_date: Date;
   price: number;
+  is_online: boolean;
+  is_paid: boolean;
   tags: tags;
+  categories: categories;
   channels: channels;
 };
 
@@ -49,11 +68,14 @@ type ChannelType = {
   description: string;
   created_at: Date;
   users: users;
+  _count: {
+    events: number;
+  };
 };
 
 type FavoriteType = {
   id: string;
-  events: events;
+  events: EventType;
 };
 
 type DashboardType = {
@@ -81,6 +103,14 @@ export default function Page() {
   const getDashboardData = async () => {
     const dashboardData = await getUserDashboardData();
     setDashboard(dashboardData);
+  };
+
+  const handleFollow = async () => {
+    toast.success("Berhasil ditambahkan!");
+  };
+
+  const handleFavorite = async () => {
+    toast.success("Berhasil disimpan!");
   };
 
   useEffect(() => {
@@ -119,13 +149,15 @@ export default function Page() {
                   className="hover:-translate-y-3 hover:border-primary transition-all duration-300"
                 >
                   <div className="flex flex-col lg:flex-row gap-4 p-2">
-                    <Image
-                      src={item.events.image || ""}
-                      alt="events"
-                      width={300}
-                      height={300}
-                      className="object-cover border border-muted rounded-md"
-                    />
+                    <div className="relative w-[300px] h-[300px]">
+                      <Image
+                        src={item.events.image || ""}
+                        alt="events"
+                        fill
+                        sizes="100%"
+                        className="object-cover border border-muted rounded-md"
+                      />
+                    </div>
                     <div className="flex flex-col gap-2 w-full">
                       <CardTitle>{item.events.name}</CardTitle>
                       <CardDescription>
@@ -138,23 +170,37 @@ export default function Page() {
                         </Link>
                       </CardDescription>
                       <div className="flex gap-4">
-                        <div className="flex gap-2 items-center text-muted-foreground">
-                          <Clock />
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <UserRound className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.categories.name}
+                          </p>
+                        </div>
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <LayoutGrid className="w-4 h-4" />
+                          <p className="text-xs">{item.events.tags.name}</p>
+                        </div>
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <MapPin className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.is_online ? "Online" : "Offline"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <Clock className="w-4 h-4" />
                           <p className="text-xs">
                             {item.events.event_date &&
                               formatDate(item.events.event_date)}
                           </p>
                         </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <div className="flex gap-2 items-center text-muted-foreground">
-                          <LayoutGrid />
-                          <p className="text-xs">{item.events.tags.name}</p>
-                        </div>
-                        <div className="flex gap-2 items-center text-muted-foreground">
-                          <Tag />
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <Tag className="w-4 h-4" />
                           <p className="text-xs">
-                            {formatPrice(item.events.price ?? 0)}
+                            {item.events.is_paid
+                              ? formatPrice(item.events.price)
+                              : "Gratis"}
                           </p>
                         </div>
                       </div>
@@ -162,7 +208,10 @@ export default function Page() {
                         <div
                           className="text-sm text-muted-foreground"
                           dangerouslySetInnerHTML={{
-                            __html: item.events.description || "",
+                            __html:
+                              item.events.description.length > 600
+                                ? item.events.description.slice(0, 600) + "...."
+                                : item.events.description || "",
                           }}
                         />
                       </div>
@@ -187,7 +236,7 @@ export default function Page() {
         <div className="mt-5">
           <div className="flex justify-between items-center">
             <div className="text-primary">Channel yang diikuti</div>
-            <Link href={"/users/following"}>
+            <Link href={"/users/follows"}>
               <Button variant={"secondary"} className="hover:text-primary">
                 Lihat semua
               </Button>
@@ -201,31 +250,55 @@ export default function Page() {
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                 >
                   <CardHeader>
-                    <div className="grid grid-cols-2 gap-4 mb-5">
-                      <Image
-                        src={item.image || ""}
-                        alt="image"
-                        width={500}
-                        height={500}
-                        loading="lazy"
-                        className="object-cover rounded"
-                      />
-                      <div className="flex flex-col gap-2">
-                        <h3 className="font-bold text-xl">{item.users.name}</h3>
-                        <p className="text-muted-foreground text-xs">
-                          since {formatDate(item.created_at)}
+                    <div className="flex flex-col mb-5 gap-4">
+                      <div className="relative w-full h-[300px]">
+                        <Image
+                          src={item.image || ""}
+                          alt="image"
+                          fill
+                          sizes="100%"
+                          loading="lazy"
+                          className="object-cover w-full h-full rounded"
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <p className="text-xs text-muted-foreground">
+                          Created by{" "}
+                          <span className="text-primary">
+                            {item.users.name}
+                          </span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">|</p>
+                        <p className="text-xs text-muted-foreground">
+                          Tersedia{" "}
+                          <span className="text-primary">
+                            {item._count.events} Event
+                          </span>
                         </p>
                       </div>
                     </div>
-                    <CardTitle>{item.name}</CardTitle>
+                    <CardTitle>
+                      <Link
+                        href={"/channels/" + item.id}
+                        className="hover:text-primary"
+                      >
+                        {item.name}
+                      </Link>
+                    </CardTitle>
                     <CardDescription className="max-w-lg">
                       <div
-                        dangerouslySetInnerHTML={{ __html: item.description }}
+                        dangerouslySetInnerHTML={{
+                          __html: item.description
+                            ? item.description.length > 150
+                              ? `${item.description.slice(0, 150)}...`
+                              : item.description
+                            : "",
+                        }}
                       />
                     </CardDescription>
                   </CardHeader>
                   <CardFooter>
-                    <div className="ms-auto">
+                    <div className="flex gap-2 ms-auto">
                       <Link href={"/channels/" + item.id}>
                         <Button
                           variant={"secondary"}
@@ -234,6 +307,22 @@ export default function Page() {
                           Lihat detail
                         </Button>
                       </Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={"ghost"}
+                              onClick={handleFollow}
+                              className="text-red-500 hover:text-white hover:bg-red-500"
+                            >
+                              <Heart />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Ikuti Channel</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </CardFooter>
                 </Card>
@@ -258,26 +347,80 @@ export default function Page() {
                   key={index}
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                 >
-                  <Image
-                    src={item.events.image || ""}
-                    alt="image"
-                    width={500}
-                    height={500}
-                    loading="lazy"
-                    className="object-cover rounded-t-lg"
-                  />
+                  <div className="relative w-full h-[300px]">
+                    <Image
+                      src={item.events.image || ""}
+                      alt="image"
+                      width={0}
+                      height={0}
+                      fill
+                      sizes="100%"
+                      loading="lazy"
+                      className="object-cover w-full h-full rounded-t-lg"
+                    />
+                  </div>
                   <CardHeader>
-                    <CardTitle>{item.events.name}</CardTitle>
+                    <div className="flex flex-col gap-4 mb-5">
+                      <div className="flex gap-2">
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <UserRound className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.categories.name}
+                          </p>
+                        </div>
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <LayoutGrid className="w-4 h-4" />
+                          <p className="text-xs">{item.events.tags.name}</p>
+                        </div>
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <MapPin className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.is_online ? "Online" : "Offline"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <Clock className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.event_date &&
+                              formatDate(item.events.event_date)}
+                          </p>
+                        </div>
+                        <div className="flex gap-1 items-center text-muted-foreground">
+                          <Tag className="w-4 h-4" />
+                          <p className="text-xs">
+                            {item.events.is_paid
+                              ? formatPrice(item.events.price)
+                              : "Gratis"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <CardTitle>
+                      <Link
+                        href={"/events/" + item.events.id}
+                        className="hover:text-primary"
+                      >
+                        {item.events.name && item.events.name?.length > 20
+                          ? item.events.name?.slice(0, 20) + "..."
+                          : item.events.name}
+                      </Link>
+                    </CardTitle>
                     <CardDescription className="max-w-lg">
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: item.events.description || "",
+                          __html: item.events.description
+                            ? item.events.description.length > 150
+                              ? `${item.events.description.slice(0, 150)}...`
+                              : item.events.description
+                            : "",
                         }}
                       />
                     </CardDescription>
                   </CardHeader>
                   <CardFooter>
-                    <div className="ms-auto">
+                    <div className="flex gap-2 ms-auto">
                       <Link href={"/events/" + item.events.id}>
                         <Button
                           variant={"secondary"}
@@ -286,6 +429,22 @@ export default function Page() {
                           Lihat detail
                         </Button>
                       </Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={"ghost"}
+                              onClick={handleFavorite}
+                              className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
+                            >
+                              <Bookmark />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Simpan Event</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </CardFooter>
                 </Card>

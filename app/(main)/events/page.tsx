@@ -9,6 +9,8 @@ import {
   Bookmark,
   Tag,
   LayoutGrid,
+  MapPin,
+  UserRound,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -41,6 +43,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatDate, formatPrice } from "@/lib/format";
 
 type EventType = {
   id: string;
@@ -49,6 +52,9 @@ type EventType = {
   location: string;
   event_date: string;
   image: string;
+  price: number;
+  is_paid: boolean;
+  is_online: boolean;
   categories?: {
     id: string;
     name: string;
@@ -296,14 +302,41 @@ export default function Page() {
                         />
                       </div>
                       <CardHeader>
-                        <div className="flex gap-4 mb-5">
-                          <div className="flex gap-1 text-muted-foreground">
-                            <LayoutGrid className="w-4 h-4" />
-                            <p className="text-xs">{event.categories?.name}</p>
+                        <div className="flex flex-col gap-4 mb-5">
+                          <div className="flex gap-2">
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <UserRound className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.categories?.name}
+                              </p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <LayoutGrid className="w-4 h-4" />
+                              <p className="text-xs">{event.tags?.name}</p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <MapPin className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.is_online ? "Online" : "Offline"}
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex gap-1 text-muted-foreground">
-                            <Tag className="w-4 h-4" />
-                            <p className="text-xs">{event.tags?.name}</p>
+                          <div className="flex gap-2">
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <Clock className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.event_date &&
+                                  formatDate(event.event_date)}
+                              </p>
+                            </div>
+                            <div className="flex gap-1 items-center text-muted-foreground">
+                              <Tag className="w-4 h-4" />
+                              <p className="text-xs">
+                                {event.is_paid
+                                  ? formatPrice(event.price)
+                                  : "Gratis"}
+                              </p>
+                            </div>
                           </div>
                         </div>
                         <CardTitle>
@@ -311,7 +344,9 @@ export default function Page() {
                             href={"/events/" + event.id}
                             className="hover:text-primary"
                           >
-                            {event.name}
+                            {event.name.length > 20
+                              ? event.name.slice(0, 20) + "..."
+                              : event.name}
                           </Link>
                         </CardTitle>
                         <CardDescription className="max-w-lg">

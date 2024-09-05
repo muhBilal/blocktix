@@ -62,19 +62,22 @@ const ChatComponent = ({
       if (!client) {
         toast.error("Ruang Diskusi tidak tersedia!");
         router.back();
+        return;
       }
 
-      const existingChannels = await client?.queryChannels({ id: eventId });
+      const existingChannels = await client.queryChannels({
+        id: { $eq: eventId },
+      });
       let channel;
 
       if (existingChannels && existingChannels?.length > 0) {
         channel = existingChannels[0];
       } else {
-        channel = client?.channel("messaging", eventId, {
+        channel = client.channel("messaging", eventId, {
           name: eventName ? "Channel " + eventName : "Channel",
           image: eventImage ?? "",
         });
-        await channel?.create();
+        await channel.create();
       }
 
       if (channel) {
@@ -84,10 +87,13 @@ const ChatComponent = ({
           await channel.addMembers([userId]);
         }
       }
+
+      return channel;
     } catch (err) {
       console.log(err);
       toast.error("Ruang Diskusi tidak tersedia!");
       router.back();
+      return;
     }
   };
 
