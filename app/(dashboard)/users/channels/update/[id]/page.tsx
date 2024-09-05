@@ -21,12 +21,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import FileUpload from "@/components/FileUpload";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EditableEditor from "@/components/EditableEditor";
 import { getChannelById } from "@/actions/channelAction";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import FallbackLoading from "@/components/Loading";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -59,6 +60,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
 
@@ -72,6 +74,7 @@ export default function Page({ params }: { params: { id: string } }) {
     form.setValue("nik", req?.nik);
     form.setValue("no_rek", req?.no_rek);
     form.setValue("phone", req?.phone);
+    setLoading(false);
   };
 
   const updateHandler = async (values: z.infer<typeof formSchema>) => {
@@ -86,7 +89,7 @@ export default function Page({ params }: { params: { id: string } }) {
       if (req.ok) {
         toast.success("Success!");
 
-        router.push("/admin/tags");
+        router.push("/users/channels");
       }
     } catch (err) {
       toast.error("Failed!");
@@ -115,116 +118,120 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         <Separator />
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Background Channel</FormLabel>
-                  <FormControl>
-                    <FileUpload
-                      apiEndpoint="image"
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nama Channel</FormLabel>
-                  <FormControl>
-                    <Input disabled={isLoading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deskripsi Channel</FormLabel>
-                  <FormControl>
-                    <EditableEditor
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {loading ? (
+          <FallbackLoading />
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Background Channel</FormLabel>
+                    <FormControl>
+                      <FileUpload
+                        apiEndpoint="image"
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nama Channel</FormLabel>
+                    <FormControl>
+                      <Input disabled={isLoading} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Deskripsi Channel</FormLabel>
+                    <FormControl>
+                      <EditableEditor
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="nik"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>NIK (Nomor Induk Kewarganegaran)</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="no_rek"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>No. Rekening</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nomor Telepon</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Link
-                href={"/users/channels"}
-                className={cn(
-                  buttonVariants({
-                    variant: "secondary",
-                    className: "text-primary",
-                  })
-                )}
-              >
-                Kembali
-              </Link>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Submit"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="nik"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>NIK (Nomor Induk Kewarganegaran)</FormLabel>
+                      <FormControl>
+                        <Input disabled={isLoading} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="no_rek"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>No. Rekening</FormLabel>
+                      <FormControl>
+                        <Input disabled={isLoading} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nomor Telepon</FormLabel>
+                      <FormControl>
+                        <Input disabled={isLoading} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Link
+                  href={"/users/channels"}
+                  className={cn(
+                    buttonVariants({
+                      variant: "secondary",
+                      className: "text-primary",
+                    })
+                  )}
+                >
+                  Kembali
+                </Link>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Loading..." : "Submit"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        )}
       </div>
     </ScrollArea>
   );

@@ -14,6 +14,7 @@ import * as React from "react";
 
 interface EventCreatedEmailProps {
   userFirstname: string | null;
+  eventPrice: number;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -22,12 +23,11 @@ const baseUrl = process.env.VERCEL_URL
 
 export const EventCreatedEmail = ({
   userFirstname,
+  eventPrice,
 }: EventCreatedEmailProps) => (
   <Html>
     <Head />
-    <Preview>
-      Event Anda kini tersedia untuk diakses oleh seluruh komunitas Annect.
-    </Preview>
+    <Preview>Event Anda berhasil diupload, segera lakukan pembayaran.</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -42,22 +42,23 @@ export const EventCreatedEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Selamat! Event Anda telah berhasil diunggah ke Annect. Kami sangat
-          senang membantu Anda menyebarkan informasi mengenai event yang telah
-          Anda buat kepada komunitas kami.
+          Terima kasih telah membuat event di Annect! Sebelum event Anda dapat
+          diakses oleh komunitas, Anda perlu menyelesaikan pembayaran sebesar{" "}
+          <strong>Rp{eventPrice}</strong>.
         </Text>
         <Text style={paragraph}>
-          Ingin mengelola event Anda? Klik tombol di bawah ini untuk melihat,
-          mengedit, atau mempromosikan event Anda lebih lanjut.
+          Setelah pembayaran sebesar <strong>Rp{eventPrice}</strong> selesai,
+          event Anda akan segera tersedia untuk seluruh komunitas Annect.
         </Text>
-        <Section style={btnContainer}>
-          <Button
-            style={button}
-            href="https://annect.vercel.app/users/channels"
-          >
-            Kelola Event
-          </Button>
-        </Section>
+        <Text style={paragraph}>
+          <strong>Informasi Rekening Pembayaran:</strong>
+          <br />
+          Bank: <strong>BCA</strong>
+          <br />
+          Nomor Rekening: <strong>2737423456</strong>
+          <br />
+          Atas Nama: <strong>Annect Head Officer</strong>
+        </Text>
         <Text style={paragraph}>
           Best,
           <br />

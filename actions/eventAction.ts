@@ -129,10 +129,12 @@ type createValues = {
   event_date: Date;
   channel_id?: string;
   is_paid: boolean | null;
+  post_duration: number;
 };
 
 export const createEvents = async (values: createValues) => {
   const user = await currentUser();
+  const totalPayment = values.post_duration * 1000;
 
   if (user && user.privateMetadata.role === "USER") {
     const getChannelId = await getSpesificChannelByUserId(user.id);
@@ -153,7 +155,8 @@ export const createEvents = async (values: createValues) => {
         if (req.ok) {
           await sendEventCreatedEmail(
             user?.emailAddresses[0].emailAddress,
-            user?.firstName
+            user?.firstName,
+            totalPayment
           );
           return true;
         }

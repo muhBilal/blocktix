@@ -7,6 +7,8 @@ import {
   TagIcon,
   GanttChartSquare,
   Bookmark,
+  Tag,
+  LayoutGrid,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -281,7 +283,7 @@ export default function Page() {
                       key={index}
                       className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                     >
-                      <div className="relative w-full h-[200px]">
+                      <div className="relative w-full h-[300px]">
                         <Image
                           src={event.image || ""}
                           alt="image"
@@ -294,13 +296,30 @@ export default function Page() {
                         />
                       </div>
                       <CardHeader>
-                        <CardTitle>{event.name}</CardTitle>
+                        <div className="flex gap-4 mb-5">
+                          <div className="flex gap-1 text-muted-foreground">
+                            <LayoutGrid className="w-4 h-4" />
+                            <p className="text-xs">{event.categories?.name}</p>
+                          </div>
+                          <div className="flex gap-1 text-muted-foreground">
+                            <Tag className="w-4 h-4" />
+                            <p className="text-xs">{event.tags?.name}</p>
+                          </div>
+                        </div>
+                        <CardTitle>
+                          <Link
+                            href={"/events/" + event.id}
+                            className="hover:text-primary"
+                          >
+                            {event.name}
+                          </Link>
+                        </CardTitle>
                         <CardDescription className="max-w-lg">
                           <div
                             dangerouslySetInnerHTML={{
                               __html: event.description
-                                ? event.description.length > 100
-                                  ? `${event.description.slice(0, 100)}...`
+                                ? event.description.length > 150
+                                  ? `${event.description.slice(0, 150)}...`
                                   : event.description
                                 : "",
                             }}
