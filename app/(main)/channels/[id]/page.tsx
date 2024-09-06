@@ -135,7 +135,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </div>
                 </div>
                 <Button
-                  variant={isFollowing ? "secondary" : "primary"} // Ubah varian berdasarkan status
+                  variant={isFollowing ? "secondary" : "default"} // Ubah varian berdasarkan status
                   className={`${
                     isFollowing
                       ? "bg-gray-500 text-white" // Ganti warna abu-abu jika sudah diikuti

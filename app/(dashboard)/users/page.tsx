@@ -68,7 +68,7 @@ type EventType = {
 
 type UserEventType = {
   id: string;
-  status: string;
+  status: boolean;
   events: EventType;
   users: users;
 };
@@ -192,7 +192,15 @@ export default function Page() {
                       />
                     </div>
                     <div className="flex flex-col gap-2 w-full">
-                      <CardTitle>{item.events.name}</CardTitle>
+                      <CardTitle>
+                        <Link
+                          target="_blank"
+                          href={"/events/" + item.events.id}
+                          className="hover:text-primary"
+                        >
+                          {item.events.name}
+                        </Link>
+                      </CardTitle>
                       <CardDescription>
                         Diadakan oleh{" "}
                         <Link
@@ -251,10 +259,11 @@ export default function Page() {
                       <div className="mt-3 ms-auto flex gap-2">
                         <Dialog>
                           <DialogTrigger asChild>
-                            {new Date(item.events.event_date) > new Date() ? (
+                            {new Date(item.events.event_date) > new Date() &&
+                            !item.status ? (
                               <Button>Lunasi Pembayaran</Button>
                             ) : (
-                              <Button disabled>Event Berakhir</Button>
+                              <Button disabled>Selesai</Button>
                             )}
                           </DialogTrigger>
                           <DialogContent className="sm:max-w-[425px]">
