@@ -91,15 +91,16 @@ export default function Page({ params }: { params: { id: string } }) {
     try {
       await followChannel(params.id);
       setIsFollowing(true);
-      toast.success("Berhasil mengikuti channel");
+      toast.success("Berhasil");
+      await getChannelDetail();
     } catch (error) {
-      toast.error("Gagal mengikuti channel");
+      toast.error("Gagal");
     }
   };
 
   useEffect(() => {
     getChannelDetail();
-  }, [handleFollowChannel]);
+  }, []);
   return (
     <Wrapper>
       <div className="mt-40">
@@ -135,13 +136,15 @@ export default function Page({ params }: { params: { id: string } }) {
                   </div>
                 </div>
                 <Button
-                  variant={channels.is_following ? "secondary" : "default"} // Ubah varian berdasarkan status follow
                   className={`${
-                    channels.is_following && "bg-gray-500 text-white" // Tetap abu-abu jika diikuti
+                    channels.is_following &&
+                    "bg-red-500 text-white hover:bg-red-700"
                   }`}
-                  onClick={handleFollowChannel} // Panggil fungsi follow/unfollow
+                  onClick={handleFollowChannel}
                 >
-                  {channels.is_following ? "Diikuti" : "Ikuti Channel"}
+                  {channels.is_following
+                    ? "Berhenti Mengikuti"
+                    : "Ikuti Channel"}
                 </Button>
               </div>
             </div>
