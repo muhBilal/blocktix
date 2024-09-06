@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { sendEventCreatedEmail } from "@/lib/mail";
+import { sendEventCreatedEmail, sendPaymentDoneEmail } from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
@@ -230,31 +230,44 @@ export const getHistoryUserEvent = async () => {
 export const updateUserEvent = async (
   user_event_id: string,
   image_url: string | null,
-  status: boolean | null
+  status: boolean | null,
+  link_group: string = ""
 ) => {
-  try {
-    const req = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + `/user_events/update`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: user_event_id,
-          tf_image: image_url,
-          status,
-        }),
+  const user = await currentUser();
+
+  if (user) {
+    try {
+      const req = await fetch(
+        process.env.NEXT_PUBLIC_API_BASE_URL + `/user_events/update`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: user_event_id,
+            tf_image: image_url,
+            status,
+          }),
+        }
+      );
+
+      if (req.ok) {
+        const res = await req.json();
+
+        await sendPaymentDoneEmail(
+          user.emailAddresses[0].emailAddress,
+          user.firstName,
+          link_group
+        );
+
+        return true;
       }
-    );
-
-    if (req.ok) {
-      const res = await req.json();
-
-      return true;
+    } catch (err) {
+      console.log(err);
+      return null;
     }
-  } catch (err) {
-    console.log(err);
+  } else {
     return null;
   }
 };

@@ -61,6 +61,7 @@ type EventType = {
   price: number;
   is_online: boolean;
   is_paid: boolean;
+  link_group: string;
   tags: tags;
   categories: categories;
   channels: channels;
@@ -257,36 +258,53 @@ export default function Page() {
                         />
                       </div>
                       <div className="mt-3 ms-auto flex gap-2">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            {new Date(item.events.event_date) > new Date() &&
-                            !item.status ? (
-                              <Button>Lunasi Pembayaran</Button>
-                            ) : (
-                              <Button disabled>Selesai</Button>
+                        {item.status == true && (
+                          <Link
+                            href={item.events.link_group}
+                            target="_blank"
+                            className={cn(
+                              buttonVariants({
+                                className: "text-white bg-green-500",
+                              })
                             )}
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                              <DialogTitle>Lunasi Pembayaran</DialogTitle>
-                              <DialogDescription>
-                                Upload bukti pembayaranmu disini.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <FileUpload
-                              apiEndpoint="image"
-                              onChange={(url) => setPaymentImage(url)}
-                              value={paymentImage}
-                            />
-                            <DialogFooter>
-                              <Button
-                                onClick={() => handleSubmitPayment(item.id)}
-                              >
-                                Submit
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
+                          >
+                            Bergabung ke grub
+                          </Link>
+                        )}
+
+                        {item.status == false &&
+                          new Date(item.events.event_date) < new Date() && (
+                            <Button disabled>Event Selesai</Button>
+                          )}
+
+                        {item.status == false &&
+                          new Date(item.events.event_date) > new Date() && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button>Lunasi Pembayaran</Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Lunasi Pembayaran</DialogTitle>
+                                  <DialogDescription>
+                                    Upload bukti pembayaranmu disini.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <FileUpload
+                                  apiEndpoint="image"
+                                  onChange={(url) => setPaymentImage(url)}
+                                  value={paymentImage}
+                                />
+                                <DialogFooter>
+                                  <Button
+                                    onClick={() => handleSubmitPayment(item.id)}
+                                  >
+                                    Submit
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          )}
                         <Link href={"/events/" + item.events.id}>
                           <Button
                             variant={"secondary"}

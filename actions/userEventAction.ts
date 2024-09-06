@@ -1,4 +1,7 @@
 "use server";
+
+import { currentUser } from "@clerk/nextjs/server";
+
 export const getAllData = async () => {
   try {
     const req = await fetch(
@@ -11,5 +14,14 @@ export const getAllData = async () => {
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const joinEvent = async (event_id: string) => {
+  const user = await currentUser();
+
+  if (user) {
+  } else {
+    return null;
   }
 };

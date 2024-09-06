@@ -12,25 +12,22 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface PaymentDoneEmailProps {
+interface JoinEventEmailProps {
   userFirstname: string | null;
-  linkGroup: string;
+  eventPrice: number;
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-export const PaymentDoneEmail = ({
+export const JoinEventEmail = ({
   userFirstname,
-  linkGroup,
-}: PaymentDoneEmailProps) => (
+  eventPrice,
+}: JoinEventEmailProps) => (
   <Html>
     <Head />
-    <Preview>
-      Pembayaran Anda telah diterima. Selamat bergabung! Klik untuk akses grup
-      event.
-    </Preview>
+    <Preview>Konfirmasi Pembayaran untuk Bergabung ke Event.</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -45,17 +42,24 @@ export const PaymentDoneEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Terima kasih! Pembayaran Anda telah berhasil diproses, dan Anda
-          sekarang resmi terdaftar untuk event yang telah anda daftarkan.
+          Terima kasih telah tertarik untuk bergabung ke event Annect. Untuk
+          melanjutkan proses pendaftaran,, Anda perlu menyelesaikan pembayaran
+          sebesar <strong>Rp{eventPrice}</strong>.
         </Text>
         <Text style={paragraph}>
-          Klik tautan di bawah ini untuk bergabung dengan grup event.
+          Setelah pembayaran sebesar <strong>Rp{eventPrice}</strong>{" "}
+          dikonfirmasi, Anda akan segera mendapatkan email untuk bergabung ke
+          grub event.
         </Text>
-        <Section style={btnContainer}>
-          <Button style={button} href={linkGroup}>
-            Gabung Grub
-          </Button>
-        </Section>
+        <Text style={paragraph}>
+          <strong>Informasi Rekening Pembayaran:</strong>
+          <br />
+          Bank: <strong>BCA</strong>
+          <br />
+          Nomor Rekening: <strong>2737423456</strong>
+          <br />
+          Atas Nama: <strong>Annect Head Officer</strong>
+        </Text>
         <Text style={paragraph}>
           Best,
           <br />
@@ -70,11 +74,11 @@ export const PaymentDoneEmail = ({
   </Html>
 );
 
-PaymentDoneEmail.PreviewProps = {
+JoinEventEmail.PreviewProps = {
   userFirstname: "Alan",
-} as PaymentDoneEmailProps;
+} as JoinEventEmailProps;
 
-export default PaymentDoneEmail;
+export default JoinEventEmail;
 
 const main = {
   backgroundColor: "#ffffff",
