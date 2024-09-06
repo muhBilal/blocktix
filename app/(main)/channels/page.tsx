@@ -27,6 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { followChannels } from "@/actions/followAction";
 
 type UserType = {
   id: string;
@@ -40,6 +41,7 @@ type ChannelType = {
   image: string;
   created_at: Date;
   users: UserType;
+  channels: ChannelType[] | string[];
 };
 
 export default function Page() {
@@ -52,6 +54,7 @@ export default function Page() {
   const getData = async () => {
     const channelAction = await getAllData();
     setChannels(channelAction);
+    console.log(channelAction);
   };
 
   const handleSearch = async () => {
@@ -65,8 +68,22 @@ export default function Page() {
     }
   };
 
-  const handleFavorite = async () => {
-    toast.success("Berhasil ditambahkan!");
+  const handleFollowChannels = async (channelId: string) => {
+    try {
+      await followChannels(channelId);
+      toast.success("Berhasil mengikuti channel");
+    } catch (error) {
+      toast.error("Gagal mengikuti channel");
+    }
+
+    // const result = await followChannels(channelId);
+    // console.log(result);
+    // if (result) {
+    //   // setChannels([...result, channelId]);
+    //   toast.success("Berhasil ditambahkan!");
+    // } else {
+    //   toast.error("Gagal menambahkan favorite");
+    // }
   };
 
   useEffect(() => {
@@ -188,7 +205,9 @@ export default function Page() {
                           <TooltipTrigger asChild>
                             <Button
                               variant={"ghost"}
-                              onClick={handleFavorite}
+                              onClick={async () =>
+                                await handleFollowChannels(item.id)
+                              }
                               className="text-red-500 hover:text-white hover:bg-red-500"
                             >
                               <Heart />
