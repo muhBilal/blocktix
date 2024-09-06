@@ -1,4 +1,3 @@
-import { formatPrice } from "@/lib/format";
 import {
   Body,
   Button,
@@ -13,22 +12,22 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface JoinEventEmailProps {
+interface BroadcastEmailProps {
   userFirstname: string | null;
-  eventPrice: number;
+  channel_id: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-export const JoinEventEmail = ({
+export const BroadcastEmail = ({
   userFirstname,
-  eventPrice,
-}: JoinEventEmailProps) => (
+  channel_id,
+}: BroadcastEmailProps) => (
   <Html>
     <Head />
-    <Preview>Anda telah berhasil bergabung ke sebuah event.</Preview>
+    <Preview>Notifikasi Event Baru di Channel yang Diikuti</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -43,23 +42,13 @@ export const JoinEventEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Terima kasih telah tertarik untuk bergabung ke event Annect. Untuk
-          melanjutkan proses pendaftaran, Anda perlu menyelesaikan pembayaran
-          sebesar <strong>{formatPrice(eventPrice)}</strong>.
+          Kami ingin memberitahumu bahwa channel yang kamu ikuti telah
+          mengupload sebuah event baru!
         </Text>
         <Text style={paragraph}>
-          Setelah pembayaran sebesar <strong>{formatPrice(eventPrice)}</strong>{" "}
-          dikonfirmasi, Anda akan segera mendapatkan email untuk bergabung ke
-          grub event.
-        </Text>
-        <Text style={paragraph}>
-          <strong>Informasi Rekening Pembayaran:</strong>
-          <br />
-          Bank: <strong>BCA</strong>
-          <br />
-          Nomor Rekening: <strong>2737423456</strong>
-          <br />
-          Atas Nama: <strong>Annect Head Officer</strong>
+          Kunjungi{" "}
+          <a href={baseUrl + "/channels/" + channel_id}>link berikut</a> untuk
+          informasi lebih lanjut.
         </Text>
         <Text style={paragraph}>
           Best,
@@ -75,11 +64,11 @@ export const JoinEventEmail = ({
   </Html>
 );
 
-JoinEventEmail.PreviewProps = {
+BroadcastEmail.PreviewProps = {
   userFirstname: "Alan",
-} as JoinEventEmailProps;
+} as BroadcastEmailProps;
 
-export default JoinEventEmail;
+export default BroadcastEmail;
 
 const main = {
   backgroundColor: "#ffffff",

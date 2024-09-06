@@ -22,14 +22,7 @@ import { formatDate, formatPrice } from "@/lib/format";
 import FallbackLoading from "@/components/Loading";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
-
-type Event = {
-  channels: channels;
-  name: string;
-  description: string;
-  similar_event: events[];
-  event_date: string;
-};
+import { joinEvent } from "@/actions/userEventAction";
 
 type EventType = {
   id: string;
@@ -39,6 +32,8 @@ type EventType = {
   image: string;
   location: string;
   price: number;
+  is_join: boolean;
+  link_group: string;
   channels: {
     id: string;
     name: string;
@@ -55,24 +50,34 @@ type EventType = {
 
 export default function Page({ params }: { params: { id: string } }) {
   const [events, setEvents] = useState<EventType>();
-  const [isFollowing, setIsFollowing] = useState(false);
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
     console.log(data);
     setEvents(data);
   };
 
-  useEffect(() => {
-    getEventDetail();
-  }, []);
+  const handleJoinEvent = async (
+    event_id: string,
+    price: number,
+    link_group: string
+  ) => {
+    const req = await joinEvent(event_id, price, link_group);
 
-  const handleFollowEvent = () => {
-    setIsFollowing(!isFollowing);
+    if (req) {
+      toast.success("Berhasil mengikuti!");
+      await getEventDetail();
+    } else {
+      toast.error("Gagal mengikuti!");
+    }
   };
 
   const handleFavorite = async () => {
     toast.success("Berhasil disimpan!");
   };
+
+  useEffect(() => {
+    getEventDetail();
+  }, []);
 
   return (
     <Wrapper>
@@ -125,12 +130,16 @@ export default function Page({ params }: { params: { id: string } }) {
                     Ruang Diskusi
                   </Link>
                   <Button
-                    onClick={handleFollowEvent}
-                    className={
-                      isFollowing ? "bg-green-500" : "bg-primary text-white"
+                    onClick={() =>
+                      handleJoinEvent(
+                        events.id,
+                        events.price,
+                        events.link_group
+                      )
                     }
+                    disabled={events.is_join}
                   >
-                    {isFollowing ? "Event Diikuti" : "Ikuti Event"}
+                    {events.is_join ? "Event Diikuti" : "Ikuti Event"}
                   </Button>
                 </div>
               </div>
@@ -151,12 +160,16 @@ export default function Page({ params }: { params: { id: string } }) {
                       }}
                     />
                     <Button
-                      onClick={handleFollowEvent}
-                      className={
-                        isFollowing ? "bg-green-500" : "bg-primary text-white"
+                      onClick={() =>
+                        handleJoinEvent(
+                          events.id,
+                          events.price,
+                          events.link_group
+                        )
                       }
+                      disabled={events.is_join}
                     >
-                      {isFollowing ? "Event Diikuti" : "Ikuti Event"}
+                      {events.is_join ? "Event Diikuti" : "Ikuti Event"}
                     </Button>
                   </TabsContent>
                   <TabsContent value="description" className="space-y-4">

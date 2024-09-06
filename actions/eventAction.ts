@@ -1,45 +1,47 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { sendEventCreatedEmail, sendPaymentDoneEmail } from "@/lib/mail";
+import {
+  sendBroadcastEmail,
+  sendEventCreatedEmail,
+  sendPaymentDoneEmail,
+  sendPaymentProcessEmail,
+} from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const getAllData = async () => {
   const user = await currentUser();
 
-  if (user) {
-    try {
-      const getTags = await fetch(
-        process.env.NEXT_PUBLIC_API_BASE_URL + "/tags"
-      );
-      const getCategories = await fetch(
-        process.env.NEXT_PUBLIC_API_BASE_URL + "/categories"
-      );
-      const getEvents = await fetch(
-        process.env.NEXT_PUBLIC_API_BASE_URL + `/events?users=${user.id}`
-      );
+  try {
+    const getTags = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/tags");
+    const getCategories = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + "/categories"
+    );
+    const getEvents = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + `/events?users=${user?.id}`
+    );
 
-      const tagRes = await getTags.json();
-      const categoryRes = await getCategories.json();
-      const eventRes = await getEvents.json();
+    const tagRes = await getTags.json();
+    const categoryRes = await getCategories.json();
+    const eventRes = await getEvents.json();
 
-      const data = {
-        tags: tagRes,
-        categories: categoryRes,
-        events: eventRes,
-      };
+    const data = {
+      tags: tagRes,
+      categories: categoryRes,
+      events: eventRes,
+    };
 
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
 
 export const getEventById = async (event_id: string) => {
+  const user = await currentUser();
   try {
     const req = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${event_id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${event_id}?user_id=${user?.id}`,
       {
         method: "GET",
       }
@@ -158,6 +160,8 @@ export const createEvents = async (values: createValues) => {
             user?.firstName,
             totalPayment
           );
+
+          await sendBroadcastEmail(values.channel_id);
           return true;
         }
 
@@ -255,11 +259,15 @@ export const updateUserEvent = async (
       if (req.ok) {
         const res = await req.json();
 
-        await sendPaymentDoneEmail(
-          user.emailAddresses[0].emailAddress,
-          user.firstName,
-          link_group
-        );
+        if (status) {
+          await sendPaymentDoneEmail(
+            user.emailAddresses[0].emailAddress,
+            user.firstName,
+            link_group
+          );
+        } else {
+          await sendPaymentProcessEmail();
+        }
 
         return true;
       }

@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/format";
 import {
   Body,
   Button,
@@ -44,11 +45,12 @@ export const EventCreatedEmail = ({
         <Text style={paragraph}>
           Terima kasih telah membuat event di Annect! Sebelum event Anda dapat
           diakses oleh komunitas, Anda perlu menyelesaikan pembayaran sebesar{" "}
-          <strong>Rp{eventPrice}</strong>.
+          <strong>{formatPrice(eventPrice)}</strong>.
         </Text>
         <Text style={paragraph}>
-          Setelah pembayaran sebesar <strong>Rp{eventPrice}</strong> selesai,
-          event Anda akan segera tersedia untuk seluruh komunitas Annect.
+          Setelah pembayaran sebesar <strong>{formatPrice(eventPrice)}</strong>{" "}
+          selesai, event Anda akan segera tersedia untuk seluruh komunitas
+          Annect.
         </Text>
         <Text style={paragraph}>
           <strong>Informasi Rekening Pembayaran:</strong>

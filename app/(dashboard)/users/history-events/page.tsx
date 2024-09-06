@@ -1,5 +1,5 @@
 "use client";
-import { getHistoryUserEvent } from "@/actions/eventAction";
+import { getHistoryUserEvent, updateUserEvent } from "@/actions/eventAction";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -27,7 +27,7 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { categories, events, tags } from "@prisma/client";
+import { categories, channels, events, tags, users } from "@prisma/client";
 import { Clock, LayoutGrid, MapPin, Plus, Tag, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,6 +36,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { formatDate, formatPrice } from "@/lib/format";
 import FallbackLoading from "@/components/Loading";
+import FileUpload from "@/components/FileUpload";
+import { cn } from "@/lib/utils";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -51,20 +53,24 @@ type EventType = {
   price: number;
   is_online: boolean;
   is_paid: boolean;
+  link_group: string;
   tags: tags;
   categories: categories;
+  channels: channels;
 };
 
 type HistoryEvent = {
   id: string;
-  status: string;
+  status: boolean;
   events: EventType;
+  users: users;
 };
 
 export default function Page() {
   const [histories, setHistories] = useState<HistoryEvent[]>([]);
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
+  const [paymentImage, setPaymentImage] = useState<string | undefined>("");
 
   const getData = async () => {
     const req = await getHistoryUserEvent();
@@ -72,9 +78,27 @@ export default function Page() {
     setLoading(false);
   };
 
-  const handleSubmitPayment = async () => {
-    toast.success("Pembayaran berhasil!");
-    router.push("/users/history-events");
+  const handleUpdatePayment = async (
+    user_event_id: string,
+    image_url: string
+  ) => {
+    const req = await updateUserEvent(user_event_id, image_url, false);
+
+    if (req) {
+      toast.success("Pembayaran berhasil!");
+      window.location.reload();
+      return;
+    }
+
+    toast.error("Terjadi kesalahan!");
+  };
+
+  const handleSubmitPayment = async (user_event_id: string) => {
+    if (paymentImage == "" || !paymentImage) {
+      toast.error("Upload bukti pembayaran!");
+    } else {
+      await handleUpdatePayment(user_event_id, paymentImage);
+    }
   };
 
   useEffect(() => {
@@ -174,24 +198,53 @@ export default function Page() {
                     </CardHeader>
                     <CardFooter>
                       <div className="flex gap-2 ms-auto">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button>Lunasi Pembayaran</Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                              <DialogTitle>Lunasi Pembayaran</DialogTitle>
-                              <DialogDescription>
-                                Upload bukti pembayaranmu disini.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                              <Button onClick={handleSubmitPayment}>
-                                Submit
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
+                        {item.status == true && (
+                          <Link
+                            href={item.events.link_group}
+                            target="_blank"
+                            className={cn(
+                              buttonVariants({
+                                className: "text-white bg-green-500",
+                              })
+                            )}
+                          >
+                            Bergabung ke grub
+                          </Link>
+                        )}
+
+                        {item.status == false &&
+                          new Date(item.events.event_date) < new Date() && (
+                            <Button disabled>Event Selesai</Button>
+                          )}
+
+                        {item.status == false &&
+                          new Date(item.events.event_date) > new Date() && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button>Lunasi Pembayaran</Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Lunasi Pembayaran</DialogTitle>
+                                  <DialogDescription>
+                                    Upload bukti pembayaranmu disini.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <FileUpload
+                                  apiEndpoint="image"
+                                  onChange={(url) => setPaymentImage(url)}
+                                  value={paymentImage}
+                                />
+                                <DialogFooter>
+                                  <Button
+                                    onClick={() => handleSubmitPayment(item.id)}
+                                  >
+                                    Submit
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          )}
                         <Link href={"/events/" + item.events.id}>
                           <Button
                             variant={"secondary"}

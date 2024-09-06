@@ -26,6 +26,7 @@ export const getAllDataFollowers = async (id: string) => {
 
     if (req.ok) {
       const res = await req.json();
+      return res;
     }
   } catch (err) {
     console.log(err);

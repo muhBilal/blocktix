@@ -5,6 +5,10 @@ import ChannelCreatedEmail from "@/emails/create-channel";
 import ChannelValidatedEmail from "@/emails/channel-validated";
 import PaymentDoneEmail from "@/emails/payment-done";
 import { JoinEventEmail } from "@/emails/join-event";
+import { getAllDataFollowers } from "@/actions/followAction";
+import BroadcastEmail from "@/emails/broadcast";
+import { currentUser } from "@clerk/nextjs/server";
+import PaymentProcessEmail from "@/emails/payment-process";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;
@@ -130,6 +134,29 @@ export const sendPaymentDoneEmail = async (
   }
 };
 
+export const sendPaymentProcessEmail = async () => {
+  const user = await currentUser();
+
+  if (user) {
+    try {
+      await resend.emails.send({
+        from: "Annect <marketing@awsd-qwerty.com>",
+        to: user.emailAddresses[0].emailAddress,
+        subject:
+          "Pembayaran Anda telah kami terima. Dan akan di proses oleh admin!",
+        react: PaymentProcessEmail({
+          userFirstname: user.firstName,
+        }),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    console.log("user not found");
+    return null;
+  }
+};
+
 export const sendJoinEventEmail = async (
   email: string,
   name: string | null,
@@ -139,10 +166,44 @@ export const sendJoinEventEmail = async (
     await resend.emails.send({
       from: "Annect <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Lakukan Pembayaran untuk Bergabung ke Event.",
+      subject: "Anda telah berhasil bergabung ke sebuah event.",
       react: JoinEventEmail({ userFirstname: name, eventPrice: price }),
     });
   } catch (err) {
     console.log(err);
+  }
+};
+
+type UserType = {
+  id: string;
+  name: string | null;
+  email: string;
+};
+
+type FollowerType = {
+  id: string;
+  users: UserType;
+};
+
+export const sendBroadcastEmail = async (channel_id: string) => {
+  try {
+    const followers: FollowerType[] = await getAllDataFollowers(channel_id);
+
+    await Promise.all(
+      followers.map(async (item) => {
+        await resend.emails.send({
+          from: "Annect <marketing@awsd-qwerty.com>",
+          to: item.users.email,
+          subject: "Event baru telah dibuat!",
+          react: BroadcastEmail({
+            userFirstname: item.users.name,
+            channel_id: channel_id,
+          }),
+        });
+      })
+    );
+  } catch (err) {
+    console.log(err);
+    return null;
   }
 };
