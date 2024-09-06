@@ -40,6 +40,7 @@ type ChannelType = {
   description: string;
   image: string;
   created_at: Date;
+  is_following: boolean;
   _count: {
     events: number;
   };
@@ -57,6 +58,11 @@ export default function Page() {
   const getData = async () => {
     const channelAction = await getAllData();
     setChannels(channelAction);
+    // Memastikan channel yang sudah di-follow memiliki background merah
+    const followed = channelAction.filter((channel: ChannelType) =>
+      followedChannels.includes(channel.id)
+    );
+    setChannels((prevChannels) => [...prevChannels, ...followed]);
     console.log(channelAction);
   };
 
@@ -73,20 +79,28 @@ export default function Page() {
 
   const handleFollowChannels = async (channelId: string) => {
     try {
-      await followChannel(channelId);
-      toast.success("Berhasil mengikuti channel");
+      if (followedChannels.includes(channelId)) {
+        // Jika sudah di-follow, unfollow
+        const result = await followChannel(channelId); // Panggil API untuk unfollow
+        if (result) {
+          setFollowedChannels((prev) => prev.filter((id) => id !== channelId)); // Hapus dari daftar yang di-follow
+          toast.success("Berhasil menghapus channel dari ikuti");
+        } else {
+          toast.success("Berhasil berhenti mengikuti channel");
+        }
+      } else {
+        // Jika belum di-follow, follow
+        const result = await followChannel(channelId); // Panggil API untuk follow
+        if (result) {
+          setFollowedChannels((prev) => [...prev, channelId]); // Tambahkan ke daftar yang di-follow
+          toast.success("Berhasil mengikuti channel");
+        } else {
+          toast.success("Berhasil berhenti mengikuti channel");
+        }
+      }
     } catch (error) {
-      toast.error("Gagal mengikuti channel");
+      toast.error("Gagal memperbarui status channel");
     }
-
-    // const result = await followChannels(channelId);
-    // console.log(result);
-    // if (result) {
-    //   // setChannels([...result, channelId]);
-    //   toast.success("Berhasil ditambahkan!");
-    // } else {
-    //   toast.error("Gagal menambahkan favorite");
-    // }
   };
 
   useEffect(() => {
@@ -214,7 +228,10 @@ export default function Page() {
                                 await handleFollowChannels(item.id)
                               }
                               className={
-                                "text-red-500 hover:text-white hover:bg-red-500"
+                                item.is_following == true ||
+                                followedChannels.includes(item.id)
+                                  ? "bg-red-500 text-white"
+                                  : "text-red-500 hover:text-white hover:bg-red-500"
                               }
                             >
                               <Heart />
