@@ -97,7 +97,6 @@ export default function Page() {
 
   const getData = async () => {
     const getTags = await getBrowseData();
-    console.log(getTags);
 
     setTags(getTags?.tags);
     setCategories(getTags?.categories);

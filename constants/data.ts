@@ -121,6 +121,12 @@ export const adminNavItems: NavItem[] = [
     icon: "event",
     label: "event",
   },
+  {
+    title: "User Payment",
+    href: "/admin/payments",
+    icon: "billing",
+    label: "user payment",
+  },
 ];
 
 export type Product = {

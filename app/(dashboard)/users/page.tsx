@@ -127,7 +127,7 @@ export default function Page() {
     user_event_id: string,
     image_url: string
   ) => {
-    const req = await updateUserEvent(user_event_id, image_url);
+    const req = await updateUserEvent(user_event_id, image_url, false);
 
     if (req) {
       toast.success("Pembayaran berhasil!");

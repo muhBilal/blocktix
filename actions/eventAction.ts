@@ -211,7 +211,8 @@ export const getHistoryUserEvent = async () => {
 
 export const updateUserEvent = async (
   user_event_id: string,
-  image_url: string | null
+  image_url: string | null,
+  status: boolean | null
 ) => {
   try {
     const req = await fetch(
@@ -221,14 +222,18 @@ export const updateUserEvent = async (
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: user_event_id, tf_image: image_url }),
+        body: JSON.stringify({
+          id: user_event_id,
+          tf_image: image_url,
+          status,
+        }),
       }
     );
 
     if (req.ok) {
       const res = await req.json();
 
-      return res;
+      return true;
     }
   } catch (err) {
     console.log(err);

@@ -69,11 +69,8 @@ export const checkUser = async () => {
 
     await insertUser(data);
 
-    console.log("sebelum email");
     if (data.role == "USER") {
-      console.log("masuk");
       const mails = await sendWelcomeEmail(data.email, data.name);
-      console.log(mails);
     }
   }
 
