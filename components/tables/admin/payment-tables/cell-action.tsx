@@ -20,6 +20,7 @@ type EventType = {
   name: string;
   image: string;
   price: number;
+  link_group: string;
 };
 
 type UserType = {
@@ -49,7 +50,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
 
   const onConfirm = async () => {
-    const req = await updateUserEvent(data.id, data.tf_image, true);
+    const req = await updateUserEvent(
+      data.id,
+      data.tf_image,
+      true,
+      data.events.link_group
+    );
 
     if (req) {
       toast.success("Success!");

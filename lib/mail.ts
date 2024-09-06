@@ -4,6 +4,7 @@ import WelcomeEmail from "@/emails/welcome";
 import ChannelCreatedEmail from "@/emails/create-channel";
 import ChannelValidatedEmail from "@/emails/channel-validated";
 import PaymentDoneEmail from "@/emails/payment-done";
+import { JoinEventEmail } from "@/emails/join-event";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;
@@ -123,6 +124,23 @@ export const sendPaymentDoneEmail = async (
       to: email,
       subject: "Pembayaran Anda telah diterima. Selamat bergabung!",
       react: PaymentDoneEmail({ userFirstname: name, linkGroup: link_group }),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendJoinEventEmail = async (
+  email: string,
+  name: string | null,
+  price: number
+) => {
+  try {
+    await resend.emails.send({
+      from: "Annect <marketing@awsd-qwerty.com>",
+      to: email,
+      subject: "Lakukan Pembayaran untuk Bergabung ke Event.",
+      react: JoinEventEmail({ userFirstname: name, eventPrice: price }),
     });
   } catch (err) {
     console.log(err);

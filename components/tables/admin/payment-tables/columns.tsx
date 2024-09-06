@@ -11,6 +11,7 @@ type EventType = {
   name: string;
   image: string;
   price: number;
+  link_group: string;
 };
 
 type UserType = {
