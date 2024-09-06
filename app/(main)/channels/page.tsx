@@ -27,7 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { followChannels } from "@/actions/followAction";
+import { followChannel } from "@/actions/followAction";
 
 type UserType = {
   id: string;
@@ -73,7 +73,7 @@ export default function Page() {
 
   const handleFollowChannels = async (channelId: string) => {
     try {
-      await followChannels(channelId);
+      await followChannel(channelId);
       toast.success("Berhasil mengikuti channel");
     } catch (error) {
       toast.error("Gagal mengikuti channel");
@@ -213,7 +213,9 @@ export default function Page() {
                               onClick={async () =>
                                 await handleFollowChannels(item.id)
                               }
-                              className="text-red-500 hover:text-white hover:bg-red-500"
+                              className={
+                                "text-red-500 hover:text-white hover:bg-red-500"
+                              }
                             >
                               <Heart />
                             </Button>

@@ -32,36 +32,36 @@ export const getAllDataFollowers = async (id: string) => {
   }
 };
 
-export const followChannels = async (channel_id: string) => {
-  let user = await currentUser();
+// export const followChannels = async (channel_id: string) => {
+//   let user = await currentUser();
 
-  if (user) {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/follow/channels`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ channel_id, user_id: user.id }),
-        }
-      );
+//   if (user) {
+//     try {
+//       const response = await fetch(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/follow/channels`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({ channel_id, user_id: user.id }),
+//         }
+//       );
 
-      const res = await response.text();
+//       const res = await response.text();
 
-      if (!response.ok) {
-        throw new Error("Failed to follow channel");
-      }
+//       if (!response.ok) {
+//         throw new Error("Failed to follow channel");
+//       }
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error following channel:", error);
-      return null;
-    }
-  }
-};
+//       const data = await response.json();
+//       return data;
+//     } catch (error) {
+//       console.error("Error following channel:", error);
+//       return null;
+//     }
+//   }
+// };
 
 export const followChannel = async (channel_id: string) => {
   let user = await currentUser();

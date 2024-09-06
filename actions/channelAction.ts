@@ -7,7 +7,12 @@ import { channels_status } from "@prisma/client";
 
 export const getAllData = async () => {
   try {
-    const req = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/channels");
+    let user = await currentUser();
+
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels?user_id=${user?.id}`,
+      { cache: "no-store" }
+    );
 
     if (req.ok) {
       const res = await req.json();
@@ -84,9 +89,10 @@ export const createChannels = async (values: createValue) => {
 };
 
 export const getChannelById = async (channel_id: string) => {
+  let user = await currentUser();
   try {
     const req = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/channels/${channel_id}/${user?.id}`,
       {
         method: "GET",
       }
