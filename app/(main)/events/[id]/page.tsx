@@ -58,6 +58,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const getEventDetail = async () => {
     const data = await getEventById(params.id);
+    console.log(data);
     setEvents(data);
   };
 
@@ -66,21 +67,11 @@ export default function Page({ params }: { params: { id: string } }) {
   }, []);
 
   const handleFollowEvent = () => {
-    setIsFollowing(!isFollowing); // Ubah status mengikuti atau tidak
+    setIsFollowing(!isFollowing);
   };
 
   const handleFavorite = async () => {
     toast.success("Berhasil disimpan!");
-  };
-
-  const formatDateIndonesian = (dateString: string): string => {
-    const date = new Date(dateString);
-
-    return date.toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   return (
