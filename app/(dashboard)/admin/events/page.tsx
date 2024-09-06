@@ -10,17 +10,38 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+type EventType = {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  event_date: string;
+  image: string;
+  price: number;
+  is_paid: boolean;
+  is_online: boolean;
+  is_favorite: boolean;
+  categories?: {
+    id: string;
+    name: string;
+  };
+  tags?: {
+    id: string;
+    name: string;
+  };
+};
+
 const breadcrumbItems = [
   { title: "Dashboard", link: "/admin" },
   { title: "Event", link: "/admin/events" },
 ];
 
 export default function Page() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<events[]>([]);
 
   const getData = async () => {
     const req = await getAllData();
-    setEvents(req);
+    setEvents(req?.events);
   };
 
   useEffect(() => {
