@@ -23,10 +23,9 @@ import CountUp from "react-countup";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { categories, tags } from "@prisma/client";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getBrowseData } from "@/actions/browseAction";
 import {
   Card,
   CardDescription,
@@ -44,6 +43,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { formatDate, formatPrice } from "@/lib/format";
+import { addFavorite } from "@/actions/favoriteAction";
 
 type EventType = {
   id: string;
@@ -55,6 +55,7 @@ type EventType = {
   price: number;
   is_paid: boolean;
   is_online: boolean;
+  is_favorite: boolean;
   categories?: {
     id: string;
     name: string;
@@ -96,11 +97,12 @@ export default function Page() {
   const queryParams = searchParams.get("query");
 
   const getData = async () => {
-    const getTags = await getBrowseData();
+    const data = await getAllData();
+    console.log(data);
 
-    setTags(getTags?.tags);
-    setCategories(getTags?.categories);
-    setEvents(getTags?.events);
+    setTags(data?.tags);
+    setCategories(data?.categories);
+    setEvents(data?.events);
   };
 
   const onSubmit = async (values: z.infer<typeof filterSchema>) => {
@@ -111,8 +113,15 @@ export default function Page() {
     window.location.reload();
   };
 
-  const handleFavorite = async () => {
-    toast.success("Berhasil disimpan!");
+  const handleFavorite = async (eventId: string) => {
+    const result = await addFavorite(eventId);
+    console.log(result);
+    if (result) {
+      setFavorites([...favorites, eventId]);
+      toast.success("Berhasil ditambahkan!");
+    } else {
+      toast.error("Gagal menambahkan favorite");
+    }
   };
 
   useEffect(() => {
@@ -138,22 +147,6 @@ export default function Page() {
     }
   };
 
-  const toggleFavorite = (eventId: string) => {
-    if (favorites.includes(eventId)) {
-      setFavorites(favorites.filter((id) => id !== eventId));
-    } else {
-      setFavorites([...favorites, eventId]);
-    }
-  };
-
-  const toggleJoinEvent = (eventId: string) => {
-    if (joinedEvents.includes(eventId)) {
-      setJoinedEvents(joinedEvents.filter((id) => id !== eventId));
-    } else {
-      setJoinedEvents([...joinedEvents, eventId]);
-    }
-  };
-
   const formatDateIndonesian = (dateString: string): string => {
     const date = new Date(dateString);
 
@@ -162,6 +155,14 @@ export default function Page() {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const toggleFavorite = (eventId: string) => {
+    if (favorites.includes(eventId)) {
+      setFavorites(favorites.filter((id) => id !== eventId));
+    } else {
+      setFavorites([...favorites, eventId]);
+    }
   };
 
   return (
@@ -375,14 +376,25 @@ export default function Page() {
                               <TooltipTrigger asChild>
                                 <Button
                                   variant={"ghost"}
-                                  onClick={handleFavorite}
-                                  className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
+                                  onClick={async () =>
+                                    await handleFavorite(event.id)
+                                  }
+                                  className={`hover:text-white hover:bg-primary transition-all duration-200 ${
+                                    event.is_favorite ||
+                                    favorites.includes(event.id)
+                                      ? "bg-primary text-white"
+                                      : "text-primary"
+                                  }`}
                                 >
                                   <Bookmark />
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Simpan Event</p>
+                                {event.is_favorite ? (
+                                  <p>Hapus Favorite</p>
+                                ) : (
+                                  <p>Simpan Event</p>
+                                )}
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

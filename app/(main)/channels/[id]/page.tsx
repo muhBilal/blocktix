@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDate, formatPrice } from "@/lib/format";
 import toast from "react-hot-toast";
+import { followChannel } from "@/actions/followAction";
 
 type UserType = {
   id: string;
@@ -79,17 +80,21 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const handleFollowChannel = () => {
-    setIsFollowing(!isFollowing);
-  };
-
-  const handleFavorite = async () => {
-    toast.success("Berhasil disimpan!");
-  };
-
   const getChannelDetail = async () => {
     const data = await getChannelById(params.id);
     setChannels(data);
+    console.log(data);
+    setIsFollowing(data?.isFollowing || false);
+  };
+
+  const handleFollowChannel = async () => {
+    try {
+      await followChannel(params.id);
+      setIsFollowing(true);
+      toast.success("Berhasil mengikuti channel");
+    } catch (error) {
+      toast.error("Gagal mengikuti channel");
+    }
   };
 
   useEffect(() => {
@@ -129,8 +134,17 @@ export default function Page({ params }: { params: { id: string } }) {
                     <p className="font-bold text-xl">{channels?.users?.name}</p>
                   </div>
                 </div>
-                <Button variant={"secondary"} className="hover:text-primary">
-                  Ikuti Channel
+                <Button
+                  variant={isFollowing ? "secondary" : "primary"} // Ubah varian berdasarkan status
+                  className={`${
+                    isFollowing
+                      ? "bg-gray-500 text-white" // Ganti warna abu-abu jika sudah diikuti
+                      : "hover:text-primary"
+                  }`}
+                  onClick={handleFollowChannel} // Panggil fungsi handleFollowChannel saat diklik
+                  disabled={isFollowing} // Disable tombol jika sudah diikuti
+                >
+                  {isFollowing ? "Diikuti" : "Ikuti Channel"}
                 </Button>
               </div>
             </div>
@@ -234,7 +248,7 @@ export default function Page({ params }: { params: { id: string } }) {
                               <TooltipTrigger asChild>
                                 <Button
                                   variant={"ghost"}
-                                  onClick={handleFavorite}
+                                  onClick={async () => handleFollowChannel()}
                                   className="hover:text-white text-primary hover:bg-primary transition-all duration-200"
                                 >
                                   <Bookmark />
