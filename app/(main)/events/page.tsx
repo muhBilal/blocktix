@@ -114,13 +114,22 @@ export default function Page() {
   };
 
   const handleFavorite = async (eventId: string) => {
-    const result = await addFavorite(eventId);
-    console.log(result);
-    if (result) {
-      setFavorites([...favorites, eventId]);
-      toast.success("Berhasil ditambahkan!");
+    if (favorites.includes(eventId)) {
+      const result = await addFavorite(eventId);
+      if (result) {
+        setFavorites(favorites.filter((id) => id !== eventId));
+        toast.success("Berhasil dihapus dari favorite!");
+      } else {
+        toast.error("Gagal menghapus favorite");
+      }
     } else {
-      toast.error("Gagal menambahkan favorite");
+      const result = await addFavorite(eventId);
+      if (result) {
+        setFavorites([...favorites, eventId]);
+        toast.success("Berhasil ditambahkan ke favorite!");
+      } else {
+        toast.error("Gagal menambahkan favorite");
+      }
     }
   };
 
