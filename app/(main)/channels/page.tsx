@@ -105,7 +105,7 @@ export default function Page() {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [handleFollowChannels]);
 
   return (
     <Wrapper>

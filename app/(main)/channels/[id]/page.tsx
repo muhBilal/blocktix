@@ -68,6 +68,7 @@ type ChannelType = {
   description: string;
   image: string;
   users?: UserType;
+  is_following: boolean;
   _count?: {
     follows: number;
     events: number;
@@ -84,7 +85,6 @@ export default function Page({ params }: { params: { id: string } }) {
     const data = await getChannelById(params.id);
     setChannels(data);
     console.log(data);
-    setIsFollowing(data?.isFollowing || false);
   };
 
   const handleFollowChannel = async () => {
@@ -99,7 +99,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     getChannelDetail();
-  }, []);
+  }, [handleFollowChannel]);
   return (
     <Wrapper>
       <div className="mt-40">
@@ -135,16 +135,13 @@ export default function Page({ params }: { params: { id: string } }) {
                   </div>
                 </div>
                 <Button
-                  variant={isFollowing ? "secondary" : "default"} // Ubah varian berdasarkan status
+                  variant={channels.is_following ? "secondary" : "default"} // Ubah varian berdasarkan status follow
                   className={`${
-                    isFollowing
-                      ? "bg-gray-500 text-white" // Ganti warna abu-abu jika sudah diikuti
-                      : "hover:text-primary"
+                    channels.is_following && "bg-gray-500 text-white" // Tetap abu-abu jika diikuti
                   }`}
-                  onClick={handleFollowChannel} // Panggil fungsi handleFollowChannel saat diklik
-                  disabled={isFollowing} // Disable tombol jika sudah diikuti
+                  onClick={handleFollowChannel} // Panggil fungsi follow/unfollow
                 >
-                  {isFollowing ? "Diikuti" : "Ikuti Channel"}
+                  {channels.is_following ? "Diikuti" : "Ikuti Channel"}
                 </Button>
               </div>
             </div>
