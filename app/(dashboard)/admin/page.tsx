@@ -24,15 +24,19 @@ type Tag = {
   totalData: number;
 };
 
+type TransactionType = {
+  created_at: Date;
+  events: events;
+  users: users;
+  status: boolean;
+};
+
 type Dashboard = {
   userCount: number;
   eventCount: number;
   channelCount: number;
   totalprice: number | null;
-  transaction: {
-    users: users;
-    events: events;
-  };
+  transaction: TransactionType[];
   tagsWithEventCount: Tag[];
 };
 
@@ -40,6 +44,7 @@ export default function Page() {
   const [dashboard, setDashboard] = useState<Dashboard>();
   const getData = async () => {
     const data = await getDashboardData();
+    console.log(data);
     setDashboard(data);
   };
   useEffect(() => {
@@ -182,11 +187,13 @@ export default function Page() {
                 <CardHeader>
                   <CardTitle>Transaksi terakhir</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Ada sebanyak 10 transaksi di bulan ini.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  {dashboard?.transaction && (
+                    <RecentSales data={dashboard.transaction} />
+                  )}
                 </CardContent>
               </Card>
               <div className="col-span-4">
