@@ -79,24 +79,14 @@ export default function Page() {
 
   const handleFollowChannels = async (channelId: string) => {
     try {
-      if (followedChannels.includes(channelId)) {
-        // Jika sudah di-follow, unfollow
-        const result = await followChannel(channelId); // Panggil API untuk unfollow
-        if (result) {
-          setFollowedChannels((prev) => prev.filter((id) => id !== channelId)); // Hapus dari daftar yang di-follow
-          toast.success("Berhasil menghapus channel dari ikuti");
-        } else {
-          toast.success("Berhasil berhenti mengikuti channel");
-        }
+      const result = await followChannel(channelId);
+      console.log(result);
+
+      if (result?.message == "success") {
+        toast.success("Berhasil");
+        await getData();
       } else {
-        // Jika belum di-follow, follow
-        const result = await followChannel(channelId); // Panggil API untuk follow
-        if (result) {
-          setFollowedChannels((prev) => [...prev, channelId]); // Tambahkan ke daftar yang di-follow
-          toast.success("Berhasil mengikuti channel");
-        } else {
-          toast.success("Berhasil berhenti mengikuti channel");
-        }
+        toast.error("Gagal");
       }
     } catch (error) {
       toast.error("Gagal memperbarui status channel");
@@ -105,7 +95,7 @@ export default function Page() {
 
   useEffect(() => {
     getData();
-  }, [handleFollowChannels]);
+  }, []);
 
   return (
     <Wrapper>
@@ -228,8 +218,7 @@ export default function Page() {
                                 await handleFollowChannels(item.id)
                               }
                               className={
-                                item.is_following == true ||
-                                followedChannels.includes(item.id)
+                                item.is_following == true
                                   ? "bg-red-500 text-white"
                                   : "text-red-500 hover:text-white hover:bg-red-500"
                               }
@@ -238,7 +227,11 @@ export default function Page() {
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Ikuti Channel</p>
+                            {item.is_following ? (
+                              <p>Berhenti Mengikuti</p>
+                            ) : (
+                              <p>Ikuti Channel</p>
+                            )}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>

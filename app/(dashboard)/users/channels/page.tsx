@@ -29,6 +29,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import FileUpload from "@/components/FileUpload";
+import { eventPayment } from "@/actions/eventAction";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/users" },
@@ -49,6 +60,7 @@ type ChannelUser = {
 export default function Page() {
   const [channels, setChannels] = useState<ChannelUser | null>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [paymentImage, setPaymentImage] = useState<string | undefined>("");
   const getData = async () => {
     const req = await getChannelByUserId();
     setChannels(req);
@@ -62,6 +74,29 @@ export default function Page() {
       router.push("/users/channels/events/create");
     } else {
       toast.error("Tunggu diverifikasi oleh admin!");
+    }
+  };
+
+  const handleUpdatePayment = async (
+    user_event_id: string,
+    image_url: string
+  ) => {
+    const req = await eventPayment(user_event_id, image_url);
+
+    if (req) {
+      toast.success("Pembayaran berhasil!");
+      window.location.reload();
+      return;
+    }
+
+    toast.error("Terjadi kesalahan!");
+  };
+
+  const handleSubmitPayment = async (user_event_id: string) => {
+    if (paymentImage == "" || !paymentImage) {
+      toast.error("Upload bukti pembayaran!");
+    } else {
+      await handleUpdatePayment(user_event_id, paymentImage);
     }
   };
 
@@ -157,22 +192,46 @@ export default function Page() {
                               <CardTitle>
                                 <div className="flex w-full justify-between items-center">
                                   {event.name}
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
+                                  {event.status == "ONGOING" ||
+                                    (event.status == "DONE" && (
+                                      <Button disabled>Event Berjalan</Button>
+                                    ))}
+
+                                  {event.status == "PENDING" && (
+                                    <Dialog>
+                                      <DialogTrigger asChild>
                                         <Button variant={"secondary"}>
-                                          {event.status}
+                                          Bayar Event
                                         </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p className="font-normal">
-                                          {event.status == "PENDING"
-                                            ? "Lunasi pembayaran"
-                                            : "Event telah tampil"}
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
+                                      </DialogTrigger>
+                                      <DialogContent className="sm:max-w-[425px]">
+                                        <DialogHeader>
+                                          <DialogTitle>
+                                            Lunasi Pembayaran
+                                          </DialogTitle>
+                                          <DialogDescription>
+                                            Upload bukti pembayaranmu disini.
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <FileUpload
+                                          apiEndpoint="image"
+                                          onChange={(url) =>
+                                            setPaymentImage(url)
+                                          }
+                                          value={paymentImage}
+                                        />
+                                        <DialogFooter>
+                                          <Button
+                                            onClick={() =>
+                                              handleSubmitPayment(event.id)
+                                            }
+                                          >
+                                            Submit
+                                          </Button>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
+                                  )}
                                 </div>
                               </CardTitle>
                               <CardDescription className="max-w-lg">

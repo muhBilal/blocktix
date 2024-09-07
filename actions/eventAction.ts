@@ -37,6 +37,25 @@ export const getAllData = async () => {
   }
 };
 
+export const getAllDataAdmin = async () => {
+  const user = await currentUser();
+
+  try {
+    const req = await fetch(
+      process.env.NEXT_PUBLIC_API_BASE_URL + `/events/admin`
+    );
+
+    if (req.ok) {
+      const res = await req.json();
+      return res;
+    }
+    return null;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
 export const getEventById = async (event_id: string) => {
   const user = await currentUser();
   try {
@@ -71,6 +90,30 @@ export const eventVerification = async (event_id: string) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: "ONGOING" }),
+      }
+    );
+    if (!req.ok) {
+      console.error(`Failed to fetch event. Status: ${req.status}`);
+      return null;
+    }
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const eventPayment = async (event_id: string, image: string) => {
+  try {
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/events/${event_id}/payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ event_id, image }),
       }
     );
     if (!req.ok) {

@@ -3,6 +3,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { Checkbox } from "@/components/ui/checkbox";
 import { events } from "@prisma/client";
+import { formatPrice } from "@/lib/format";
+import Link from "next/link";
 
 export const columns: ColumnDef<events>[] = [
   {
@@ -43,6 +45,31 @@ export const columns: ColumnDef<events>[] = [
   {
     accessorKey: "price",
     header: "PRICE",
+    cell: ({ row }) => (
+      <span>
+        {row.original.price && row.original.price > 0
+          ? formatPrice(row.original.price)
+          : "Gratis"}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "tf_image",
+    header: "PAYMENT IMAGE",
+    cell: ({ row }) => (
+      <>
+        {row.original.tf_image && (
+          <Link
+            href={row.original.tf_image}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary"
+          >
+            View Image
+          </Link>
+        )}
+      </>
+    ),
   },
   {
     accessorKey: "status",

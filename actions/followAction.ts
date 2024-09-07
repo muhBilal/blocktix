@@ -85,7 +85,7 @@ export const followChannel = async (channel_id: string) => {
       }
 
       const data = await response.json();
-      return data;
+      return { message: "success" };
     } catch (error) {
       console.error("Error following channel:", error);
       return null;

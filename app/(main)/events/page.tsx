@@ -114,22 +114,13 @@ export default function Page() {
   };
 
   const handleFavorite = async (eventId: string) => {
-    if (favorites.includes(eventId)) {
-      const result = await addFavorite(eventId);
-      if (result) {
-        setFavorites(favorites.filter((id) => id !== eventId));
-        toast.success("Berhasil dihapus dari favorite!");
-      } else {
-        toast.error("Gagal menghapus favorite");
-      }
+    const result = await addFavorite(eventId);
+
+    if (result) {
+      toast.success("Berhasil");
+      getData();
     } else {
-      const result = await addFavorite(eventId);
-      if (result) {
-        setFavorites([...favorites, eventId]);
-        toast.success("Berhasil ditambahkan ke favorite!");
-      } else {
-        toast.error("Gagal menambahkan favorite");
-      }
+      toast.error("Gagal");
     }
   };
 
@@ -389,8 +380,7 @@ export default function Page() {
                                     await handleFavorite(event.id)
                                   }
                                   className={`hover:text-white hover:bg-primary transition-all duration-200 ${
-                                    event.is_favorite ||
-                                    favorites.includes(event.id)
+                                    event.is_favorite
                                       ? "bg-primary text-white"
                                       : "text-primary"
                                   }`}

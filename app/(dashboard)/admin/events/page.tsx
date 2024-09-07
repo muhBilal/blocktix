@@ -1,5 +1,5 @@
 "use client";
-import { getAllData } from "@/actions/eventAction";
+import { getAllData, getAllDataAdmin } from "@/actions/eventAction";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { EventTable } from "@/components/tables/admin/event-tables/table";
 import { buttonVariants } from "@/components/ui/button";
@@ -40,8 +40,9 @@ export default function Page() {
   const [events, setEvents] = useState<events[]>([]);
 
   const getData = async () => {
-    const req = await getAllData();
-    setEvents(req?.events);
+    const req = await getAllDataAdmin();
+    console.log(req);
+    setEvents(req);
   };
 
   useEffect(() => {
