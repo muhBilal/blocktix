@@ -3,7 +3,6 @@
 import { db } from "@/lib/db";
 import { sendChannelCreatedEmail, sendChannelValidatedEmail } from "@/lib/mail";
 import { currentUser } from "@clerk/nextjs/server";
-import { channels_status } from "@prisma/client";
 
 export const getAllData = async () => {
   try {

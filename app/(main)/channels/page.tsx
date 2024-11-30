@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Wrapper from "@/components/Wrapper";
 import {
   Card,
@@ -14,8 +13,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getAllData, searchChannelByName } from "@/actions/channelAction";
-import { Separator } from "@/components/ui/separator";
-import { formatDate } from "@/lib/format";
 import CountUp from "react-countup";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
@@ -106,6 +103,7 @@ export default function Page() {
             alt="icon-chart"
             width={210}
             height={210}
+            loading="lazy"
             className="absolute bottom-0 left-0 ml-7"
           />
           <Image
@@ -113,10 +111,11 @@ export default function Page() {
             alt="icon-search"
             width={180}
             height={180}
+            loading="lazy"
             className="absolute right-0 bottom-0 mr-5"
           />
           <h1 className="text-4xl text-center font-semibold">
-            <CountUp end={1000} duration={3} className="text-primary" /> Channel
+            <CountUp end={1000} duration={2} className="text-primary" /> Channel
             Akademik Yang Aktif
           </h1>
           <p className="text-muted-foreground max-w-lg text-center">
@@ -146,9 +145,9 @@ export default function Page() {
         <div className="mt-10">
           {channels?.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              {channels?.map((item, index) => (
+              {channels?.map((item) => (
                 <Card
-                  key={index}
+                  key={item.id}
                   className="group hover:-translate-y-3 hover:border-primary transition-all duration-300"
                 >
                   <CardHeader>
@@ -218,7 +217,7 @@ export default function Page() {
                                 await handleFollowChannels(item.id)
                               }
                               className={
-                                item.is_following == true
+                                item.is_following === true
                                   ? "bg-red-500 text-white"
                                   : "text-red-500 hover:text-white hover:bg-red-500"
                               }

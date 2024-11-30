@@ -1,6 +1,7 @@
 "use server";
 
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export const getAllData = async () => {
   const user = await currentUser();
@@ -21,28 +22,28 @@ export const getAllData = async () => {
 export const addFavorite = async (event_id: string) => {
   let user = await currentUser();
 
-  if (user) {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/favorites/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ event_id, user_id: user.id }),
-        }
-      );
+  if (!user) return redirect("/sign-in");
 
-      if (!response.ok) {
-        throw new Error("Failed to add favorite");
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/favorites/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ event_id, user_id: user.id }),
       }
+    );
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error adding favorite:", error);
-      return null;
+    if (!response.ok) {
+      throw new Error("Failed to add favorite");
     }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error adding favorite:", error);
+    return null;
   }
 };

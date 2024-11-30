@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/Wrapper";
 import { BookCopy, GraduationCap, Speech, Trophy, Users } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import TextEffect from "@/components/TextEffect";
 import { Card } from "@/components/ui/card";
@@ -15,8 +15,13 @@ export default function Home({ params }: { params: { id: string } }) {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  const handleSearch = () => {
-    router.push(`/events?query=${encodeURIComponent(searchQuery)}`);
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push(
+      `/events?name=${encodeURIComponent(
+        searchQuery
+      )}&tags=&categories=&prices=`
+    );
   };
 
   const tagsUp = [
@@ -122,24 +127,29 @@ export default function Home({ params }: { params: { id: string } }) {
               <span className="text-primary">pengembangan diri</span> tanpa
               khawatir akan <span className="text-primary">penipuan</span>.
             </p>
-            <div className="max-w-2xl w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary grid grid-cols-12 gap-4 rounded-lg mt-10 shadow-xl">
-              <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
-                <Input
-                  type="text"
-                  placeholder="cari nama event..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full text-lg border-none bg-transparent focus-visible::outline-none focus-visible::border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
-                />
-              </div>
-              <div className="lg:col-span-3 col-span-12 p-2">
-                <Button
-                  onClick={() => handleSearch()}
-                  className="w-full h-full p-4 text-lg text-white"
-                >
-                  Search
-                </Button>
-              </div>
+            <div className="max-w-2xl w-full bg-muted dark:bg-transparent border-2 dark:border border-secondary dark:border-primary rounded-lg mt-10 shadow-xl">
+              <form
+                onSubmit={(e) => handleSearch(e)}
+                className="grid grid-cols-12 gap-4"
+              >
+                <div className="lg:col-span-9 col-span-12 p-2 flex items-center">
+                  <Input
+                    type="text"
+                    placeholder="cari nama event..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full text-lg border-none bg-transparent focus-visible::outline-none focus-visible::border-none focus-visible:ring-transparent focus-visible:ring-offset-0"
+                  />
+                </div>
+                <div className="lg:col-span-3 col-span-12 p-2">
+                  <Button
+                    type="submit"
+                    className="w-full h-full p-4 text-lg text-white"
+                  >
+                    Search
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
 

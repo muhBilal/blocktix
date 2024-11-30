@@ -218,23 +218,26 @@ export default function Page({ params }: { params: { id: string } }) {
                     </div>
                   </TabsContent>
                 </Tabs>
-                <div className=" flex items-center justify-start bg-primary rounded-lg mt-5">
-                  <div className="relative h-[150px] p-3 mr-5">
-                    <GraduationCap className="w-full h-full text-white" />
-                  </div>
-                  <div className="flex flex-col items-start mr-10">
-                    <h4 className="text-2xl font-bold text-white">
-                      Tidak tertarik dengan event ini ?
-                    </h4>
-                    <p className="text-2xl font-medium text-white">
-                      Lihat event lainnya
-                    </p>
-                  </div>
-                  <div className="relative h-[45px] ml-auto mr-10">
-                    <Link href="/events">
+                <div className="bg-primary rounded-lg mt-5">
+                  <Link
+                    href="/events"
+                    className="flex items-center justify-start"
+                  >
+                    <div className="relative h-[150px] p-3 mr-5">
+                      <GraduationCap className="w-full h-full text-white" />
+                    </div>
+                    <div className="flex flex-col items-start mr-10">
+                      <h4 className="text-2xl font-bold text-white">
+                        Tidak tertarik dengan event ini ?
+                      </h4>
+                      <p className="text-2xl font-medium text-white">
+                        Lihat event lainnya
+                      </p>
+                    </div>
+                    <div className="relative h-[45px] ml-auto mr-10">
                       <CornerUpRight className="w-full h-full text-white" />
-                    </Link>
-                  </div>
+                    </div>
+                  </Link>
                 </div>
               </div>
               <div className="col-span-12 lg:col-span-4">
