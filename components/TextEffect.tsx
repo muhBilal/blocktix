@@ -12,7 +12,7 @@ const TextEffect = () => {
   }, []);
 
   return (
-    <span className="text-primary">
+    <span className="bg-gradient-to-l from-red-600 to-violet-600 text-transparent bg-clip-text">
       <TextTransition springConfig={presets.wobbly} className="!h-[52px]">
         {TEXTS[index % TEXTS.length]}
       </TextTransition>

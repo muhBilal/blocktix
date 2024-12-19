@@ -43,7 +43,7 @@ export const JoinEventEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Terima kasih telah tertarik untuk bergabung ke event Annect. Untuk
+          Terima kasih telah tertarik untuk bergabung ke event BlockTix. Untuk
           melanjutkan proses pendaftaran, Anda perlu menyelesaikan pembayaran
           sebesar <strong>{formatPrice(eventPrice)}</strong>.
         </Text>
@@ -59,12 +59,12 @@ export const JoinEventEmail = ({
           <br />
           Nomor Rekening: <strong>2737423456</strong>
           <br />
-          Atas Nama: <strong>Annect Head Officer</strong>
+          Atas Nama: <strong>BlockTix Head Officer</strong>
         </Text>
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>

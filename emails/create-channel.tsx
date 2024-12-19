@@ -27,7 +27,7 @@ export const ChannelCreatedEmail = ({
     <Head />
     <Preview>
       Channel Anda telah berhasil dibuat dan sedang menunggu verifikasi dari tim
-      Annect.
+      BlockTix.
     </Preview>
     <Body style={main}>
       <Container style={container}>
@@ -43,9 +43,9 @@ export const ChannelCreatedEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Selamat! Channel Anda telah berhasil dibuat di Annect. Langkah
+          Selamat! Channel Anda telah berhasil dibuat di BlockTix. Langkah
           selanjutnya adalah verifikasi oleh tim kami untuk memastikan bahwa
-          channel Anda sesuai dengan pedoman komunitas Annect.
+          channel Anda sesuai dengan pedoman komunitas BlockTix.
         </Text>
         <Text style={paragraph}>
           Ingin mengelola channel Anda? Klik tombol di bawah ini untuk melihat
@@ -54,7 +54,7 @@ export const ChannelCreatedEmail = ({
         <Section style={btnContainer}>
           <Button
             style={button}
-            href="https://annect.vercel.app/users/channels"
+            href="https://BlockTix.vercel.app/users/channels"
           >
             Kelola Channel
           </Button>
@@ -62,7 +62,7 @@ export const ChannelCreatedEmail = ({
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>

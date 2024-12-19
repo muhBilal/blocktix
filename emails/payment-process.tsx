@@ -48,7 +48,7 @@ export const PaymentProcessEmail = ({
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
