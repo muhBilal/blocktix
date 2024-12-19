@@ -26,7 +26,7 @@ export const ChannelValidatedEmail = ({
   <Html>
     <Head />
     <Preview>
-      Channel Anda kini sudah diverifikasi dan siap digunakan di Annect.
+      Channel Anda kini sudah diverifikasi dan siap digunakan di BlockTix.
     </Preview>
     <Body style={main}>
       <Container style={container}>
@@ -43,7 +43,7 @@ export const ChannelValidatedEmail = ({
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
           Kami dengan senang hati memberi tahu Anda bahwa channel Anda telah
-          berhasil diverifikasi dan sekarang aktif di Annect! 🎉
+          berhasil diverifikasi dan sekarang aktif di BlockTix! 🎉
         </Text>
         <Text style={paragraph}>
           Anda dapat mulai mengunggah berbagai macam event akademik di channel
@@ -53,7 +53,7 @@ export const ChannelValidatedEmail = ({
         <Section style={btnContainer}>
           <Button
             style={button}
-            href="https://annect.vercel.app/users/channels"
+            href="https://BlockTix.vercel.app/users/channels"
           >
             Kelola Channel
           </Button>
@@ -61,7 +61,7 @@ export const ChannelValidatedEmail = ({
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>

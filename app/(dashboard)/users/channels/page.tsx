@@ -115,13 +115,13 @@ export default function Page() {
               {channels ? (
                 <>
                   <div className="relative h-[300px]">
-                    <Image
-                      src={channels?.image || ""}
-                      fill
-                      alt="background"
-                      sizes="100%"
-                      className="rounded-lg object-cover"
-                    />
+                    {/*<Image*/}
+                    {/*  src={channels?.image || ""}*/}
+                    {/*  fill*/}
+                    {/*  alt="background"*/}
+                    {/*  sizes="100%"*/}
+                    {/*  className="rounded-lg object-cover"*/}
+                    {/*/>*/}
                   </div>
                   <div className="mt-10">
                     <div className="flex justify-between items-center">

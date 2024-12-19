@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/annect.iml" filepath="$PROJECT_DIR$/.idea/annect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BlockTix.iml" filepath="$PROJECT_DIR$/.idea/BlockTix.iml" />
     </modules>
   </component>
 </project>

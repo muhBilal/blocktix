@@ -24,7 +24,7 @@ export const WelcomeEmail = ({ userFirstname }: WelcomeEmailProps) => (
   <Html>
     <Head />
     <Preview>
-      Temukan potensi penuh keterampilan diri Anda dengan Annect.
+      Temukan potensi penuh keterampilan diri Anda dengan BlockTix.
     </Preview>
     <Body style={main}>
       <Container style={container}>
@@ -40,19 +40,19 @@ export const WelcomeEmail = ({ userFirstname }: WelcomeEmailProps) => (
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Selamat datang di Annect! Kami sangat senang Anda telah bergabung
+          Selamat datang di BlockTix! Kami sangat senang Anda telah bergabung
           dengan platform kami yang dirancang untuk membantu Anda menemukan
           peluang baru dan mengembangkan kemampuan Anda dengan lebih cepat.
         </Text>
         <Section style={btnContainer}>
-          <Button style={button} href="https://annect.vercel.app/users">
+          <Button style={button} href="https://BlockTix.vercel.app/users">
             Get started
           </Button>
         </Section>
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>

@@ -43,14 +43,14 @@ export const EventCreatedEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Terima kasih telah membuat event di Annect! Sebelum event Anda dapat
+          Terima kasih telah membuat event di BlockTix! Sebelum event Anda dapat
           diakses oleh komunitas, Anda perlu menyelesaikan pembayaran sebesar{" "}
           <strong>{formatPrice(eventPrice)}</strong>.
         </Text>
         <Text style={paragraph}>
           Setelah pembayaran sebesar <strong>{formatPrice(eventPrice)}</strong>{" "}
           selesai, event Anda akan segera tersedia untuk seluruh komunitas
-          Annect.
+          BlockTix.
         </Text>
         <Text style={paragraph}>
           <strong>Informasi Rekening Pembayaran:</strong>
@@ -59,12 +59,12 @@ export const EventCreatedEmail = ({
           <br />
           Nomor Rekening: <strong>2737423456</strong>
           <br />
-          Atas Nama: <strong>Annect Head Officer</strong>
+          Atas Nama: <strong>BlockTix Head Officer</strong>
         </Text>
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The BlockTix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
