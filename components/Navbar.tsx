@@ -42,21 +42,10 @@ const Navbar = (props: Props) => {
   const { user } = useUser();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
     <div className="w-full fixed top-0 left-0 right-0 z-20 p-4">
       <Wrapper>
-        <div className={`flex justify-between items-center gap-4 rounded-xl p-4 border border-input ${isScrolled ? 'bg-background' : 'bg-transparent'}`}>
+        <div className={`flex justify-between items-center gap-4 rounded-xl p-4 border border-input bg-background`}>
           <aside className="flex gap-2 items-center">
             <Image
               src={"/festiva/logo.png"}

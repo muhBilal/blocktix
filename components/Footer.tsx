@@ -1,6 +1,4 @@
 import React from "react";
-import Wrapper from "./Wrapper";
-import { Separator } from "./ui/separator";
 import Link from "next/link";
 
 type Props = {};
@@ -34,12 +32,12 @@ const Footer = (props: Props) => {
                                               type="email"
                                               id="subcribe"
                                               name="email"
-                                              className="pt-4 pe-40 pb-4 ps-6 w-full h-[50px] border outline-none border-slate-400 text-slate-900 dark:text-white rounded-full bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 active:border-violet-700 active:outline-none active:border-2"
+                                              className="pt-4 pe-40 pb-4 ps-6 w-full h-[50px] border outline-none border-slate-400 text-slate-900 dark:text-white rounded-md bg-white dark:bg-slate-900 shadow dark:shadow-gray-800"
                                               placeholder="Enter your email :"
                                           />
                                           <button
                                               type="submit"
-                                              className="btn absolute top-[2px] end-[3px] h-[46px] bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white rounded-full"
+                                              className="btn absolute top-[2px] end-[3px] h-[46px] bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white rounded-md"
                                           >
                                               Subscribe
                                           </button>
@@ -62,7 +60,7 @@ const Footer = (props: Props) => {
                               <div className="lg:col-span-4 md:col-span-12">
                                   <a href="#" className="text-[22px] focus:outline-none">
                                       <img
-                                          src="assets/images/festiva/logo-name.png"
+                                          src="/festiva/logo-name.png"
                                           className={`max-w-32`}
                                           alt=""
                                       />
@@ -203,7 +201,7 @@ const Footer = (props: Props) => {
                   <div className="grid md:grid-cols-2 items-center gap-6">
                       <div className="md:text-start text-center">
                           <p className="mb-0 text-gray-300">
-                              <script>document.write(new Date().getFullYear())</script>
+                              &copy; {new Date().getFullYear()} 
                               {" "}
                               &copy; {new Date().getFullYear()} | All rights reserved
                           </p>

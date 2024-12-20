@@ -55,7 +55,6 @@ export default function Page() {
   const getData = async () => {
     const channelAction = await getAllData();
     setChannels(channelAction);
-    // Memastikan channel yang sudah di-follow memiliki background merah
     const followed = channelAction.filter((channel: ChannelType) =>
       followedChannels.includes(channel.id)
     );
