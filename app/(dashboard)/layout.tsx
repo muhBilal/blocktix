@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "Annect - Dashboard Page",
+  title: "Blocktix - Dashboard Page",
   description: "Dashboard Page",
 };
 

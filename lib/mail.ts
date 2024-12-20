@@ -58,9 +58,9 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 export const sendWelcomeEmail = async (email: string, name: string | null) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Selamat Datang di Annect! 🚀",
+      subject: "Selamat Datang di Blocktix! 🚀",
       react: WelcomeEmail({ userFirstname: name }),
     });
   } catch (err) {
@@ -75,9 +75,9 @@ export const sendEventCreatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      subject: "Event Anda Berhasil Diunggah di Blocktix! 🎉",
       react: EventCreatedEmail({ userFirstname: name, eventPrice: price }),
     });
   } catch (err) {
@@ -91,9 +91,9 @@ export const sendChannelCreatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      subject: "Event Anda Berhasil Diunggah di Blocktix! 🎉",
       react: ChannelCreatedEmail({ userFirstname: name }),
     });
   } catch (err) {
@@ -107,9 +107,9 @@ export const sendChannelValidatedEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
-      subject: "Event Anda Berhasil Diunggah di Annect! 🎉",
+      subject: "Event Anda Berhasil Diunggah di Blocktix! 🎉",
       react: ChannelValidatedEmail({ userFirstname: name }),
     });
   } catch (err) {
@@ -124,7 +124,7 @@ export const sendPaymentDoneEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Pembayaran Anda telah diterima. Selamat bergabung!",
       react: PaymentDoneEmail({ userFirstname: name, linkGroup: link_group }),
@@ -140,7 +140,7 @@ export const sendPaymentProcessEmail = async () => {
   if (user) {
     try {
       await resend.emails.send({
-        from: "Annect <marketing@awsd-qwerty.com>",
+        from: "Blocktix <marketing@awsd-qwerty.com>",
         to: user.emailAddresses[0].emailAddress,
         subject:
           "Pembayaran Anda telah kami terima. Dan akan di proses oleh admin!",
@@ -164,7 +164,7 @@ export const sendJoinEventEmail = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Annect <marketing@awsd-qwerty.com>",
+      from: "Blocktix <marketing@awsd-qwerty.com>",
       to: email,
       subject: "Anda telah berhasil bergabung ke sebuah event.",
       react: JoinEventEmail({ userFirstname: name, eventPrice: price }),
@@ -192,7 +192,7 @@ export const sendBroadcastEmail = async (channel_id: string) => {
     await Promise.all(
       followers.map(async (item) => {
         await resend.emails.send({
-          from: "Annect <marketing@awsd-qwerty.com>",
+          from: "Blocktix <marketing@awsd-qwerty.com>",
           to: item.users.email,
           subject: "Event baru telah dibuat!",
           react: BroadcastEmail({

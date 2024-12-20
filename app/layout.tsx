@@ -8,7 +8,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "Annect",
+  title: "Blocktix",
   description:
     "Event Akademic Untuk Pelajar Mahasiswa Maupun Siswa di Seluruh Indonesia",
 };

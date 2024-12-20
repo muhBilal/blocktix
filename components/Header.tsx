@@ -18,7 +18,7 @@ export default function Header() {
             height={40}
           />
           <Link href={"/"} className="font-bold text-xl">
-            Annect
+            Blocktix
           </Link>
         </div>
         <div className={cn("block lg:!hidden")}>

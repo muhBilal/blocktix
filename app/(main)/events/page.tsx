@@ -11,8 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, Suspense } from "react";
-import { getAllData, searchEventByTitle } from "@/actions/eventAction";
-
+import { getAllData } from "@/actions/eventAction";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import CountUp from "react-countup";

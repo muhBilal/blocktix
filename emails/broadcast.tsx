@@ -53,7 +53,7 @@ export const BroadcastEmail = ({
         <Text style={paragraph}>
           Best,
           <br />
-          The Annect team
+          The Blocktix team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
